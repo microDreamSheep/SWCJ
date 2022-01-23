@@ -3,28 +3,28 @@ package com.midream.sheep.SWCJ;
 import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
 import com.midream.sheep.SWCJ.util.xml.XmlFactory;
 import com.midream.sheep.test;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class xmlFactory {
     @Test
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
         test getHtml = (test)xf.getWebSpider("getHtml");
-        String[] html = getHtml.getdada();
-        System.out.println(html.length);
+        getHtml.getdada();
     }
     @Test
     public void modle() throws IOException {
-        String[] a = a();
-        for (String s : a) {
+        Object[] a = getdada();
+        for (Object s : a) {
             System.out.println(s);
         }
     }
@@ -49,27 +49,38 @@ public class xmlFactory {
         }catch (Exception e)
         {e.printStackTrace();}
     }
-    public String[] a(){
-            try{java.util.Map/*<String,String>*/ map = new java.util.HashMap/*<>*/();map.put(" UserName","xmdymcsheepsir");
-                map.put("uuid_tt_dd","4646545646-1642571061362-956268");
+    private int timeout = 10000;
+    private String[] userAgent = new String[]{"Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62", "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; TencentTraveler 4.0)", "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)"};
 
-                org.jsoup.nodes.Document document = org.jsoup.Jsoup.connect("https://www.ddyueshu.com/33_33907/").ignoreContentType(true).timeout(10000)
-                        .cookies(map).get();
-                java.util.List list = new java.util.ArrayList();
-                org.jsoup.select.Elements select = document.select("#list");
-                for (int i = 0;i<select.size();i++) {
-                    org.jsoup.nodes.Element element = select.get(i);org.jsoup.select.Elements element1 = element.select("dl>dd");
-                    for(int a = 0;a<element1.size();a++) {
-                        org.jsoup.nodes.Element element2 = element1.get(a);list.add(element2.html());
-                    }
+    public Object[] getdada() {
+        try {
+            HashMap var1 = new HashMap();
+            var1.put(" UserName", "xmdymcsheepsir");
+            var1.put("uuid_tt_dd", "4646545646-1642571061362-956268");
+            Document var2 = Jsoup.connect("https://www.ddyueshu.com/33_33907/").ignoreContentType(true).timeout(this.timeout).cookies(var1).userAgent(this.userAgent[(int)(Math.random() * (double)this.userAgent.length)]).get();
+            ArrayList var3 = new ArrayList();
+            Elements var4 = var2.select("#list");
+
+            for(int var5 = 0; var5 < var4.size(); ++var5) {
+                Object var6 = var4.get(var5);
+                Elements var7 = ((Element)var6).select("dl>dd");
+
+                for(int var8 = 0; var8 < var7.size(); ++var8) {
+                    Object var9 = var7.get(var8);
+                    var3.add(((Element)var9).html());
                 }
-                String[] result = new String[list.size()];
-                for(int i = 0;i< list.size();i++){
-                    result[i] = list.get(i).toString();
-                }return result;
-            }catch (Exception e){
-                e.printStackTrace();
             }
+
+            String[] var10 = new String[var3.size()];
+
+            for(int var11 = 0; var11 < var3.size(); ++var11) {
+                var10[var11] = var3.get(var11).toString();
+            }
+
+            return var10;
+        } catch (Exception var13) {
+            var13.printStackTrace();
             return null;
+        }
     }
 }

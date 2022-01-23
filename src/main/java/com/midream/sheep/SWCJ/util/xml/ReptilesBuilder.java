@@ -137,10 +137,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                                 sb.append("}\n");
                             }
                             //返回数据
-                            sb.append("                String[] result = new String[list.size()];\n" +
-                                    "                for(int i = 0;i< list.size();i++){\n" +
-                                    "                    result[i] = list.get(i).toString();\n" +
-                                    "                }");
+                            sb.append("Object[] result = list.toArray();\n");
                         }
                     }
                     sb.append("return result;\n");
@@ -164,6 +161,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                 return aClass.getDeclaredConstructor().newInstance();
             }
         } catch (Exception e) {
+            System.out.println("异常");
             e.printStackTrace();
         }finally {
         }

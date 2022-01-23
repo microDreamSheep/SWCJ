@@ -23,7 +23,7 @@
         cache缓存，将生成的类直接转为字节码加载
         非缓存，将生成的类输出到本地class在加载
         -->
-        <createTactics isCache="true"/>
+        <createTactics isCache="false"/>
     </config>
     <!--具体的某个爬虫类
          inPutType:传入的数值类型（可以为空）
@@ -73,6 +73,6 @@
         基本数据类型直接用，
         引用类型必须全类名如:java.lang.String
         -->
-        <returnType type="String[]"/>
+        <returnType type="Object[]"/>
     </swc>
 </SWCL>
