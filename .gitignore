@@ -1,6 +1,4 @@
-######################
-# 解决java产生文件
-######################
+#java生成的
 *.class
 
 # Mobile Tools for Java (J2ME)
