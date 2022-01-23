@@ -53,7 +53,7 @@
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
             <jsoup>jsoup配置-->
             <parseProgram  isHtml="true">
-                <regular reg="(((http|ftp|https)://)?)([a-zA-Z0-9.-])(:[0-9]{1,4})/[a-zA-Z0-9&amp;%./-~-]*"/>
+                <regular reg=""/>
                 <!--jsoup可以分为多层解析
                 即一次<pa>就是一次解析
                 -->
