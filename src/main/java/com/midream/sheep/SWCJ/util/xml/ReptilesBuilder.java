@@ -9,13 +9,9 @@ import com.midream.sheep.SWCJ.data.swc.RootReptile;
 import com.midream.sheep.SWCJ.util.classLoader.SWCJClassLoader;
 import com.midream.sheep.SWCJ.util.io.SIO;
 import com.midream.sheep.SWCJ.util.javaassist.Assist;
+import com.midream.sheep.SWCJ.util.javaassist.IAssist;
 import javassist.*;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ReptilesBuilder implements ReptilesBuilderInter{
-    private static Assist assist;
+    private static IAssist assist;
     private static SWCJClassLoader swcjcl;
     static{
         assist = new Assist();
@@ -125,13 +121,13 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                             ReptilePaJsoup rpj = ru.getJsoup().get(0);
                             sb.append("\njava.util.List/*<String>*/ list = new java.util.ArrayList/*<>*/();\n");
                             sb.append("org.jsoup.select.Elements select = document.select(\""+rpj.getPaText()+"\");\n" +
-                                    "for (org.jsoup.nodes.Element element : select) {\n");
+                                    "for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
                             //开始循环
                             String string = "element";//命名空间
                             String end = "element";
                             for(int i = 1;i<ru.getJsoup().size();i++){
                                 sb.append("org.jsoup.select.Elements element"+i+" = "+string+".select(\""+ru.getJsoup().get(i).getPaText()+"\");\n");
-                                sb.append("for (org.jsoup.nodes.Element element"+(i+1)+" : element"+i+") {\n");
+                                sb.append("for(int a = 0;a<element"+i+".size();a++) {\norg.jsoup.nodes.Element element"+(i+1)+" = element"+i+".get(a);");
                                 string = "element"+(i+1);
                                 end = string;
                             }
@@ -141,7 +137,10 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                                 sb.append("}\n");
                             }
                             //返回数据
-                            sb.append("String[] result = list.toArray(new String[]{});\n");
+                            sb.append("                String[] result = new String[list.size()];\n" +
+                                    "                for(int i = 0;i< list.size();i++){\n" +
+                                    "                    result[i] = list.get(i).toString();\n" +
+                                    "                }");
                         }
                     }
                     sb.append("return result;\n");
