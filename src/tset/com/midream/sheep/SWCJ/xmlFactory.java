@@ -1,6 +1,7 @@
 package com.midream.sheep.SWCJ;
 
 import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
+import com.midream.sheep.SWCJ.util.classLoader.SWCJClassLoader;
 import com.midream.sheep.SWCJ.util.xml.XmlFactory;
 import com.midream.sheep.test;
 import org.jsoup.Jsoup;
@@ -12,14 +13,16 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class xmlFactory {
     @Test
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
-        test getHtml = (test)xf.getWebSpider("getHtml");
-        getHtml.getdada();
+        Object getHtml = xf.getWebSpider("getHtml");
+        System.out.println(getHtml);
+
     }
     @Test
     public void modle() throws IOException {
@@ -82,5 +85,12 @@ public class xmlFactory {
             var13.printStackTrace();
             return null;
         }
+    }
+    @Test
+    public void jiazaiqi() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        SWCJClassLoader swcjClassLoader = new SWCJClassLoader();
+        Class<?> aClass = swcjClassLoader.loadData("com.midream.sheep.SWCJ.d0aec9bbe1ce4e4989bd9b8043c7a722", "E:\\workplae\\SWCJ\\target\\test-classes\\com\\midream\\sheep\\SWCJ\\d0aec9bbe1ce4e4989bd9b8043c7a722.class");
+        test o = (test)aClass.getDeclaredConstructor().newInstance();
+
     }
 }

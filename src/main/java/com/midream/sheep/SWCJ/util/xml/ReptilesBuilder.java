@@ -1,19 +1,18 @@
 package com.midream.sheep.SWCJ.util.xml;
 
 import com.midream.sheep.SWCJ.Annotation.WebSpider;
+import com.midream.sheep.SWCJ.Exception.ConflictException;
 import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
 import com.midream.sheep.SWCJ.data.ReptileConfig;
 import com.midream.sheep.SWCJ.data.swc.ReptilePaJsoup;
 import com.midream.sheep.SWCJ.data.swc.ReptileUrl;
 import com.midream.sheep.SWCJ.data.swc.RootReptile;
 import com.midream.sheep.SWCJ.util.classLoader.SWCJClassLoader;
-import com.midream.sheep.SWCJ.util.io.SIO;
 import com.midream.sheep.SWCJ.util.javaassist.Assist;
 import com.midream.sheep.SWCJ.util.javaassist.IAssist;
 import javassist.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -53,6 +52,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
             ctClass.addInterface(classPool.get(rr.getParentInter()));
             //拼接方法体
             StringBuilder sb = new StringBuilder();
+            boolean isOut = false;
             //拼接方法
             {
                 //方法头 定义被重写
@@ -142,23 +142,32 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                     }
                     sb.append("return result;\n");
                 }
+                isOut = true;
             }
             sb.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
-            System.out.println(sb.toString());
             String method = sb.toString();
             CtMethod make = CtMethod.make(method, ctClass);
             ctClass.addMethod(make);
             Class<?> aClass = null;
-            if(rc.isCache()) {
-                byte[] bytes = ctClass.toBytecode();
-                aClass = swcjcl.loadData(className, bytes);
-            }else {
+            if(!isOut) {
+                if (rc.isCache()) {
+                    byte[] bytes = ctClass.toBytecode();
+                    aClass = swcjcl.loadData(className, bytes);
+                } else {
+                    ctClass.writeFile(rc.getWorkplace());
+                    aClass = swcjcl.loadData(className, rc.getWorkplace() + "/" + className.replace(".", "//") + ".class");
+                }
+                ctClass.detach();
+                if (aClass != null) {
+                    return aClass.getDeclaredConstructor().newInstance();
+                }
+            }else{
+                if(rc.isCache()){
+                    throw new ConflictException("There is no cache in the output mode(输出模式不存在缓存)");
+                }
                 ctClass.writeFile(rc.getWorkplace());
-                aClass = swcjcl.loadData(className, rc.getWorkplace() + "/" + className.replace(".", "//") + ".class");
-            }
-            ctClass.detach();
-            if(aClass!=null) {
-                return aClass.getDeclaredConstructor().newInstance();
+                ctClass.detach();
+                return rc.getWorkplace();
             }
         } catch (Exception e) {
             System.out.println("异常");
@@ -177,5 +186,4 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
         }
         return "";
     }
-
 }

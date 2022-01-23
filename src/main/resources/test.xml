@@ -56,10 +56,10 @@
 <!--                <regular reg="href="/>-->
                 <!--jsoup可以分为多层解析
                 即一次<pa>就是一次解析
+                注，jsoup仅支持生成类
                 -->
                 <jsoup>
-<!--                    &lt;!&ndash;pa可配置属性来选取目标Document
-                    &ndash;&gt;-->
+                    <!--;pa可配置属性来选取目标Document-->
                     <pa>
                         #list
                     </pa>
@@ -73,6 +73,6 @@
         基本数据类型直接用，
         引用类型必须全类名如:java.lang.String
         -->
-        <returnType type="Object[]"/>
+        <returnType type="String"/>
     </swc>
 </SWCL>

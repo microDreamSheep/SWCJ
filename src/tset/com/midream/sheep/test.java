@@ -4,5 +4,5 @@ import com.midream.sheep.SWCJ.Annotation.WebSpider;
 
 public interface test {
     @WebSpider("getHtml")
-    Object[] getdada();
+    String getdada();
 }
