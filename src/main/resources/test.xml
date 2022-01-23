@@ -53,22 +53,20 @@
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
             <jsoup>jsoup配置-->
             <parseProgram  isHtml="true">
-                <regular reg="href="/>
+<!--                <regular reg="href="/>-->
                 <!--jsoup可以分为多层解析
                 即一次<pa>就是一次解析
                 -->
-                <!--<jsoup>
-                    &lt;!&ndash;pa可配置属性来选取目标Document
-                    text="选取目标文本"
-                    reg=文本正则表达式
-                    &ndash;&gt;
-                    <pa text="你好" reg="[ads]">
-                        awdawdwad
+                <jsoup>
+<!--                    &lt;!&ndash;pa可配置属性来选取目标Document
+                    &ndash;&gt;-->
+                    <pa>
+                        #list
                     </pa>
                     <pa>
-
+                        dl>dd
                     </pa>
-                </jsoup>-->
+                </jsoup>
             </parseProgram>
         </url>
         <!--返回值类型

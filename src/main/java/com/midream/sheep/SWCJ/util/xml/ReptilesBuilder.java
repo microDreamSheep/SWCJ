@@ -3,11 +3,14 @@ package com.midream.sheep.SWCJ.util.xml;
 import com.midream.sheep.SWCJ.Annotation.WebSpider;
 import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
 import com.midream.sheep.SWCJ.data.ReptileConfig;
+import com.midream.sheep.SWCJ.data.swc.ReptilePaJsoup;
 import com.midream.sheep.SWCJ.data.swc.ReptileUrl;
 import com.midream.sheep.SWCJ.data.swc.RootReptile;
 import com.midream.sheep.SWCJ.util.classLoader.SWCJClassLoader;
 import com.midream.sheep.SWCJ.util.javaassist.Assist;
 import javassist.*;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -92,12 +95,12 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                     //获取方法主体的类
                     ReptileUrl ru = rr.getRu();
                     String map = (!rr.getCookies().equals("")||rr.getCookies()!=null)?".cookies(map)":"";
-                    sb.append("\nString text = org.jsoup.Jsoup.connect(\""+ru.getUrl()+"\").ignoreContentType(true).timeout(timeout)\n"
+                    sb.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\""+ru.getUrl()+"\").ignoreContentType(true).timeout(timeout)\n"
                             +map+".userAgent(userAgent[(int) (Math.random()*userAgent.length)])."
-                            +(ru.getRequestType().equals("POST")?"post":"get")+"()."+(ru.isHtml()?"html":"get")+"();");
+                            +(ru.getRequestType().equals("POST")?"post":"get")+"();");
                     if(ru.getReg()!=null&&!ru.getReg().equals("")){
                         //进入正则表达式方法
-                        sb.append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\""+ru.getReg()+"\");\n" +
+                        sb.append("String text = document."+(ru.isHtml()?"html":"text")+"();\n"+"java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\""+ru.getReg()+"\");\n" +
                                 "java.util.regex.Matcher matcher = pattern.matcher(text);\n");
                         if(rr.getReturnType().equals("String")||rr.getReturnType().equals("java.lang.String")||rr.getReturnType().equals("")){
                             sb.append("matcher.find();\n" +
@@ -110,11 +113,38 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                                     "result[d] = matcher.group(d);\n" +
                                     "}");
                         }
+                    }else if(ru.getJsoup()!=null){
+                        //拼接jsoup
+                        {
+                            System.out.println(ru.getJsoup().toString());
+                            //一级查询
+                            ReptilePaJsoup rpj = ru.getJsoup().get(0);
+                            sb.append("java.util.List/*<String>*/ list = new java.util.LinkedList/*<>*/();\n" +
+                                    "org.jsoup.select.Elements select = document.select(\""+rpj.getPaText()+"\");\n" +
+                                    "for (org.jsoup.nodes.Element element : select) {");
+                            //开始循环
+                            String string = "element";//命名空间
+                            String end = "element";
+                            for(int i = 1;i<ru.getJsoup().size();i++){
+                                sb.append("org.jsoup.select.Elements element"+i+" = "+string+".select(\""+ru.getJsoup().get(i).getPaText()+"\");");
+                                sb.append("for (org.jsoup.nodes.Element element"+(i+1)+" : element"+i+") {");
+                                string = "element"+(i+1);
+                                end = string;
+                            }
+                            sb.append("list.add("+end+(ru.isHtml()?".html":".text")+"());");
+                            //添加括号
+                            for(int i = 0;i<ru.getJsoup().size();i++){
+                                sb.append("}");
+                            }
+                            //返回数据
+                            sb.append("String[] result = list.toArray(new String[]{});");
+                        }
                     }
                     sb.append("return result;");
                 }
             }
             sb.append("}catch (Exception e){e.printStackTrace();}return null;}");
+            System.out.println(sb.toString());
             CtMethod make = CtMethod.make(sb.toString(), ctClass);
             ctClass.addMethod(make);
             Class<?> aClass = null;
@@ -145,4 +175,5 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
         }
         return "";
     }
+
 }

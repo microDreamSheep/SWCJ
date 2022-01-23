@@ -160,9 +160,6 @@ public class XmlFactory {
                                     //实例化一个ReptilePaJsoup
                                     ReptilePaJsoup rp = new ReptilePaJsoup();
                                     Node node = childNodes.item(c);
-                                    NamedNodeMap attributes = node.getAttributes();
-                                    rp.setText((attributes.getNamedItem("text")!=null)?attributes.getNamedItem("text").getNodeValue().trim():"");
-                                    rp.setReg((attributes.getNamedItem("reg")!=null)?attributes.getNamedItem("reg").getNodeValue().trim():"");
                                     rp.setPaText(node.getTextContent().trim());
                                     ru.addJsoup(rp);
                                 }
