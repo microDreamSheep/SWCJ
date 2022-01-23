@@ -23,22 +23,8 @@ public class xmlFactory {
     }
     @Test
     public void modle() throws IOException {
-        //提供一个list接收数据
-        List<String> result = new LinkedList<>();
-
-        org.jsoup.nodes.Document document = org.jsoup.Jsoup.connect("https://www.ddyueshu.com/33_33907/").get();
-        //第一层
-        org.jsoup.select.Elements select = document.select("#list");
-        for (org.jsoup.nodes.Element element : select) {
-            //第二层
-            org.jsoup.select.Elements select1 = element.select("dl>dd");
-            for (org.jsoup.nodes.Element element1 : select1) {
-                //最后一层
-                result.add(element1.html());
-            }
-        }
-        String[] strings = result.toArray(new String[]{});
-        for (String s : strings) {
+        String[] a = a();
+        for (String s : a) {
             System.out.println(s);
         }
     }
@@ -63,5 +49,28 @@ public class xmlFactory {
         }catch (Exception e)
         {e.printStackTrace();}
     }
+    public String[] a(){
+        try{java.util.Map/*<String,String>*/ map = new java.util.HashMap/*<>*/();map.put(" UserName","xmdymcsheepsir");
+            map.put("uuid_tt_dd","4646545646-1642571061362-956268");
 
+            org.jsoup.nodes.Document document = org.jsoup.Jsoup.connect("https://www.ddyueshu.com/33_33907/").ignoreContentType(true).timeout(10000)
+                    .cookies(map).get();
+            java.util.List<String> list = new java.util.ArrayList<>();
+            org.jsoup.select.Elements select = document.select("#list");
+            for (org.jsoup.nodes.Element element : select) {
+                org.jsoup.select.Elements element1 = element.select("dl>dd");
+                for (org.jsoup.nodes.Element element2 : element1) {
+                    list.add(element2.html());
+                }
+            }
+            String[] result = new String[list.size()];
+            for (int i = 0;i<list.size();i++) {
+                result[i] = list.get(i);
+            }
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

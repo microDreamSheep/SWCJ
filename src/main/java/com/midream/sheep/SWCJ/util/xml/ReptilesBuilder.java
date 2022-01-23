@@ -7,12 +7,17 @@ import com.midream.sheep.SWCJ.data.swc.ReptilePaJsoup;
 import com.midream.sheep.SWCJ.data.swc.ReptileUrl;
 import com.midream.sheep.SWCJ.data.swc.RootReptile;
 import com.midream.sheep.SWCJ.util.classLoader.SWCJClassLoader;
+import com.midream.sheep.SWCJ.util.io.SIO;
 import com.midream.sheep.SWCJ.util.javaassist.Assist;
 import javassist.*;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -116,36 +121,36 @@ public class ReptilesBuilder implements ReptilesBuilderInter{
                     }else if(ru.getJsoup()!=null){
                         //拼接jsoup
                         {
-                            System.out.println(ru.getJsoup().toString());
                             //一级查询
                             ReptilePaJsoup rpj = ru.getJsoup().get(0);
-                            sb.append("java.util.List/*<String>*/ list = new java.util.LinkedList/*<>*/();\n" +
-                                    "org.jsoup.select.Elements select = document.select(\""+rpj.getPaText()+"\");\n" +
-                                    "for (org.jsoup.nodes.Element element : select) {");
+                            sb.append("\njava.util.List/*<String>*/ list = new java.util.ArrayList/*<>*/();\n");
+                            sb.append("org.jsoup.select.Elements select = document.select(\""+rpj.getPaText()+"\");\n" +
+                                    "for (org.jsoup.nodes.Element element : select) {\n");
                             //开始循环
                             String string = "element";//命名空间
                             String end = "element";
                             for(int i = 1;i<ru.getJsoup().size();i++){
-                                sb.append("org.jsoup.select.Elements element"+i+" = "+string+".select(\""+ru.getJsoup().get(i).getPaText()+"\");");
-                                sb.append("for (org.jsoup.nodes.Element element"+(i+1)+" : element"+i+") {");
+                                sb.append("org.jsoup.select.Elements element"+i+" = "+string+".select(\""+ru.getJsoup().get(i).getPaText()+"\");\n");
+                                sb.append("for (org.jsoup.nodes.Element element"+(i+1)+" : element"+i+") {\n");
                                 string = "element"+(i+1);
                                 end = string;
                             }
-                            sb.append("list.add("+end+(ru.isHtml()?".html":".text")+"());");
+                            sb.append("list.add("+end+(ru.isHtml()?".html":".text")+"());\n");
                             //添加括号
                             for(int i = 0;i<ru.getJsoup().size();i++){
-                                sb.append("}");
+                                sb.append("}\n");
                             }
                             //返回数据
-                            sb.append("String[] result = list.toArray(new String[]{});");
+                            sb.append("String[] result = list.toArray(new String[]{});\n");
                         }
                     }
-                    sb.append("return result;");
+                    sb.append("return result;\n");
                 }
             }
-            sb.append("}catch (Exception e){e.printStackTrace();}return null;}");
+            sb.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
             System.out.println(sb.toString());
-            CtMethod make = CtMethod.make(sb.toString(), ctClass);
+            String method = sb.toString();
+            CtMethod make = CtMethod.make(method, ctClass);
             ctClass.addMethod(make);
             Class<?> aClass = null;
             if(rc.isCache()) {
