@@ -41,14 +41,14 @@
         <!--请求配置
         一个配置对应一个方法
         -->
-        <url name="getHtml" inPutType="int" inPutName="count">
+        <url name="getHtml" inPutType="" inPutName="">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
             -->
             <type type="GET"/>
             <!--url链接-->
-            <url path="https://pic.netbian.com/index_#{count}.html"/>
+            <url path="https://pic.netbian.com/index_3.html"/>
             <!--解析html方案
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本

@@ -81,7 +81,6 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
 
             //类封口
             sb.append("\n}");
-            System.out.println(sb.toString());
             //实例化文件类
             File javaFile = new File(rc.getWorkplace() + "//" + name + ".java");
             //输出到工作空间

@@ -17,12 +17,11 @@ public class xmlFactory {
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
         test getHtml = (test)xf.getWebSpider("getHtml");
-        for(int i = 2;i<7;i++){
-            String[] getdada = getHtml.getdada(i);
+            String[] getdada = getHtml.getdada();
             for (String s : getdada) {
                 System.out.println(s);
             }
-        }
+
     }
     @Test
     public void First(){
