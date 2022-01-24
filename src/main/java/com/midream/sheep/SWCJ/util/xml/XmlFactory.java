@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * 工厂类，读取配置文件，获取具体实现类
+ * */
 public class XmlFactory {
     private ReptileConfig rc = new ReptileConfig();
     private Map<String,RootReptile> rootReptiles = new HashMap<>();;
@@ -34,6 +36,7 @@ public class XmlFactory {
     public XmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException {
         parse(xmlFile);
     }
+    //解析文档
     private void parse(File xmlFile) throws ParserConfigurationException, IOException, SAXException {
         //1.创建DocumentBuilderFactory对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

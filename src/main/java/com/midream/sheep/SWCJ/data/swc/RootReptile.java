@@ -1,12 +1,22 @@
 package com.midream.sheep.SWCJ.data.swc;
-
+/**
+ * @author midreamSheep
+ * 核心爬虫配置文件
+ * */
 public class RootReptile {
+    //url策略
     private ReptileUrl ru;
+    //携带cookies
     private String cookies;
+    //父接口
     private String parentInter;
-    private String returnType = "java.lang.String";
+    //返回值类型 默认为String[]
+    private String returnType = "java.lang.String[]";
+    //注入类型
     private String inPutType;
+    //注入名字
     private String inPutName;
+    //方法名
     private String id;
 
     @Override

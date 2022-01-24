@@ -5,8 +5,12 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.*;
+/**
+ * @author midreamSheep
+ * 自定义编译类
+ * */
 public class SWCJClassLoader extends ClassLoader{
-    //通过文件加载
+    //通过文件加载一个class
     public Class<?> loadData(String className,String file){
         byte[] data = loderClassData(file);
         if(data!=null){
@@ -19,7 +23,7 @@ public class SWCJClassLoader extends ClassLoader{
         }
         return null;
     }
-    //通过字节加载
+    //通过字节加载一个class
     private byte[] loderClassData(String file)  {
         InputStream is = null;
         ByteArrayOutputStream bos = null;
@@ -49,7 +53,7 @@ public class SWCJClassLoader extends ClassLoader{
         }
         return datas;
     }
-    //java编译器
+    //java编译器,编译一个java文件为class
     public String compileJavaFile(File tofile){
         //获取系统Java编译器
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();

@@ -2,12 +2,20 @@ package com.midream.sheep.SWCJ.data.swc;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author midreamSheep
+ * 爬虫的url配置类
+ * */
 public class ReptileUrl {
+    //访问链接
     private String url;
+    //请求类型
     private String requestType;
+    //正则表达式
     private String reg;
+    //jsoup策略
     private List<ReptilePaJsoup> jsoup;
+    //是否是html返回
     private boolean isHtml;
 
     @Override

@@ -1,6 +1,10 @@
 package com.midream.sheep.SWCJ.data.swc;
-
+/**
+ * @author midreamSheep
+ * jsoup爬虫的核心类
+ * */
 public class ReptilePaJsoup {
+    //jsoup格式
     private String paText;
 
     public ReptilePaJsoup() {
