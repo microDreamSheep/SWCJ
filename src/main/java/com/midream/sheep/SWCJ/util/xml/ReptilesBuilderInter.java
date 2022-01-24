@@ -12,4 +12,6 @@ public interface ReptilesBuilderInter {
     Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException;
     //检查接口是否生效
     String checkFunction(String className, String id) throws ClassNotFoundException;
+    //获取池中对象
+    Object getObject(String Key,String classname);
 }

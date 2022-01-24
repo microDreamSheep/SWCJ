@@ -2,6 +2,7 @@ package com.midream.sheep.SWCJ.util.xml;
 
 import com.midream.sheep.SWCJ.Annotation.WebSpider;
 import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
+import com.midream.sheep.SWCJ.cache.CacheCorn;
 import com.midream.sheep.SWCJ.data.Constant;
 import com.midream.sheep.SWCJ.data.ReptileConfig;
 import com.midream.sheep.SWCJ.data.swc.ReptilePaJsoup;
@@ -28,6 +29,13 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
 
     @Override
     public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException {
+        //获取类名
+        String name = "a" + UUID.randomUUID().toString().replace("-", "");
+        //效验池中是否存在
+        Object object = getObject(rr.getId(),name);
+        if(object!=null){
+            return object;
+        }
         //效验接口是否有方法,并返回方法名
         String s1 = null;
         try {
@@ -38,7 +46,6 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         if (s1 == null || s1.equals("")) {
             throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
         }
-        String name = "a" + UUID.randomUUID().toString().replace("-", "");
         try {
             //拼接类
             StringBuilder sb = new StringBuilder();
@@ -152,13 +159,20 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             File classFile = new File(s);
             //加载类
             Class<?> aClass = swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + name, s);
+            Object webc = aClass.getDeclaredConstructor().newInstance();
             if (rc.isCache()) {
-                javaFile.delete();
+                //是缓存则进入对象池
                 classFile.delete();
+                CacheCorn.addObject(rr.getId(),webc);
+            }else{
+                //非缓存则进入路径池
+                CacheCorn.addPath(rr.getId(),classFile.getPath());
             }
+            //删掉java原文件
+            javaFile.delete();
             if (aClass != null) {
                 //返回类
-                return aClass.getDeclaredConstructor().newInstance();
+                return webc;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,5 +189,18 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
         return "";
+    }
+
+    @Override
+    public Object getObject(String Key,String classname) {
+        Object ob = CacheCorn.getObject(Key);
+        if(ob!=null){
+            return ob;
+        }
+        String path = CacheCorn.getPath(Key);
+        if(path!=null){
+            return swcjcl.loadData(classname,path);
+        }
+        return null;
     }
 }
