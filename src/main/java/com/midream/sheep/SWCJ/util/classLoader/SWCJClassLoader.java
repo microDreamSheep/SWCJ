@@ -1,8 +1,13 @@
 package com.midream.sheep.SWCJ.util.classLoader;
 
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import java.io.*;
 
 public class SWCJClassLoader extends ClassLoader{
+    //通过文件加载
     public Class<?> loadData(String className,String file){
         byte[] data = loderClassData(file);
         if(data!=null){
@@ -15,6 +20,7 @@ public class SWCJClassLoader extends ClassLoader{
         }
         return null;
     }
+    //通过字节加载
     private byte[] loderClassData(String file)  {
         InputStream is = null;
         ByteArrayOutputStream bos = null;
@@ -46,4 +52,19 @@ public class SWCJClassLoader extends ClassLoader{
         }
         return datas;
     }
+    //java编译器
+    public String compileJavaFile(File tofile){
+        //获取系统Java编译器
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        //获取Java文件管理器
+        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+        //通过源文件获取到要编译的Java类源码迭代器，包括所有内部类，其中每个类都是一个 JavaFileObject，也被称为一个汇编单元
+        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(tofile);
+        //生成编译任务
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
+        //执行编译任务
+        task.call();
+        return tofile.getPath().replace(".java",".class");
+    }
+
 }

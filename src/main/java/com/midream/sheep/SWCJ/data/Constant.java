@@ -10,4 +10,5 @@ public class Constant {
         map.put("HashMap","java.util.HashMap");
         java.util.Map<String,String> cookies = new java.util.HashMap<>();
     }
+    public static String DEFAULT_PACKAGE_NAME = "com.midream.sheep.SWCJ";
 }

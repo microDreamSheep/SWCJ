@@ -11,4 +11,5 @@ public interface ISIO {
     //获取字节码
     byte[] inPutBytes(File file) throws IOException;
     byte[] inPutBytes(String file) throws IOException;
+    void outPutString(String data,File tofile) throws IOException;
 }

@@ -47,7 +47,7 @@
             -->
             <type type="GET"/>
             <!--url链接-->
-            <url path="https://www.ddyueshu.com/33_33907/"/>
+            <url path="https://www.17k.com/chapter/3377666/45200781.html"/>
             <!--解析html方案
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
@@ -61,10 +61,10 @@
                 <jsoup>
                     <!--;pa可配置属性来选取目标Document-->
                     <pa>
-                        #list
+                        #readArea>div>div.p
                     </pa>
                     <pa>
-                        dl>dd
+                        p
                     </pa>
                 </jsoup>
             </parseProgram>
@@ -73,6 +73,6 @@
         基本数据类型直接用，
         引用类型必须全类名如:java.lang.String
         -->
-        <returnType type="String"/>
+        <returnType type="Object[]"/>
     </swc>
 </SWCL>

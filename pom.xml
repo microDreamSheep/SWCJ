@@ -39,13 +39,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--动态生成类-->
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.24.1-GA</version>
-        </dependency>
-
     </dependencies>
 
 </project>

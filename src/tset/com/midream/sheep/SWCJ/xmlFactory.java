@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -20,8 +21,11 @@ public class xmlFactory {
     @Test
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
-        Object getHtml = xf.getWebSpider("getHtml");
-        System.out.println(getHtml);
+        test getHtml = (test)xf.getWebSpider("getHtml");
+        Object[] getdada = getHtml.getdada();
+        for (Object o : getdada) {
+            System.out.println(o);
+        }
 
     }
     @Test
@@ -65,8 +69,10 @@ public class xmlFactory {
             Elements var4 = var2.select("#list");
 
             for(int var5 = 0; var5 < var4.size(); ++var5) {
-                Object var6 = var4.get(var5);
-                Elements var7 = ((Element)var6).select("dl>dd");
+                Element var6 = var4.get(var5);
+                Element element = var4.get(var5);
+
+                Elements var7 = var6.select("dl>dd");
 
                 for(int var8 = 0; var8 < var7.size(); ++var8) {
                     Object var9 = var7.get(var8);
@@ -92,5 +98,16 @@ public class xmlFactory {
         Class<?> aClass = swcjClassLoader.loadData("com.midream.sheep.SWCJ.d0aec9bbe1ce4e4989bd9b8043c7a722", "E:\\workplae\\SWCJ\\target\\test-classes\\com\\midream\\sheep\\SWCJ\\d0aec9bbe1ce4e4989bd9b8043c7a722.class");
         test o = (test)aClass.getDeclaredConstructor().newInstance();
 
+    }
+    @Test
+    public void testCom() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        SWCJClassLoader swcjClassLoader = new SWCJClassLoader();
+        String s = swcjClassLoader.compileJavaFile(new File("E:/a.java"));
+        Class<?> aClass = swcjClassLoader.loadData("com.midream.sheep.a", s);
+        test o = (test)aClass.getConstructor().newInstance();
+        Object[] getdada = o.getdada();
+        for (Object o1 : getdada) {
+            System.out.println(o1);
+        }
     }
 }

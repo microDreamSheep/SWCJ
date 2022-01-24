@@ -38,4 +38,12 @@ public class SIO implements ISIO{
     public byte[] inPutBytes(String file) throws IOException {
         return inPutBytes(new File(file));
     }
+
+    @Override
+    public void outPutString(String data, File tofile) throws IOException {
+        OutputStream os = new FileOutputStream(tofile);
+        os.write(data.getBytes());
+        os.flush();
+        os.close();
+    }
 }
