@@ -168,7 +168,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         {
             //获取方法主体的类
             String map = (!rr.getCookies().equals("") || rr.getCookies() != null) ? ".cookies(map)" : "";
-            sb.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\".replace(\"#{"+ru.getInPutName()+"}\","+ru.getInPutName()+"+\"\")).ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
+            sb.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\".replace(\"#{"+ru.getInPutName()+"}\","+ru.getInPutName()+((ru.getInPutName().equals(""))?"\"\"":("+\"\""))+")).ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
                 sb.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
