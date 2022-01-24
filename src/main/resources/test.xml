@@ -52,7 +52,7 @@
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
             <jsoup>jsoup配置-->
-            <parseProgram  isHtml="true">
+            <parseProgram  isHtml="false">
 <!--                <regular reg="href="/>-->
                 <!--jsoup可以分为多层解析
                 即一次<pa>就是一次解析
@@ -60,10 +60,13 @@
                 <jsoup>
                     <!--;pa可配置属性来选取目标Document-->
                     <pa>
-                        #readArea>div>div.p
+                        div.area>div.read
                     </pa>
                     <pa>
-                        p
+                        div.readArea>div.readAreaBox
+                    </pa>
+                    <pa>
+                        div.p>p>a
                     </pa>
                 </jsoup>
             </parseProgram>

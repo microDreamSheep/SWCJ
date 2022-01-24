@@ -114,9 +114,10 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                             String string = "element";//命名空间
                             String end = "element";
                             for (int i = 1; i < ru.getJsoup().size(); i++) {
+                                String uuid = UUID.randomUUID().toString().replace("-","");
                                 sb.append("org.jsoup.select.Elements element").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
-                                sb.append("for(int a = 0;a<element").append(i).append(".size();a++) {\norg.jsoup.nodes.Element element").append(i + 1).append(" = element").append(i).append(".get(a);");
-                                string = "element" + (i + 1);
+                                sb.append("for(int "+"c"+uuid+" = 0;c"+uuid+"<element").append(i).append(".size();c"+uuid+"++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = element").append(i).append(".get(c"+uuid+");");
+                                string = "element" + (i + 2);
                                 end = string;
                             }
                             sb.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
