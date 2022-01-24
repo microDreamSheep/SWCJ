@@ -28,12 +28,9 @@ public class SWCJClassLoader extends ClassLoader {
     }
 
     @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
-        byte[] b = loderClassData(name);
-        return defineClass(name, b, 0, b.length);
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        return super.findLoadedClass(name);
     }
-
-
 
     //通过字节加载一个class
     private byte[] loderClassData(String file) {

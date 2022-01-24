@@ -30,13 +30,13 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
 
     @Override
     public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        //获取类名
+        String name = "a" + UUID.randomUUID().toString().replace("-", "");
         //效验池中是否存在
         Object object = getObject(rr.getId());
         if(object!=null){
             return object;
         }
-        //获取类名
-        String name = "a" + UUID.randomUUID().toString().replace("-", "");
         //效验接口是否有方法,并返回方法名
         String s1 = null;
         try {
@@ -163,11 +163,14 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             Object webc = aClass.getDeclaredConstructor().newInstance();
             if (rc.isCache()) {
                 //是缓存则进入对象池
+                classFile.delete();
                 CacheCorn.addObject(rr.getId(),webc);
+            }else{
+                //非缓存则进入路径池
+                CacheCorn.addPath(rr.getId(),s);
             }
             //删掉java原文件
             javaFile.delete();
-            classFile.delete();
             if (aClass != null) {
                 //返回类
                 return webc;
@@ -194,6 +197,11 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         Object ob = CacheCorn.getObject(Key);
         if(ob!=null){
             return ob;
+        }
+        String path = CacheCorn.getPath(Key);
+        if(path!=null){
+            String name = Constant.DEFAULT_PACKAGE_NAME+"."+path.substring(path.lastIndexOf("\\")+1,path.lastIndexOf("."));
+            return swcjcl.findClass(name).getDeclaredConstructor().newInstance();
         }
         return null;
     }
