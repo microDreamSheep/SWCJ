@@ -16,9 +16,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * 工厂类，读取配置文件，获取具体实现类
+ * */
 public class XmlFactory {
     private ReptileConfig rc = new ReptileConfig();
     private Map<String,RootReptile> rootReptiles = new HashMap<>();;
@@ -28,16 +31,14 @@ public class XmlFactory {
     }
     //xml工厂提供的构造器
     public XmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException {
-        //1.创建DocumentBuilderFactory对象
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        //2.创建DocumentBuilder对象
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document d = builder.parse(xmlFile);
-        NodeList root = d.getElementsByTagName("SWCL");
-        parseXml(root.item(0));
+        parse(new File(xmlFile));
     }
     //xml工厂提供的构造器
     public XmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException {
+        parse(xmlFile);
+    }
+    //解析文档
+    private void parse(File xmlFile) throws ParserConfigurationException, IOException, SAXException {
         //1.创建DocumentBuilderFactory对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //2.创建DocumentBuilder对象
@@ -104,9 +105,6 @@ public class XmlFactory {
     private void pareSWC(Node n){
         //实例化类
         RootReptile rr = new RootReptile();
-        ReptileUrl ru = new ReptileUrl();
-        //绑定两类-----组合设计模式
-        rr.setRu(ru);
         //分析根节点
         NamedNodeMap nodeMap = n.getAttributes();
         //配置信息
@@ -126,11 +124,12 @@ public class XmlFactory {
                     NamedNodeMap attributes = no.getAttributes();
                     rr.setParentInter(attributes.getNamedItem("class").getNodeValue().trim());
                     break;
-                case "returnType":
-                    rr.setReturnType(no.getAttributes().getNamedItem("type").getNodeValue().trim());
-                    break;
                 case "url":
+                    ReptileUrl ru = new ReptileUrl();
+                    ru.setName(no.getAttributes().getNamedItem("name").getNodeValue());
                     parseUrl(no.getChildNodes(),ru);
+                    //绑定两类-----组合设计模式
+                    rr.addUrl(ru);
                     break;
             }
         }
@@ -145,6 +144,9 @@ public class XmlFactory {
                     break;
                 case "url":
                     ru.setUrl(n.getAttributes().getNamedItem("path").getNodeValue().trim());
+                    break;
+                case "returnType":
+                    ru.setReturnType(n.getAttributes().getNamedItem("type").getNodeValue().trim());
                     break;
                 case "parseProgram":
                     NodeList nodes = n.getChildNodes();
@@ -170,9 +172,9 @@ public class XmlFactory {
             }
         }
     }
-    public Object getWebSpider(String id) throws EmptyMatchMethodException {
+    public Object getWebSpider(String id) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         rc.setWorkplace(rc.getWorkplace().replace("file:/","").replace("file:\\",""));
-        return rb.reptilesBuilder(rootReptiles.get(id),rc);
+        return rb.Builder(rootReptiles.get(id),rc);
     }
 
 }

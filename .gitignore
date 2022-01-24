@@ -3,12 +3,12 @@
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-test/
+
 # Package Files #
 *.jar
 *.war
 *.ear
-
+test/
 hs_err_pid*
 
 /target

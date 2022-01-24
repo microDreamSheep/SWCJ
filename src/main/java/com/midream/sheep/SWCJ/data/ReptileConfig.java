@@ -1,13 +1,23 @@
 package com.midream.sheep.SWCJ.data;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author midreamSheep
+ * 全局配置
+ * */
 public class ReptileConfig {
+    //工作空间
     private String workplace = ReptileConfig.class.getClassLoader().getResource("")+ "com/midream/sheep/SWCJ/wordkplace";
+    //超时时间
     private int timeout = 10000;
+    //浏览器模拟
     private List<String> userAgents = new ArrayList<>();
     private boolean isCache = true;//是否缓存
+    /**
+     * 增加浏览器
+     * */
     public void addUserAgent(String userAgent){
         userAgents.add(userAgent);
     }
@@ -47,6 +57,11 @@ public class ReptileConfig {
 
     public void setWorkplace(String workplace) {
         this.workplace = workplace;
+        File place = new File(workplace);
+        //生成文件夹
+        if(!place.exists()){
+            place.mkdirs();
+        }
     }
 
     public int getTimeout() {

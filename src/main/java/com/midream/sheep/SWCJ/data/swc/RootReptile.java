@@ -1,12 +1,24 @@
 package com.midream.sheep.SWCJ.data.swc;
 
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * @author midreamSheep
+ * 核心爬虫配置文件
+ * */
 public class RootReptile {
-    private ReptileUrl ru;
+    //url策略
+    private List<ReptileUrl> ru = new LinkedList<>();
+    //携带cookies
     private String cookies;
+    //父接口
     private String parentInter;
-    private String returnType = "java.lang.String";
+    //注入类型
     private String inPutType;
+    //注入名字
     private String inPutName;
+    //方法名
     private String id;
 
     @Override
@@ -15,7 +27,6 @@ public class RootReptile {
                 "ru=" + ru +
                 ", cookies='" + cookies + '\'' +
                 ", parentInter='" + parentInter + '\'' +
-                ", returnType='" + returnType + '\'' +
                 ", inPutType='" + inPutType + '\'' +
                 ", inPutName='" + inPutName + '\'' +
                 ", id='" + id + '\'' +
@@ -49,11 +60,11 @@ public class RootReptile {
     public RootReptile() {
     }
 
-    public ReptileUrl getRu() {
+    public List<ReptileUrl> getRu() {
         return ru;
     }
 
-    public void setRu(ReptileUrl ru) {
+    public void setRu(LinkedList<ReptileUrl> ru) {
         this.ru = ru;
     }
 
@@ -73,11 +84,7 @@ public class RootReptile {
         this.parentInter = parentInter;
     }
 
-    public String getReturnType() {
-        return returnType;
-    }
-
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
+    public void addUrl(ReptileUrl ru){
+        this.ru.add(ru);
     }
 }

@@ -1,25 +1,29 @@
 package com.midream.sheep.SWCJ.util.io;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SIO implements ISIO{
     @Override
     public String inPutString(File file) throws IOException {
-        //实例化输入流
-        InputStream is = new FileInputStream(file);
-        //建立1024大小的缓冲区
-        int len = -1;
-        byte[] datas = new byte[1024];
         //字符串
         StringBuffer sb = new StringBuffer();
-        //输入
-        while ((len=is.read(datas))!=-1){
-            sb.append(new String(datas,0,len));
+        //实例化输入流
+        InputStream is = null;
+        try {
+            is = new FileInputStream(file);
+            //建立1024大小的缓冲区
+            int len = -1;
+            byte[] datas = new byte[1024];
+            //输入
+            while ((len = is.read(datas)) != -1) {
+                sb.append(new String(datas, 0, len));
+            }
+        }finally {
+            if(is!=null) {
+                //关闭流
+                is.close();
+            }
         }
-        //关闭流
-        is.close();
         //返回
         return sb.toString();
     }
@@ -41,9 +45,15 @@ public class SIO implements ISIO{
 
     @Override
     public void outPutString(String data, File tofile) throws IOException {
-        OutputStream os = new FileOutputStream(tofile);
-        os.write(data.getBytes());
-        os.flush();
-        os.close();
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(tofile);
+            os.write(data.getBytes());
+            os.flush();
+        }finally {
+            if(os!=null) {
+                os.close();
+            }
+        }
     }
 }

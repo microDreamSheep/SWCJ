@@ -1,14 +1,10 @@
 package com.midream.sheep.SWCJ.data;
-
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * @author midreamSheep
+ * 字符常量池
+ * */
 public class Constant {
-    public static Map<String,String> map = new HashMap<>();
-    static {
-        map.put("Map","java.util.Map");
-        map.put("HashMap","java.util.HashMap");
-        java.util.Map<String,String> cookies = new java.util.HashMap<>();
-    }
-    public static String DEFAULT_PACKAGE_NAME = "com.midream.sheep.SWCJ";
+    //默认生成的包名
+    public static final String DEFAULT_PACKAGE_NAME = "com";
+    private Constant(){}
 }
