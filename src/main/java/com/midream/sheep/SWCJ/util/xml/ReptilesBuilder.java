@@ -115,8 +115,8 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                             String end = "element";
                             for (int i = 1; i < ru.getJsoup().size(); i++) {
                                 String uuid = UUID.randomUUID().toString().replace("-","");
-                                sb.append("org.jsoup.select.Elements element").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
-                                sb.append("for(int "+"c"+uuid+" = 0;c"+uuid+"<element").append(i).append(".size();c"+uuid+"++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = element").append(i).append(".get(c"+uuid+");");
+                                sb.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
+                                sb.append("for(int "+"c"+uuid+" = 0;c"+uuid+"<elementi").append(i).append(".size();c"+uuid+"++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c"+uuid+");");
                                 string = "element" + (i + 2);
                                 end = string;
                             }
