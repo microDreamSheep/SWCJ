@@ -23,11 +23,11 @@
         cache缓存，将生成的类直接转为字节码加载
         非缓存，将生成的类输出到本地class在加载
         -->
-        <createTactics isCache="false"/>
+        <createTactics isCache="true"/>
     </config>
     <!--具体的某个爬虫类
          inPutType:传入的数值类型（可以为空）
-         id 调用的方法名
+         id 获取的方式
         下面使用传入值时使用的标识符（可以为空）-->
     <swc id="getHtml" inPutType="" inPutName="">
         <!--局部爬虫使用的cookies文本
@@ -39,8 +39,9 @@
         <!--父类接口，爬虫通过接口调-->
         <parentInterface class="com.midream.sheep.test"/>
         <!--请求配置
+        一个配置对应一个方法
         -->
-        <url>
+        <url name="getHtml">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
@@ -66,15 +67,15 @@
                         div.readArea>div.readAreaBox
                     </pa>
                     <pa>
-                        div.p>p>a
+                        div.p>p
                     </pa>
                 </jsoup>
             </parseProgram>
+            <!--返回值类型
+            基本数据类型直接用，
+            引用类型必须全类名如:java.lang.String
+            -->
+            <returnType type="String[]"/>
         </url>
-        <!--返回值类型
-        基本数据类型直接用，
-        引用类型必须全类名如:java.lang.String
-        -->
-        <returnType type="String[]"/>
     </swc>
 </SWCL>

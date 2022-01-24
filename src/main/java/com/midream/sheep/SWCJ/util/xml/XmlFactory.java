@@ -105,9 +105,6 @@ public class XmlFactory {
     private void pareSWC(Node n){
         //实例化类
         RootReptile rr = new RootReptile();
-        ReptileUrl ru = new ReptileUrl();
-        //绑定两类-----组合设计模式
-        rr.setRu(ru);
         //分析根节点
         NamedNodeMap nodeMap = n.getAttributes();
         //配置信息
@@ -127,11 +124,12 @@ public class XmlFactory {
                     NamedNodeMap attributes = no.getAttributes();
                     rr.setParentInter(attributes.getNamedItem("class").getNodeValue().trim());
                     break;
-                case "returnType":
-                    rr.setReturnType(no.getAttributes().getNamedItem("type").getNodeValue().trim());
-                    break;
                 case "url":
+                    ReptileUrl ru = new ReptileUrl();
+                    ru.setName(no.getAttributes().getNamedItem("name").getNodeValue());
                     parseUrl(no.getChildNodes(),ru);
+                    //绑定两类-----组合设计模式
+                    rr.addUrl(ru);
                     break;
             }
         }
@@ -146,6 +144,9 @@ public class XmlFactory {
                     break;
                 case "url":
                     ru.setUrl(n.getAttributes().getNamedItem("path").getNodeValue().trim());
+                    break;
+                case "returnType":
+                    ru.setReturnType(n.getAttributes().getNamedItem("type").getNodeValue().trim());
                     break;
                 case "parseProgram":
                     NodeList nodes = n.getChildNodes();

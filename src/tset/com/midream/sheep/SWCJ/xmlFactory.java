@@ -17,12 +17,7 @@ public class xmlFactory {
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
         test getHtml = (test)xf.getWebSpider("getHtml");
-        System.out.println("第一次实例化");
-        long start2 = System.currentTimeMillis();
-        test getHtml2 = (test)xf.getWebSpider("getHtml");
-        long end2 = System.currentTimeMillis();
-        System.out.println("第二次实例化，获取成功,花费时间"+(end2-start2));
-        String[] getdada = getHtml2.getdada();
+        String[] getdada = getHtml.getdada();
         for (String s : getdada) {
             System.out.println(s);
         }

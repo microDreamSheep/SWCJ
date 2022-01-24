@@ -7,6 +7,16 @@ import java.util.List;
  * 爬虫的url配置类
  * */
 public class ReptileUrl {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //方法名
+    private String name;
     //访问链接
     private String url;
     //请求类型
@@ -17,6 +27,16 @@ public class ReptileUrl {
     private List<ReptilePaJsoup> jsoup;
     //是否是html返回
     private boolean isHtml;
+    //返回值类型 默认为String[]
+    private String returnType = "java.lang.String[]";
+
+    public String getReturnType() {
+        return returnType;
+    }
+
+    public void setReturnType(String returnType) {
+        this.returnType = returnType;
+    }
 
     @Override
     public String toString() {
