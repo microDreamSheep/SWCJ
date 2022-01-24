@@ -13,6 +13,7 @@ import com.midream.sheep.SWCJ.util.io.ISIO;
 import com.midream.sheep.SWCJ.util.io.SIO;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +29,14 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     }
 
     @Override
-    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException {
-        //获取类名
-        String name = "a" + UUID.randomUUID().toString().replace("-", "");
+    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         //效验池中是否存在
-        Object object = getObject(rr.getId(),name);
+        Object object = getObject(rr.getId());
         if(object!=null){
             return object;
         }
+        //获取类名
+        String name = "a" + UUID.randomUUID().toString().replace("-", "");
         //效验接口是否有方法,并返回方法名
         String s1 = null;
         try {
@@ -162,14 +163,11 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             Object webc = aClass.getDeclaredConstructor().newInstance();
             if (rc.isCache()) {
                 //是缓存则进入对象池
-                classFile.delete();
                 CacheCorn.addObject(rr.getId(),webc);
-            }else{
-                //非缓存则进入路径池
-                CacheCorn.addPath(rr.getId(),classFile.getPath());
             }
             //删掉java原文件
             javaFile.delete();
+            classFile.delete();
             if (aClass != null) {
                 //返回类
                 return webc;
@@ -192,14 +190,10 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     }
 
     @Override
-    public Object getObject(String Key,String classname) {
+    public Object getObject(String Key) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Object ob = CacheCorn.getObject(Key);
         if(ob!=null){
             return ob;
-        }
-        String path = CacheCorn.getPath(Key);
-        if(path!=null){
-            return swcjcl.loadData(classname,path);
         }
         return null;
     }

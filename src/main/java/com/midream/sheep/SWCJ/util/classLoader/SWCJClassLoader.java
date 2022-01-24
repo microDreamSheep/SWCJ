@@ -5,26 +5,38 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.*;
+
 /**
  * @author midreamSheep
  * 自定义编译类
- * */
-public class SWCJClassLoader extends ClassLoader{
+ */
+public class SWCJClassLoader extends ClassLoader {
     //通过文件加载一个class
-    public Class<?> loadData(String className,String file){
+    public Class<?> loadData(String className, String file) {
         byte[] data = loderClassData(file);
-        if(data!=null){
-            return super.defineClass(className,data,0,data.length);
-        }
-        return null;
-    }    public Class<?> loadData(String className,byte[] datas){
-        if(datas!=null){
-            return super.defineClass(className,datas,0,datas.length);
+        if (data != null) {
+            return super.defineClass(className, data, 0, data.length);
         }
         return null;
     }
+
+    public Class<?> loadData(String className, byte[] datas) {
+        if (datas != null) {
+            return super.defineClass(className, datas, 0, datas.length);
+        }
+        return null;
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        byte[] b = loderClassData(name);
+        return defineClass(name, b, 0, b.length);
+    }
+
+
+
     //通过字节加载一个class
-    private byte[] loderClassData(String file)  {
+    private byte[] loderClassData(String file) {
         InputStream is = null;
         ByteArrayOutputStream bos = null;
         byte[] datas = null;
@@ -36,14 +48,14 @@ public class SWCJClassLoader extends ClassLoader{
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(is!=null){
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if(bos!=null){
+            if (bos != null) {
                 try {
                     bos.close();
                 } catch (IOException e) {
@@ -53,8 +65,9 @@ public class SWCJClassLoader extends ClassLoader{
         }
         return datas;
     }
+
     //java编译器,编译一个java文件为class
-    public String compileJavaFile(File tofile){
+    public String compileJavaFile(File tofile) {
         //获取系统Java编译器
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         //获取Java文件管理器
@@ -65,7 +78,7 @@ public class SWCJClassLoader extends ClassLoader{
         JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
         //执行编译任务
         task.call();
-        return tofile.getPath().replace(".java",".class");
+        return tofile.getPath().replace(".java", ".class");
     }
 
 }

@@ -16,6 +16,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 /**
@@ -170,7 +171,7 @@ public class XmlFactory {
             }
         }
     }
-    public Object getWebSpider(String id) throws EmptyMatchMethodException {
+    public Object getWebSpider(String id) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         rc.setWorkplace(rc.getWorkplace().replace("file:/","").replace("file:\\",""));
         return rb.Builder(rootReptiles.get(id),rc);
     }

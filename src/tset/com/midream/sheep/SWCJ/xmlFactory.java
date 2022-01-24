@@ -14,7 +14,7 @@ import java.util.*;
 
 public class xmlFactory {
     @Test
-    public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException {
+    public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
         test getHtml = (test)xf.getWebSpider("getHtml");
         System.out.println("第一次实例化");
