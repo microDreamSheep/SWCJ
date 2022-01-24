@@ -1,7 +1,6 @@
 package com.midream.sheep.SWCJ.util.xml;
 
 import com.midream.sheep.SWCJ.Annotation.WebSpider;
-import com.midream.sheep.SWCJ.Exception.ConflictException;
 import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
 import com.midream.sheep.SWCJ.data.Constant;
 import com.midream.sheep.SWCJ.data.ReptileConfig;
@@ -102,13 +101,14 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                                     "for(int d = 0;d<i;d++){\n" +
                                     "result[d] = matcher.group(d);\n" +
                                     "}");
+                            sb.append("return result;\n");
                         }
                     } else if (ru.getJsoup() != null) {
                         //拼接jsoup
                         {
                             //一级查询
                             ReptilePaJsoup rpj = ru.getJsoup().get(0);
-                            sb.append("\njava.util.List/*<String>*/ list = new java.util.ArrayList/*<>*/();\n");
+                            sb.append("\njava.util.List<String> list = new java.util.ArrayList<>();\n");
                             sb.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
                             //开始循环
                             String string = "element";//命名空间
@@ -125,10 +125,14 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                                 sb.append("}\n");
                             }
                             //返回数据
-                            sb.append("Object[] result = list.toArray();\n");
+                            sb.append("String[] result = list.toArray(new String[]{});");
+                            if(rr.getReturnType().equals("String") || rr.getReturnType().equals("java.lang.String")){
+                                sb.append("return result[0];");
+                            }else {
+                                sb.append("return result;");
+                            }
                         }
                     }
-                    sb.append("return result;\n");
                 }
             }
             sb.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");

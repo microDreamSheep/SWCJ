@@ -22,10 +22,8 @@ public class xmlFactory {
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
         test getHtml = (test)xf.getWebSpider("getHtml");
-        Object[] getdada = getHtml.getdada();
-        for (Object o : getdada) {
-            System.out.println(o);
-        }
+        String[] getdada = getHtml.getdada();
+        System.out.println(getdada.length);
 
     }
     @Test
@@ -65,7 +63,7 @@ public class xmlFactory {
             var1.put(" UserName", "xmdymcsheepsir");
             var1.put("uuid_tt_dd", "4646545646-1642571061362-956268");
             Document var2 = Jsoup.connect("https://www.ddyueshu.com/33_33907/").ignoreContentType(true).timeout(this.timeout).cookies(var1).userAgent(this.userAgent[(int)(Math.random() * (double)this.userAgent.length)]).get();
-            ArrayList var3 = new ArrayList();
+            ArrayList<String> var3 = new ArrayList<>();
             Elements var4 = var2.select("#list");
 
             for(int var5 = 0; var5 < var4.size(); ++var5) {
@@ -79,6 +77,7 @@ public class xmlFactory {
                     var3.add(((Element)var9).html());
                 }
             }
+            String[] strings = var3.toArray(new String[]{});
 
             String[] var10 = new String[var3.size()];
 
@@ -96,18 +95,7 @@ public class xmlFactory {
     public void jiazaiqi() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         SWCJClassLoader swcjClassLoader = new SWCJClassLoader();
         Class<?> aClass = swcjClassLoader.loadData("com.midream.sheep.SWCJ.d0aec9bbe1ce4e4989bd9b8043c7a722", "E:\\workplae\\SWCJ\\target\\test-classes\\com\\midream\\sheep\\SWCJ\\d0aec9bbe1ce4e4989bd9b8043c7a722.class");
-        test o = (test)aClass.getDeclaredConstructor().newInstance();
+        test o = (test) aClass.getDeclaredConstructor().newInstance();
 
-    }
-    @Test
-    public void testCom() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        SWCJClassLoader swcjClassLoader = new SWCJClassLoader();
-        String s = swcjClassLoader.compileJavaFile(new File("E:/a.java"));
-        Class<?> aClass = swcjClassLoader.loadData("com.midream.sheep.a", s);
-        test o = (test)aClass.getConstructor().newInstance();
-        Object[] getdada = o.getdada();
-        for (Object o1 : getdada) {
-            System.out.println(o1);
-        }
     }
 }
