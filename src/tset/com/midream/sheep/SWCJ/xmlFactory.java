@@ -28,6 +28,10 @@ public class xmlFactory {
         }
 
     }
+    @Test
+    public void First(){
+        System.out.println(new Scanner(System.in).next().equals("123456")?"密码正确":"密码错误");
+    }
 
     @Test
     public void getHtml(){
