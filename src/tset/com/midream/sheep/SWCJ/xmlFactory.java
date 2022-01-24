@@ -4,15 +4,10 @@ import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
 import com.midream.sheep.SWCJ.util.classLoader.SWCJClassLoader;
 import com.midream.sheep.SWCJ.util.xml.XmlFactory;
 import com.midream.sheep.test;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;

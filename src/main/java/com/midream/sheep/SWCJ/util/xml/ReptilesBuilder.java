@@ -16,10 +16,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
+@SuppressWarnings("all")
 public class ReptilesBuilder implements ReptilesBuilderInter {
-    private static ISIO sio;
-    private static SWCJClassLoader swcjcl;
+    private static final ISIO sio;
+    private static final SWCJClassLoader swcjcl;
 
     static {
         sio = new SIO();
@@ -27,7 +27,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     }
 
     @Override
-    public Object reptilesBuilder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException {
+    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException {
         //效验接口是否有方法,并返回方法名
         String s1 = null;
         try {
@@ -48,12 +48,13 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             sb.append("public class ").append(name).append(" implements ").append(rr.getParentInter()).append(" {");
             //拼接方法
             {
+                String stringBody = "String";
                 //搭建全局静态属性
                 {
                     //timeout
                     sb.append("private static int timeout = ").append(rc.getTimeout()).append(";\n");
                     //userAgent数组创建
-                    StringBuffer usreAgent = new StringBuffer();
+                    StringBuilder usreAgent = new StringBuilder("");
                     usreAgent.append("private static String[] userAgent = new String[]{");
                     for (int i = 0; i < rc.getUserAgents().size(); i++) {
                         usreAgent.append("\"").append(rc.getUserAgents().get(i)).append("\"").append((i + 1 != rc.getUserAgents().size()) ? "," : "};");
@@ -61,10 +62,10 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     sb.append(usreAgent.toString()).append("\n");
                 }
                 //方法头 定义被重写
-                sb.append("\npublic ").append((rr.getReturnType().equals("String") || rr.getReturnType().equals("java.lang.String")) ? "String" : rr.getReturnType()).append(" ").append(s1).append("(").append(rr.getInPutType().equals("") ? "" : rr.getReturnType() + " " + rr.getInPutName()).append("){").append("\n").append("try{");
+                sb.append("\npublic ").append((rr.getReturnType().equals(stringBody) || rr.getReturnType().equals("java.lang."+stringBody)) ? "String" : rr.getReturnType()).append(" ").append(s1).append("(").append(rr.getInPutType().equals("") ? "" : rr.getReturnType() + " " + rr.getInPutName()).append("){").append("\n").append("try{");
                 //搭建局部变量
                 {
-                    if (!(rr.getCookies().equals("")) && !(rr.getCookies() == null)) {
+                    if (!(rr.getCookies().equals("")) && (rr.getCookies() != null)) {
                         //cookie字典
                         Map<String, String> map = new HashMap<>();
                         //取出cookies值
@@ -91,7 +92,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     if (ru.getReg() != null && !ru.getReg().equals("")) {
                         //进入正则表达式方法
                         sb.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
-                        if (rr.getReturnType().equals("String") || rr.getReturnType().equals("java.lang.String") || rr.getReturnType().equals("")) {
+                        if (rr.getReturnType().equals(stringBody) || rr.getReturnType().equals("java.lang.String") || rr.getReturnType().equals("")) {
                             sb.append("matcher.find();\n" +
                                     "String result =  matcher.group();\n");
                         } else if (rr.getReturnType().equals("String[]") || rr.getReturnType().equals("java.lang.String[]")) {
@@ -110,14 +111,16 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                             ReptilePaJsoup rpj = ru.getJsoup().get(0);
                             sb.append("\njava.util.List<String> list = new java.util.ArrayList<>();\n");
                             sb.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
+
+                            String element = "element";
                             //开始循环
-                            String string = "element";//命名空间
-                            String end = "element";
+                            String string = element;//命名空间
+                            String end = element;
                             for (int i = 1; i < ru.getJsoup().size(); i++) {
                                 String uuid = UUID.randomUUID().toString().replace("-","");
                                 sb.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
-                                sb.append("for(int "+"c"+uuid+" = 0;c"+uuid+"<elementi").append(i).append(".size();c"+uuid+"++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c"+uuid+");");
-                                string = "element" + (i + 2);
+                                sb.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c"+uuid+");");
+                                string = element + (i + 2);
                                 end = string;
                             }
                             sb.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
@@ -127,7 +130,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                             }
                             //返回数据
                             sb.append("String[] result = list.toArray(new String[]{});");
-                            if(rr.getReturnType().equals("String") || rr.getReturnType().equals("java.lang.String")){
+                            if(rr.getReturnType().equals(stringBody) || rr.getReturnType().equals("java.lang.String")){
                                 sb.append("return result[0];");
                             }else {
                                 sb.append("return result;");

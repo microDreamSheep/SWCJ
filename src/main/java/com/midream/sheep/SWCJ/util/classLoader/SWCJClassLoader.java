@@ -5,7 +5,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.*;
-
 public class SWCJClassLoader extends ClassLoader{
     //通过文件加载
     public Class<?> loadData(String className,String file){
@@ -30,11 +29,9 @@ public class SWCJClassLoader extends ClassLoader{
             is = new FileInputStream(new File(file));
             is.transferTo(bos);
             datas = bos.toByteArray();
-        }catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             if(is!=null){
                 try {
                     is.close();

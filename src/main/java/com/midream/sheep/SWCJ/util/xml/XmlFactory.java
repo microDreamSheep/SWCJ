@@ -28,16 +28,13 @@ public class XmlFactory {
     }
     //xml工厂提供的构造器
     public XmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException {
-        //1.创建DocumentBuilderFactory对象
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        //2.创建DocumentBuilder对象
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document d = builder.parse(xmlFile);
-        NodeList root = d.getElementsByTagName("SWCL");
-        parseXml(root.item(0));
+        parse(new File(xmlFile));
     }
     //xml工厂提供的构造器
     public XmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException {
+        parse(xmlFile);
+    }
+    private void parse(File xmlFile) throws ParserConfigurationException, IOException, SAXException {
         //1.创建DocumentBuilderFactory对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //2.创建DocumentBuilder对象
@@ -172,7 +169,7 @@ public class XmlFactory {
     }
     public Object getWebSpider(String id) throws EmptyMatchMethodException {
         rc.setWorkplace(rc.getWorkplace().replace("file:/","").replace("file:\\",""));
-        return rb.reptilesBuilder(rootReptiles.get(id),rc);
+        return rb.Builder(rootReptiles.get(id),rc);
     }
 
 }
