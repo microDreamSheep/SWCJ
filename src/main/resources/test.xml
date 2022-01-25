@@ -6,7 +6,7 @@
         isAbsolute->是否是相对路径
         workplace->文件夹路径
         -->
-
+        <constructionSpace isAbsolute="false" workSpace="E:\临时文件"/>
         <!--超时时间，请求超过这个时间报异常
         value->超时具体时间
         -->
@@ -23,7 +23,7 @@
         cache缓存，将生成的类直接转为字节码加载
         非缓存，将生成的类输出到本地class在加载
         -->
-
+        <createTactics isCache="false"/>
     </config>
     <!--具体的某个爬虫类
          inPutType:传入的数值类型（可以为空）
@@ -42,15 +42,12 @@
         一个配置对应一个方法
         -->
         <url name="getHtml" inPutType="" inPutName="">
-
->>>>>>> master
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
             -->
             <type type="GET"/>
             <!--url链接-->
-<<<<<<< develop
             <url path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
             并不支持同时使用
@@ -62,14 +59,10 @@
                 即一次<pa>就是一次解析
                 -->
                 <jsoup>
-<<<<<<< develop
                     <!--pa可配置属性来选取目标Document-->
                     <pa>
-                        #main
+                        #main>div.slist>ul>li>a
                     </pa>
-                    <pa>
-                        div.slist>ul>li>a
-=======
                 </jsoup>
             </parseProgram>
             <!--返回值类型

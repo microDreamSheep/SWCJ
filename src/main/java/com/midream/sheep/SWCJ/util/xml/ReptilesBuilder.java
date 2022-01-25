@@ -99,6 +99,55 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             } else {
                 //非缓存则进入路径池
                 CacheCorn.addPath(rr.getId(), s);
+            }
+            //删掉java原文件
+            javaFile.delete();
+            if (aClass != null) {
+                //返回类
+                return webc;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String,String> getFunction(String className) throws ClassNotFoundException {
+        Map<String,String> map = new HashMap<>();
+        Class<?> ca = Class.forName(className);
+        Method[] methods = ca.getMethods();
+        for (Method method : methods) {
+            if(method.getAnnotation(WebSpider.class).value()!=null&&!method.getAnnotation(WebSpider.class).value().equals("")){
+                map.put(method.getAnnotation(WebSpider.class).value(),method.getName());
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Object getObject(String Key) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Object ob = CacheCorn.getObject(Key);
+        if (ob != null) {
+            return ob;
+        }
+        String path = CacheCorn.getPath(Key);
+        if (path != null) {
+            String name = Constant.DEFAULT_PACKAGE_NAME + "." + path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
+            return swcjcl.findClass(name).getDeclaredConstructor().newInstance();
+        }
+        return null;
+    }
+
+    private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,String method) {
+        //方法体
+        StringBuilder sbmethod = new StringBuilder("");
+        String stringBody = "String";
+        //方法头 定义被重写
+        sbmethod.append("\npublic ").append((ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang." + stringBody)) ? "String" : ru.getReturnType()).append(" ").append(method).append("(").append(ru.getInPutType().equals("") ? "" : ru.getInPutType() + " " + ru.getInPutName()).append("){").append("\n").append("try{");
+        //搭建局部变量
+        {
+            if (!(rr.getCookies().equals("")) && (rr.getCookies() != null)) {
                 //cookie字典
                 Map<String, String> map = new HashMap<>();
                 //取出cookies值
@@ -119,7 +168,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         //搭建主要的方法体
         {
             //获取方法主体的类
-            String map = (rr.getCookies() != null&!rr.getCookies().equals("")) ? ".cookies(map)" : "";
+            String map = (!rr.getCookies().equals("") && rr.getCookies() != null) ? ".cookies(map)" : "";
             sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
