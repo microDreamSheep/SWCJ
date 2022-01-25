@@ -95,10 +95,57 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             if (rc.isCache()) {
                 //是缓存则进入对象池
                 CacheCorn.addObject(rr.getId(), webc);
-                classFile.delete();
             } else {
                 //非缓存则进入路径池
                 CacheCorn.addPath(rr.getId(), s);
+                classFile.delete();
+            }
+            //删掉java原文件
+            javaFile.delete();
+            if (aClass != null) {
+                //返回类
+                return webc;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String,String> getFunction(String className) throws ClassNotFoundException {
+        Map<String,String> map = new HashMap<>();
+        Class<?> ca = Class.forName(className);
+        Method[] methods = ca.getMethods();
+        for (Method method : methods) {
+            if(method.getAnnotation(WebSpider.class).value()!=null&&!method.getAnnotation(WebSpider.class).value().equals("")){
+                map.put(method.getAnnotation(WebSpider.class).value(),method.getName());
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Object getObject(String Key) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Object ob = CacheCorn.getObject(Key);
+        if (ob != null) {
+            return ob;
+        }
+        String path = CacheCorn.getPath(Key);
+        if (path != null) {
+            String name = Constant.DEFAULT_PACKAGE_NAME + "." + path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
+            return swcjcl.findClass(name).getDeclaredConstructor().newInstance();
+        }
+        return null;
+    }
+
+    private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,String method) {
+        String stringBody = "String";
+        //方法头 定义被重写
+        sb.append("\npublic ").append((ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang." + stringBody)) ? "String" : ru.getReturnType()).append(" ").append(method).append("(").append(rr.getInPutType().equals("") ? "" : ru.getReturnType() + " " + rr.getInPutName()).append("){").append("\n").append("try{");
+        //搭建局部变量
+        {
+            if (!(rr.getCookies().equals("")) && (rr.getCookies() != null)) {
                 //cookie字典
                 Map<String, String> map = new HashMap<>();
                 //取出cookies值
@@ -109,40 +156,40 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     map.put(split1[0], split1[1]);
                 }
                 //拼接cookie接受map
-                sbmethod.append("java.util.Map<String,String> map = new java.util.HashMap<>();");
+                sb.append("java.util.Map<String,String> map = new java.util.HashMap<>();");
                 //开始注入cookie值
                 for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
-                    sbmethod.append("map.put(\"").append(stringStringEntry.getKey()).append("\",\"").append(stringStringEntry.getValue()).append("\");\n");
+                    sb.append("map.put(\"").append(stringStringEntry.getKey()).append("\",\"").append(stringStringEntry.getValue()).append("\");\n");
                 }
             }
         }
         //搭建主要的方法体
         {
             //获取方法主体的类
-            String map = (rr.getCookies() != null&!rr.getCookies().equals("")) ? ".cookies(map)" : "";
-            sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
+            String map = (!rr.getCookies().equals("") || rr.getCookies() != null) ? ".cookies(map)" : "";
+            sb.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
-                sbmethod.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
+                sb.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
                 if (ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang.String") || ru.getReturnType().equals("")) {
-                    sbmethod.append("matcher.find();\n" +
+                    sb.append("matcher.find();\n" +
                             "String result =  matcher.group();\n");
                 } else if (ru.getReturnType().equals("String[]") || ru.getReturnType().equals("java.lang.String[]")) {
-                    sbmethod.append("matcher.find();\n" +
+                    sb.append("matcher.find();\n" +
                             "int i = matcher.groupCount();\n" +
                             "String[] result = new String[i];\n" +
                             "for(int d = 0;d<i;d++){\n" +
                             "result[d] = matcher.group(d);\n" +
                             "}");
-                    sbmethod.append("return result;\n");
+                    sb.append("return result;\n");
                 }
             } else if (ru.getJsoup() != null) {
                 //拼接jsoup
                 {
                     //一级查询
                     ReptilePaJsoup rpj = ru.getJsoup().get(0);
-                    sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\n");
-                    sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
+                    sb.append("\njava.util.List<String> list = new java.util.ArrayList<>();\n");
+                    sb.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
 
                     String element = "element";
                     //开始循环
@@ -150,30 +197,26 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     String end = element;
                     for (int i = 1; i < ru.getJsoup().size(); i++) {
                         String uuid = UUID.randomUUID().toString().replace("-", "");
-                        sbmethod.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
-                        sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c" + uuid + ");");
+                        sb.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
+                        sb.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c" + uuid + ");");
                         string = element + (i + 2);
                         end = string;
                     }
-                    sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
+                    sb.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
                     //添加括号
                     for (int i = 0; i < ru.getJsoup().size(); i++) {
-                        sbmethod.append("}\n");
+                        sb.append("}\n");
                     }
                     //返回数据
-                    sbmethod.append("String[] result = list.toArray(new String[]{});");
+                    sb.append("String[] result = list.toArray(new String[]{});");
                     if (ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang.String")) {
-                        sbmethod.append("return result[0];");
+                        sb.append("return result[0];");
                     } else {
-                        sbmethod.append("return result;");
+                        sb.append("return result;");
                     }
                 }
             }
         }
-        sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
-        if(ru.getInPutName()!=null&!ru.getInPutName().equals("")) {
-            sbmethod.insert(sbmethod.indexOf("#{" + ru.getInPutName() + "}") + 3 + ru.getInPutName().length(), "\".replace(\"#{" + ru.getInPutName() + "}\"," + ru.getInPutName() + "+\"\")+\"");
-        }
-        sb.append(sbmethod);
+        sb.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
     }
 }
