@@ -17,7 +17,7 @@
         isAbsolute->是否是相对路径
         workplace->文件夹路径
         -->
-        <constructionSpace isAbsolute="true" workSpace="com/midream/sheep"/>
+        <constructionSpace isAbsolute="false" workSpace="E:\临时文件"/>
         <!--超时时间，请求超过这个时间报异常
         value->超时具体时间
         -->
@@ -34,13 +34,13 @@
         cache缓存，将生成的类直接转为字节码加载
         非缓存，将生成的类输出到本地class在加载
         -->
-        <createTactics isCache="true"/>
+        <createTactics isCache="false"/>
     </config>
     <!--具体的某个爬虫类
          inPutType:传入的数值类型（可以为空）
          id 获取的方式
         下面使用传入值时使用的标识符（可以为空）-->
-    <swc id="getHtml" inPutType="" inPutName="">
+    <swc id="getHtml">
         <!--局部爬虫使用的cookies文本
         格式 键:值;···
         -->
@@ -48,18 +48,18 @@
             uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
         </cookies>
         <!--父类接口，爬虫通过接口调-->
-        <parentInterface class="com.midream.sheep.test"/>
+        <parentInterface class="com.midream.sheep.TestWeb"/>
         <!--请求配置
         一个配置对应一个方法
         -->
-        <url name="getHtml">
+        <url name="getHtml" inPutType="" inPutName="">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
             -->
             <type type="GET"/>
             <!--url链接-->
-            <url path="https://www.17k.com/chapter/3377666/45200781.html"/>
+            <url path="https://pic.netbian.com/index_#{count}.html"/>
             <!--解析html方案
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
@@ -70,15 +70,9 @@
                 即一次<pa>就是一次解析
                 -->
                 <jsoup>
-                    <!--;pa可配置属性来选取目标Document-->
+                    <!--pa可配置属性来选取目标Document-->
                     <pa>
-                        div.area>div.read
-                    </pa>
-                    <pa>
-                        div.readArea>div.readAreaBox
-                    </pa>
-                    <pa>
-                        div.p>p
+                        #main>div.slist>ul>li>a
                     </pa>
                 </jsoup>
             </parseProgram>
