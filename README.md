@@ -1,3 +1,14 @@
+# SWCJ爬虫框架
+
+#### 介绍
+一个通过配置文件实现爬虫的框架,目标是让你的配置地狱更地狱，呸，让你通过配置文件实现爬虫，哪怕你是非程序员
+，后面我们会推出爬虫GUI工具（甚至是手机app)
+目前尚处于不完善阶段，支持动态加载，如果你知道如何优化或希望练手，欢迎加入我们
+
+#### 软件架构
+暂无
+### 配置模板
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <SWCL>
     <!--全局配置-->
@@ -6,7 +17,7 @@
         isAbsolute->是否是相对路径
         workplace->文件夹路径
         -->
-        <constructionSpace isAbsolute="false" workSpace="E:\临时文件"/>
+        <constructionSpace isAbsolute="true" workSpace="com/midream/sheep"/>
         <!--超时时间，请求超过这个时间报异常
         value->超时具体时间
         -->
@@ -23,13 +34,13 @@
         cache缓存，将生成的类直接转为字节码加载
         非缓存，将生成的类输出到本地class在加载
         -->
-        <createTactics isCache="false"/>
+        <createTactics isCache="true"/>
     </config>
     <!--具体的某个爬虫类
          inPutType:传入的数值类型（可以为空）
          id 获取的方式
         下面使用传入值时使用的标识符（可以为空）-->
-    <swc id="getHtml">
+    <swc id="getHtml" inPutType="" inPutName="">
         <!--局部爬虫使用的cookies文本
         格式 键:值;···
         -->
@@ -37,18 +48,18 @@
             uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
         </cookies>
         <!--父类接口，爬虫通过接口调-->
-        <parentInterface class="com.midream.sheep.TestWeb"/>
+        <parentInterface class="com.midream.sheep.test"/>
         <!--请求配置
         一个配置对应一个方法
         -->
-        <url name="getHtml" inPutType="" inPutName="">
+        <url name="getHtml">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
             -->
             <type type="GET"/>
             <!--url链接-->
-            <url path="https://pic.netbian.com/index_#{count}.html"/>
+            <url path="https://www.17k.com/chapter/3377666/45200781.html"/>
             <!--解析html方案
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
@@ -59,9 +70,15 @@
                 即一次<pa>就是一次解析
                 -->
                 <jsoup>
-                    <!--pa可配置属性来选取目标Document-->
+                    <!--;pa可配置属性来选取目标Document-->
                     <pa>
-                        #main>div.slist>ul>li>a
+                        div.area>div.read
+                    </pa>
+                    <pa>
+                        div.readArea>div.readAreaBox
+                    </pa>
+                    <pa>
+                        div.p>p
                     </pa>
                 </jsoup>
             </parseProgram>
@@ -73,3 +90,4 @@
         </url>
     </swc>
 </SWCL>
+```

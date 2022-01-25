@@ -8,7 +8,7 @@
 *.jar
 *.war
 *.ear
-test/
+
 hs_err_pid*
 
 /target

@@ -14,10 +14,6 @@ public class RootReptile {
     private String cookies="";
     //父接口
     private String parentInter;
-    //注入类型
-    private String inPutType;
-    //注入名字
-    private String inPutName;
     //方法名
     private String id;
 
@@ -27,19 +23,10 @@ public class RootReptile {
                 "ru=" + ru +
                 ", cookies='" + cookies + '\'' +
                 ", parentInter='" + parentInter + '\'' +
-                ", inPutType='" + inPutType + '\'' +
-                ", inPutName='" + inPutName + '\'' +
                 ", id='" + id + '\'' +
                 '}';
     }
 
-    public String getInPutType() {
-        return inPutType;
-    }
-
-    public void setInPutType(String inPutType) {
-        this.inPutType = inPutType;
-    }
 
     public String getId() {
         return id;
@@ -47,14 +34,6 @@ public class RootReptile {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getInPutName() {
-        return inPutName;
-    }
-
-    public void setInPutName(String inPutName) {
-        this.inPutName = inPutName;
     }
 
     public RootReptile() {
