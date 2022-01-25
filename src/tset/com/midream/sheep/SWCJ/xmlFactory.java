@@ -17,7 +17,7 @@ public class xmlFactory {
     public void xmlTest() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         XmlFactory xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("test.xml").getPath());
         test getHtml = (test)xf.getWebSpider("getHtml");
-            String[] getdada = getHtml.getdada();
+            String[] getdada = getHtml.getdada("a");
             for (String s : getdada) {
                 System.out.println(s);
             }
