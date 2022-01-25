@@ -168,7 +168,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         //搭建主要的方法体
         {
             //获取方法主体的类
-            String map = (!rr.getCookies().equals("") || rr.getCookies() != null) ? ".cookies(map)" : "";
+            String map = (!rr.getCookies().equals("") && rr.getCookies() != null) ? ".cookies(map)" : "";
             sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
