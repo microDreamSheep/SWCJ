@@ -11,7 +11,7 @@ public class RootReptile {
     //url策略
     private List<ReptileUrl> ru = new LinkedList<>();
     //携带cookies
-    private String cookies;
+    private String cookies="";
     //父接口
     private String parentInter;
     //注入类型
