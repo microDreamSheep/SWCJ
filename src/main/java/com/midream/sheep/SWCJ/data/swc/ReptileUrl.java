@@ -14,9 +14,29 @@ public class ReptileUrl {
     public void setName(String name) {
         this.name = name;
     }
-
+    //注入类型
+    private String inPutType;
+    //注入名字
+    private String inPutName;
     //方法名
-    private String name;
+    private String name="";
+
+    public String getInPutType() {
+        return inPutType;
+    }
+
+    public void setInPutType(String inPutType) {
+        this.inPutType = inPutType;
+    }
+
+    public String getInPutName() {
+        return inPutName;
+    }
+
+    public void setInPutName(String inPutName) {
+        this.inPutName = inPutName;
+    }
+
     //访问链接
     private String url;
     //请求类型

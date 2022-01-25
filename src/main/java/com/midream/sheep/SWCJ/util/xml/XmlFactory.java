@@ -109,8 +109,6 @@ public class XmlFactory {
         NamedNodeMap nodeMap = n.getAttributes();
         //配置信息
         rr.setId(nodeMap.getNamedItem("id").getNodeValue().trim());
-        rr.setInPutType(nodeMap.getNamedItem("inPutType").getNodeValue().trim());
-        rr.setInPutName(nodeMap.getNamedItem("inPutName").getNodeValue().trim());
         //获取根节点子节点
         NodeList nl = n.getChildNodes();
         //分析配置并配置
@@ -126,7 +124,10 @@ public class XmlFactory {
                     break;
                 case "url":
                     ReptileUrl ru = new ReptileUrl();
+                    NamedNodeMap attributes1 = no.getAttributes();
                     ru.setName(no.getAttributes().getNamedItem("name").getNodeValue());
+                    ru.setInPutType(attributes1.getNamedItem("inPutType").getNodeValue().trim());
+                    ru.setInPutName(attributes1.getNamedItem("inPutName").getNodeValue().trim());
                     parseUrl(no.getChildNodes(),ru);
                     //绑定两类-----组合设计模式
                     rr.addUrl(ru);
