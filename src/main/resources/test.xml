@@ -29,7 +29,7 @@
          inPutType:传入的数值类型（可以为空）
          id 获取的方式
         下面使用传入值时使用的标识符（可以为空）-->
-    <swc id="getHtml">
+    <swc id="getHtml" inPutType="" inPutName="">
         <!--局部爬虫使用的cookies文本
         格式 键:值;···
         -->
