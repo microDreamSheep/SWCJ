@@ -147,7 +147,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         sbmethod.append("\npublic ").append((ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang." + stringBody)) ? "String" : ru.getReturnType()).append(" ").append(method).append("(").append(ru.getInPutType().equals("") ? "" : ru.getInPutType() + " " + ru.getInPutName()).append("){").append("\n").append("try{");
         //搭建局部变量
         {
-            if (!(rr.getCookies().equals("")) && (rr.getCookies() != null)) {
+            if ((rr.getCookies() != null)&!(rr.getCookies().equals(""))) {
                 //cookie字典
                 Map<String, String> map = new HashMap<>();
                 //取出cookies值
@@ -168,7 +168,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         //搭建主要的方法体
         {
             //获取方法主体的类
-            String map = (!rr.getCookies().equals("") && rr.getCookies() != null) ? ".cookies(map)" : "";
+            String map = (rr.getCookies() != null&!rr.getCookies().equals("")) ? ".cookies(map)" : "";
             sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法

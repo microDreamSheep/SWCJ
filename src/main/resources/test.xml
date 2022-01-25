@@ -41,7 +41,7 @@
         <!--请求配置
         一个配置对应一个方法
         -->
-        <url name="getHtml" inPutType="String" inPutName="count">
+        <url name="getHtml" inPutType="" inPutName="">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
@@ -64,7 +64,7 @@
                         #main
                     </pa>
                     <pa>
-                        div.slist>ul>li>a>#{count}
+                        div.slist>ul>li>a
                     </pa>
                 </jsoup>
             </parseProgram>
