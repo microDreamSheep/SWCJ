@@ -1,4 +1,4 @@
-package com.midream.sheep.SWCJ.cache;
+package com.midream.sheep.swsj.cache;
 
 import java.util.HashMap;
 import java.util.Map;

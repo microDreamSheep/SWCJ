@@ -1,7 +1,7 @@
 package com.midream.sheep;
 
-import com.midream.sheep.SWCJ.Exception.EmptyMatchMethodException;
-import com.midream.sheep.SWCJ.util.xml.XmlFactory;
+import com.midream.sheep.swsj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swsj.util.xml.XmlFactory;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 

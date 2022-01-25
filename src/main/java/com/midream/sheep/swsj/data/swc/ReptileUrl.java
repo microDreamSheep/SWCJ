@@ -1,4 +1,4 @@
-package com.midream.sheep.SWCJ.data.swc;
+package com.midream.sheep.swsj.data.swc;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.midream.sheep.SWCJ.data.swc;
+package com.midream.sheep.swsj.data.swc;
 /**
  * @author midreamSheep
  * jsoup爬虫的核心类

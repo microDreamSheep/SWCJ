@@ -1,4 +1,4 @@
-package com.midream.sheep.SWCJ.data;
+package com.midream.sheep.swsj.data;
 /**
  * @author midreamSheep
  * 字符常量池

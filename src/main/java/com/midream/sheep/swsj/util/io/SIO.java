@@ -1,4 +1,4 @@
-package com.midream.sheep.SWCJ.util.io;
+package com.midream.sheep.swsj.util.io;
 
 import java.io.*;
 
