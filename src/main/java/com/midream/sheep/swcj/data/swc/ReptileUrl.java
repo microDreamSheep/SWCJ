@@ -14,20 +14,10 @@ public class ReptileUrl {
     public void setName(String name) {
         this.name = name;
     }
-    //注入类型
-    private String inPutType;
     //注入名字
-    private String inPutName;
+    private String inPutName="";
     //方法名
     private String name="";
-
-    public String getInPutType() {
-        return inPutType;
-    }
-
-    public void setInPutType(String inPutType) {
-        this.inPutType = inPutType;
-    }
 
     public String getInPutName() {
         return inPutName;
@@ -38,30 +28,22 @@ public class ReptileUrl {
     }
 
     //访问链接
-    private String url;
+    private String url="";
     //请求类型
-    private String requestType;
+    private String requestType="";
     //正则表达式
-    private String reg;
+    private String reg="";
     //jsoup策略
     private List<ReptilePaJsoup> jsoup;
     //是否是html返回
     private boolean isHtml;
-    //返回值类型 默认为String[]
-    private String returnType = "java.lang.String[]";
-
-    public String getReturnType() {
-        return returnType;
-    }
-
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
-    }
 
     @Override
     public String toString() {
         return "ReptileUrl{" +
-                "url='" + url + '\'' +
+                ", inPutName='" + inPutName + '\'' +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
                 ", requestType='" + requestType + '\'' +
                 ", reg='" + reg + '\'' +
                 ", jsoup=" + jsoup +

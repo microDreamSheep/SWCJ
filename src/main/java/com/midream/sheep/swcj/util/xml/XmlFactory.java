@@ -1,6 +1,8 @@
 package com.midream.sheep.swcj.util.xml;
 
+import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.data.swc.ReptileUrl;
@@ -126,8 +128,7 @@ public class XmlFactory {
                     ReptileUrl ru = new ReptileUrl();
                     NamedNodeMap attributes1 = no.getAttributes();
                     ru.setName(no.getAttributes().getNamedItem("name").getNodeValue());
-                    ru.setInPutType(attributes1.getNamedItem("inPutType").getNodeValue().trim());
-                    ru.setInPutName(attributes1.getNamedItem("inPutName").getNodeValue().trim());
+                    ru.setInPutName(no.getAttributes().getNamedItem("inPutName").getNodeValue());
                     parseUrl(no.getChildNodes(),ru);
                     //绑定两类-----组合设计模式
                     rr.addUrl(ru);
@@ -145,9 +146,6 @@ public class XmlFactory {
                     break;
                 case "url":
                     ru.setUrl(n.getAttributes().getNamedItem("path").getNodeValue().trim());
-                    break;
-                case "returnType":
-                    ru.setReturnType(n.getAttributes().getNamedItem("type").getNodeValue().trim());
                     break;
                 case "parseProgram":
                     NodeList nodes = n.getChildNodes();
@@ -173,7 +171,7 @@ public class XmlFactory {
             }
         }
     }
-    public Object getWebSpider(String id) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
         rc.setWorkplace(rc.getWorkplace().replace("file:/","").replace("file:\\",""));
         return rb.Builder(rootReptiles.get(id),rc);
     }

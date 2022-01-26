@@ -1,8 +1,12 @@
 package com.midream.sheep.swcj.util.xml;
 
+import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.swc.ReptileUrl;
 import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.SWCJMethod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -13,9 +17,9 @@ import java.util.Map;
  * */
 public interface ReptilesBuilderInter {
     //构建对象
-    Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException;
+    Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException, ConfigException, InterfaceIllegal;
     //获取接口所有方法
-    Map<String,String> getFunction(String className) throws ClassNotFoundException;
+    void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException;
     //获取池中对象
     Object getObject(String Key)  throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 }

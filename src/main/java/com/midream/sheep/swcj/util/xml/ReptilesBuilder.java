@@ -1,23 +1,18 @@
 package com.midream.sheep.swcj.util.xml;
 
 import com.midream.sheep.swcj.Annotation.WebSpider;
-import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.Exception.*;
 import com.midream.sheep.swcj.cache.CacheCorn;
-import com.midream.sheep.swcj.data.Constant;
-import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
-import com.midream.sheep.swcj.data.swc.ReptileUrl;
-import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.data.swc.*;
+import com.midream.sheep.swcj.pojo.SWCJMethod;
 import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
-import com.midream.sheep.swcj.util.io.ISIO;
-import com.midream.sheep.swcj.util.io.SIO;
-
+import com.midream.sheep.swcj.util.io.*;
+import com.midream.sheep.swcj.data.*;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.IOException;
+import java.lang.reflect.*;
 import java.util.*;
 
-@SuppressWarnings("all")
 public class ReptilesBuilder implements ReptilesBuilderInter {
     private static final ISIO sio;
     private static final SWCJClassLoader swcjcl;
@@ -28,24 +23,31 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     }
 
     @Override
-    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
+        //获取所有方法
         List<ReptileUrl> rus = rr.getRu();
+        throwsException(rr,rc,rus);
         //获取类名
         String name = "a" + UUID.randomUUID().toString().replace("-", "");
-        //效验池中是否存在
-        Object object = getObject(rr.getId());
+        //效验池中是否存在,如果存在直接返回
+        Object object = null;
+        try {
+            object = getObject(rr.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (object != null) {
             return object;
         }
         //效验接口是否有方法,并返回方法名
-        Map<String,String> function = null;
+        Map<String,SWCJMethod> function = new HashMap<>();
         try {
-            function = getFunction(rr.getParentInter());
+            getFunction(rr.getParentInter(),function);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+                throw new ConfigException("你的接口不存在："+rr.getParentInter());
         }
-        if (function == null || function.size()==0) {
-            throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
+        if (function.size()==0) {
+                throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
         }
         try {
             //拼接类
@@ -70,11 +72,17 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 }
                 {
                     for (ReptileUrl reptileUrl : rus) {
-                        String s = function.get(reptileUrl.getName());
+                        SWCJMethod s = function.get(reptileUrl.getName());
                         if(s==null){
                         continue;
                         }
-                        spliceMethod(sb,reptileUrl,rr,s);
+                        if(s.getAnnotation()!=null&&!s.getAnnotation().equals("")) {
+                            spliceMethod(sb, reptileUrl, rr, s);
+                            function.remove(s);
+                        }
+                    }
+                    if(function.size()==0){
+                        throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
                     }
                 }
             }
@@ -106,23 +114,50 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 //返回类
                 return webc;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException|InvocationTargetException|InstantiationException|IllegalAccessException|NoSuchMethodException e) {
+            System.err.println("类加载异常");
         }
         return null;
     }
 
     @Override
-    public Map<String,String> getFunction(String className) throws ClassNotFoundException {
-        Map<String,String> map = new HashMap<>();
+    public void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException {
+        Map<String,SWCJMethod> map = new HashMap<>();
         Class<?> ca = Class.forName(className);
         Method[] methods = ca.getMethods();
         for (Method method : methods) {
-            if(method.getAnnotation(WebSpider.class).value()!=null&&!method.getAnnotation(WebSpider.class).value().equals("")){
-                map.put(method.getAnnotation(WebSpider.class).value(),method.getName());
+            //实例化方法类
+            SWCJMethod swcjMethod = new SWCJMethod();
+            //设置方法名
+            swcjMethod.setMethodName(method.getName());
+            //设置方法属性
+            List<String> methodType = new ArrayList<>();
+            Parameter[] parameters = method.getParameters();
+            for (Parameter parameter : parameters) {
+                methodType.add(Constant.getClassName(parameter.getType().toString()));
+            }
+            swcjMethod.setVars(methodType);
+            //放入所有有注解的方法
+            if(method.getAnnotation(WebSpider.class)!=null&&!method.getAnnotation(WebSpider.class).value().equals("")){
+                swcjMethod.setAnnotation(method.getAnnotation(WebSpider.class).value());
+                if(!(Constant.getClassName(method.getReturnType().toString()).equals(""))) {
+                    swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
+                }else{
+                    try {
+                        throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
+                    } catch (InterfaceIllegal returnTypeIllegal) {
+                        returnTypeIllegal.printStackTrace();
+                    }
+                }
+                function.put(method.getAnnotation(WebSpider.class).value(),swcjMethod);
+            }else{
+                try {
+                    throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
+                } catch (InterfaceIllegal interfaceIllegal) {
+                    interfaceIllegal.printStackTrace();
+                }
             }
         }
-        return map;
     }
 
     @Override
@@ -139,12 +174,40 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         return null;
     }
 
-    private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,String method) {
+    private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,SWCJMethod method) {
         //方法体
         StringBuilder sbmethod = new StringBuilder("");
         String stringBody = "String";
+        //获取参数传入列表
+        StringBuilder vars = new StringBuilder();
+        List<String> vars1 = method.getVars();
+        String[] split2 = ru.getInPutName().split(",");
+        int len = split2.length;
+        if(ru.getInPutName().equals("")){
+            len = 0;
+        }
+        if(len>vars1.size()){
+            try {
+                throw new InterfaceIllegal("方法参数不统一");
+            } catch (InterfaceIllegal interfaceIllegal) {
+                interfaceIllegal.printStackTrace();
+            }
+        }else if(len==vars1.size()){
+            for(int i = 0;i< split2.length;i++){
+                vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
+            }
+        }else {
+            System.err.println("警告：你的接口有部分参数没有用到");
+            for(int i = 0;i<len;i++){
+                vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
+            }
+            for(int i = len;i<vars1.size();i++){
+                vars.append(vars1.get(i)).append(" args").append(i).append(",");
+            }
+        }
+        String varString = vars.substring(0, vars.lastIndexOf(","));
         //方法头 定义被重写
-        sbmethod.append("\npublic ").append((ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang." + stringBody)) ? "String" : ru.getReturnType()).append(" ").append(method).append("(").append(ru.getInPutType().equals("") ? "" : ru.getInPutType() + " " + ru.getInPutName()).append("){").append("\n").append("try{");
+        sbmethod.append("\npublic ").append(method.getReturnType()).append(" ").append(method.getMethodName()).append("(").append(varString).append("){").append("\n").append("try{");
         //搭建局部变量
         {
             if (!(rr.getCookies().equals("")) && (rr.getCookies() != null)) {
@@ -173,10 +236,10 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
                 sbmethod.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
-                if (ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang.String") || ru.getReturnType().equals("")) {
+                if (method.getReturnType().equals(stringBody) || method.getReturnType().equals("java.lang.String") || method.getReturnType().equals("")) {
                     sbmethod.append("matcher.find();\n" +
                             "String result =  matcher.group();\n");
-                } else if (ru.getReturnType().equals("String[]") || ru.getReturnType().equals("java.lang.String[]")) {
+                } else if (method.getReturnType().equals("String[]") || method.getReturnType().equals("java.lang.String[]")) {
                     sbmethod.append("matcher.find();\n" +
                             "int i = matcher.groupCount();\n" +
                             "String[] result = new String[i];\n" +
@@ -211,7 +274,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     }
                     //返回数据
                     sbmethod.append("String[] result = list.toArray(new String[]{});");
-                    if (ru.getReturnType().equals(stringBody) || ru.getReturnType().equals("java.lang.String")) {
+                    if (method.getReturnType().equals(stringBody) || method.getReturnType().equals("java.lang.String")) {
                         sbmethod.append("return result[0];");
                     } else {
                         sbmethod.append("return result;");
@@ -220,9 +283,27 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
         sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
-        if(ru.getInPutName()!=null&!ru.getInPutName().equals("")) {
-            sbmethod.insert(sbmethod.indexOf("#{" + ru.getInPutName() + "}") + 3 + ru.getInPutName().length(), "\".replace(\"#{" + ru.getInPutName() + "}\"," + ru.getInPutName() + "+\"\")+\"");
-        }
+        if(len!=0) {
+            for(int i = 0;i<len;i++) {
+                sbmethod.insert(sbmethod.indexOf("#{" + split2[i] + "}") + 3 +  split2[i].length(), "\".replace(\"#{" + split2[i] + "}\"," +  split2[i] + "+\"\")+\"");
+            }
+            }
         sb.append(sbmethod);
+    }
+    private void throwsException(RootReptile rr, ReptileConfig rc,List<ReptileUrl> rus) throws ConfigException {
+        for (ReptileUrl url : rus) {
+            if(url.getUrl()==null||url.getUrl().equals("")){
+                    throw new ConfigException("你的path未配置,在"+url.getName());
+            }
+            if(url.getRequestType()==null||url.getRequestType().equals("")){
+                throw new ConfigException("你的请求方式未配置,在"+url.getName());
+            }
+            if(url.getJsoup()==null||url.getReg().equals("")){
+                throw new ConfigException("你的策略未配置,在"+url.getName());
+            }
+            if(url.getName()==null||url.getName().equals("")){
+                throw new ConfigException("你的name未配置,在"+url.getName());
+            }
+        }
     }
 }
