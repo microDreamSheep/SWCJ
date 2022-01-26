@@ -298,12 +298,13 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             if(url.getRequestType()==null||url.getRequestType().equals("")){
                 throw new ConfigException("你的请求方式未配置,在"+url.getName());
             }
-            if(url.getJsoup()==null||url.getReg().equals("")){
+            if(url.getJsoup()==null&&url.getReg().equals("")){
                 throw new ConfigException("你的策略未配置,在"+url.getName());
             }
             if(url.getName()==null||url.getName().equals("")){
                 throw new ConfigException("你的name未配置,在"+url.getName());
             }
+
         }
     }
 }
