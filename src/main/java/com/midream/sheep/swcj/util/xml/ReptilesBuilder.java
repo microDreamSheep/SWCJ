@@ -24,9 +24,11 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
 
     @Override
     public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
+        //java源文件
+        File javaFile = null;
         //获取所有方法
         List<ReptileUrl> rus = rr.getRu();
-        throwsException(rr,rc,rus);
+        throwsException(rus);
         //获取类名
         String name = "a" + UUID.randomUUID().toString().replace("-", "");
         //效验池中是否存在,如果存在直接返回
@@ -63,25 +65,25 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     //timeout
                     sb.append("private static int timeout = ").append(rc.getTimeout()).append(";\n");
                     //userAgent数组创建
-                    StringBuilder usreAgent = new StringBuilder("");
+                    StringBuilder usreAgent = new StringBuilder();
                     usreAgent.append("private static String[] userAgent = new String[]{");
                     for (int i = 0; i < rc.getUserAgents().size(); i++) {
                         usreAgent.append("\"").append(rc.getUserAgents().get(i)).append("\"").append((i + 1 != rc.getUserAgents().size()) ? "," : "};");
                     }
-                    sb.append(usreAgent.toString()).append("\n");
+                    sb.append(usreAgent).append("\n");
                 }
                 {
                     for (ReptileUrl reptileUrl : rus) {
                         SWCJMethod s = function.get(reptileUrl.getName());
                         if(s==null){
-                        continue;
+                            continue;
                         }
                         if(s.getAnnotation()!=null&&!s.getAnnotation().equals("")) {
                             spliceMethod(sb, reptileUrl, rr, s);
-                            function.remove(s);
+                            function.remove(reptileUrl.getName());
                         }
                     }
-                    if(function.size()==0){
+                    if(function.size()!=0){
                         throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
                     }
                 }
@@ -90,7 +92,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             //类封口
             sb.append("\n}");
             //实例化文件类
-            File javaFile = new File(rc.getWorkplace() + "//" + name + ".java");
+            javaFile = new File(rc.getWorkplace() + "//" + name + ".java");
             //输出到工作空间
             sio.outPutString(sb.toString(), javaFile);
             //编译类
@@ -108,21 +110,21 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 //非缓存则进入路径池
                 CacheCorn.addPath(rr.getId(), s);
             }
-            //删掉java原文件
-            javaFile.delete();
-            if (aClass != null) {
-                //返回类
-                return webc;
-            }
+            //返回类
+            return webc;
         } catch (IOException|InvocationTargetException|InstantiationException|IllegalAccessException|NoSuchMethodException e) {
             System.err.println("类加载异常");
+        }finally {
+            if(javaFile!=null) {
+                //删掉java原文件
+                javaFile.delete();
+            }
         }
         return null;
     }
 
     @Override
     public void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException {
-        Map<String,SWCJMethod> map = new HashMap<>();
         Class<?> ca = Class.forName(className);
         Method[] methods = ca.getMethods();
         for (Method method : methods) {
@@ -176,7 +178,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
 
     private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,SWCJMethod method) {
         //方法体
-        StringBuilder sbmethod = new StringBuilder("");
+        StringBuilder sbmethod = new StringBuilder();
         String stringBody = "String";
         //获取参数传入列表
         StringBuilder vars = new StringBuilder();
@@ -197,7 +199,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
             }
         }else {
-            System.err.println("警告：你的接口有部分参数没有用到");
+            System.err.println("SWCJ警告：你的接口有部分参数没有用到");
             for(int i = 0;i<len;i++){
                 vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
             }
@@ -231,8 +233,8 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         //搭建主要的方法体
         {
             //获取方法主体的类
-            String map = (!rr.getCookies().equals("")) ? ".cookies(map)" : "";
-            sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType().equals("POST") ? "post" : "get").append("();");
+            String map = (!Objects.requireNonNull(rr.getCookies()).equals("")) ? ".cookies(map)" : "";
+            sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType()!=null&&ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
                 sbmethod.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
@@ -263,7 +265,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     for (int i = 1; i < ru.getJsoup().size(); i++) {
                         String uuid = UUID.randomUUID().toString().replace("-", "");
                         sbmethod.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
-                        sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c" + uuid + ");");
+                        sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
                         string = element + (i + 2);
                         end = string;
                     }
@@ -285,18 +287,20 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
         if(len!=0) {
             for(int i = 0;i<len;i++) {
-                sbmethod.insert(sbmethod.indexOf("#{" + split2[i] + "}") + 3 +  split2[i].length(), "\".replace(\"#{" + split2[i] + "}\"," +  split2[i] + "+\"\")+\"");
-            }
+                //判断，使未使用的name不被注入
+                if(sbmethod.indexOf("#{" + split2[i] + "}")!=-1) {
+                    sbmethod.insert(sbmethod.indexOf("#{" + split2[i] + "}") + 3 + split2[i].length(), "\".replace(\"#{" + split2[i] + "}\"," + split2[i] + "+\"\")+\"");
+                }else {
+                    System.err.println("SWCJ:你的"+split2[i]+"参数并未使用，请检查是否需要");
+                }
+                }
             }
         sb.append(sbmethod);
     }
-    private void throwsException(RootReptile rr, ReptileConfig rc,List<ReptileUrl> rus) throws ConfigException {
+    private void throwsException(List<ReptileUrl> rus) throws ConfigException {
         for (ReptileUrl url : rus) {
             if(url.getUrl()==null||url.getUrl().equals("")){
                     throw new ConfigException("你的path未配置,在"+url.getName());
-            }
-            if(url.getRequestType()==null||url.getRequestType().equals("")){
-                throw new ConfigException("你的请求方式未配置,在"+url.getName());
             }
             if(url.getJsoup()==null&&url.getReg().equals("")){
                 throw new ConfigException("你的策略未配置,在"+url.getName());

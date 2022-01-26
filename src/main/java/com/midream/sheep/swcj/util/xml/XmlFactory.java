@@ -32,15 +32,15 @@ public class XmlFactory {
         rb = new ReptilesBuilder();
     }
     //xml工厂提供的构造器
-    public XmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException {
+    public XmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
         parse(new File(xmlFile));
     }
     //xml工厂提供的构造器
-    public XmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException {
+    public XmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
         parse(xmlFile);
     }
     //解析文档
-    private void parse(File xmlFile) throws ParserConfigurationException, IOException, SAXException {
+    private void parse(File xmlFile) throws ParserConfigurationException, IOException, SAXException, ConfigException {
         //1.创建DocumentBuilderFactory对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //2.创建DocumentBuilder对象
@@ -50,7 +50,7 @@ public class XmlFactory {
         parseXml(root.item(0));
     }
     //解析xml配置文件
-    private void parseXml(Node root){
+    private void parseXml(Node root) throws ConfigException {
         NodeList nodes = root.getChildNodes();
         for(int i = 0;i< nodes.getLength();i++){
             Node item = nodes.item(i);
@@ -67,13 +67,18 @@ public class XmlFactory {
         }
     }
     //配置全局变量
-    private void parseConfig(NodeList nl){
+    private void parseConfig(NodeList nl) throws ConfigException {
         for(int i = 0;i<nl.getLength();i++){
             Node child = nl.item(i);
             switch (child.getNodeName()){
                 //设置超时时间
                 case "timeout":
                     NamedNodeMap timeout = child.getAttributes();
+                    try {
+                        int time = Integer.parseInt(timeout.getNamedItem("value").getNodeValue().trim());
+                    }catch (NumberFormatException e){
+                        throw new ConfigException("类型转换异常，配置文件time中"+timeout.getNamedItem("value").getNodeValue().trim()+"不是数字");
+                    }
                     rc.setTimeout(Integer.parseInt(timeout.getNamedItem("value").getNodeValue().trim()));
                     break;
                 case "constructionSpace":

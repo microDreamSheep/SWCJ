@@ -10,7 +10,6 @@
 *.ear
 
 hs_err_pid*
-test/
 /target
 **/target/
 pom.xml.tag
