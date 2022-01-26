@@ -5,6 +5,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * @author midreamSheep
@@ -28,37 +30,17 @@ public class SWCJClassLoader extends ClassLoader {
     }
 
     @Override
-    public Class<?> findClass(String name) throws ClassNotFoundException {
+    public Class<?> findClass(String name) {
         return super.findLoadedClass(name);
     }
 
     //通过字节加载一个class
     private byte[] loderClassData(String file) {
-        InputStream is = null;
-        ByteArrayOutputStream bos = null;
         byte[] datas = null;
         try {
-            bos = new ByteArrayOutputStream();
-            is = new FileInputStream(new File(file));
-            is.transferTo(bos);
-            datas = bos.toByteArray();
+            datas = Files.readAllBytes(Paths.get(file));
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return datas;
     }
