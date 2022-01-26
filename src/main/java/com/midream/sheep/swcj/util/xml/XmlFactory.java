@@ -177,8 +177,11 @@ public class XmlFactory {
         }
     }
     public Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
-        rc.setWorkplace(rc.getWorkplace().replace("file:/","").replace("file:\\",""));
-        return rb.Builder(rootReptiles.get(id),rc);
+        RootReptile rootReptile = rootReptiles.get(id);
+        if(rootReptile==null){
+            throw new ConfigException("你的配置找不到 id为："+id);
+        }
+        return rb.Builder(rootReptile,rc);
     }
 
 }

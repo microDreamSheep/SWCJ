@@ -56,7 +56,7 @@ public class ReptileConfig {
     }
 
     public void setWorkplace(String workplace) {
-        this.workplace = workplace;
+        this.workplace = workplace.replace("file:/","").replace("file:\\","");
         File place = new File(workplace);
         //生成文件夹
         if(!place.exists()){
