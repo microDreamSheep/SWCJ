@@ -194,7 +194,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             } catch (InterfaceIllegal interfaceIllegal) {
                 interfaceIllegal.printStackTrace();
             }
-        }else if(len==vars1.size()){
+        }else if(len==vars1.size()&&len!=0){
             for(int i = 0;i< split2.length;i++){
                 vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
             }
@@ -207,7 +207,11 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 vars.append(vars1.get(i)).append(" args").append(i).append(",");
             }
         }
-        String varString = vars.substring(0, vars.lastIndexOf(","));
+        String varString = "";
+        System.out.println(varString);
+        if(vars.length()!=0) {
+            varString = vars.substring(0, vars.lastIndexOf(","));
+        }
         //方法头 定义被重写
         sbmethod.append("\npublic ").append(method.getReturnType()).append(" ").append(method.getMethodName()).append("(").append(varString).append("){").append("\n").append("try{");
         //搭建局部变量

@@ -6,5 +6,5 @@ public interface WebTest {
     @WebSpider("getHtml")
     String[] test(String count,String type,String ad);
     @WebSpider("more")
-    String[] ad(int i);
+    String[] ad();
 }

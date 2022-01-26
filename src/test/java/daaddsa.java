@@ -18,7 +18,7 @@ public class daaddsa {
     public void test() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException , ConfigException, InterfaceIllegal {
         XmlFactory xf = new XmlFactory(daaddsa.class.getClassLoader().getResource("").getPath()+"/test.xml");
         WebTest getHtml = (WebTest)xf.getWebSpider("getHtml");
-        String[] test = getHtml.test("5","html","daw");
+        String[] test = getHtml.ad();
         for (String s : test) {
             System.out.println(s);
         }
