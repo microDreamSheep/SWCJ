@@ -15,13 +15,14 @@ public class Constant {
         CLASS_KEY_VALUE = new HashMap<>();
         CLASS_KEY_VALUE.put("class java.lang.String","String");
         CLASS_KEY_VALUE.put("class [Ljava.lang.String;","String[]");
-        CLASS_KEY_VALUE.put("","");
-        CLASS_KEY_VALUE.put("","");
-        CLASS_KEY_VALUE.put("","");
-        CLASS_KEY_VALUE.put("","");
+        CLASS_KEY_VALUE.put("int","int");
     }
     private Constant(){}
     public static String getClassName(String key){
-        return CLASS_KEY_VALUE.get(key);
+        String s = CLASS_KEY_VALUE.get(key);
+        if(s!=null){
+            return s;
+        }
+        return key;
     }
 }

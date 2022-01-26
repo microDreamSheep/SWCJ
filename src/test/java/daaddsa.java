@@ -23,4 +23,14 @@ public class daaddsa {
             System.out.println(s);
         }
     }
+    @Test
+    public void testada(){
+        System.out.println(int.class.getName());
+        System.out.println(long.class.getName());
+        System.out.println(double.class.getName());
+        System.out.println(short.class.getName());
+        System.out.println(int.class.getName());
+        System.out.println(int.class.getName());
+
+    }
 }
