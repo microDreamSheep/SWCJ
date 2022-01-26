@@ -1,4 +1,4 @@
-package com.midream.sheep.swsj.util.classLoader;
+package com.midream.sheep.swcj.util.classLoader;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;

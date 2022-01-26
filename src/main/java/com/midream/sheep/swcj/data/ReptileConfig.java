@@ -1,4 +1,4 @@
-package com.midream.sheep.swsj.data;
+package com.midream.sheep.swcj.data;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
  * */
 public class ReptileConfig {
     //工作空间
-    private String workplace = ReptileConfig.class.getClassLoader().getResource("")+ "com/midream/sheep/swsj/wordkplace";
+    private String workplace = ReptileConfig.class.getClassLoader().getResource("")+ "com/midream/sheep/swcj/wordkplace";
     //超时时间
     private int timeout = 10000;
     //浏览器模拟

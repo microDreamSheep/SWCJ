@@ -1,4 +1,4 @@
-package com.midream.sheep.swsj.util.io;
+package com.midream.sheep.swcj.util.io;
 
 import java.io.File;
 import java.io.IOException;

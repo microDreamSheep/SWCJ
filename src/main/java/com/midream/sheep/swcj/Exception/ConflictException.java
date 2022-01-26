@@ -1,4 +1,4 @@
-package com.midream.sheep.swsj.Exception;
+package com.midream.sheep.swcj.Exception;
 /**
  * @author midreamSheep
  * 策略冲突异常

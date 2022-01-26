@@ -1,4 +1,4 @@
-package com.midream.sheep.swsj.Annotation;
+package com.midream.sheep.swcj.Annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

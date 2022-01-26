@@ -1,4 +1,4 @@
-package com.midream.sheep.swsj.Exception;
+package com.midream.sheep.swcj.Exception;
 /**
  * @author midreamSheep
  * 空方法指向异常，在找不到方法时

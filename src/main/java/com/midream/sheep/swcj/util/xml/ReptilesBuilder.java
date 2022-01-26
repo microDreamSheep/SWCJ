@@ -1,16 +1,16 @@
-package com.midream.sheep.swsj.util.xml;
+package com.midream.sheep.swcj.util.xml;
 
-import com.midream.sheep.swsj.Annotation.WebSpider;
-import com.midream.sheep.swsj.Exception.EmptyMatchMethodException;
-import com.midream.sheep.swsj.cache.CacheCorn;
-import com.midream.sheep.swsj.data.Constant;
-import com.midream.sheep.swsj.data.ReptileConfig;
-import com.midream.sheep.swsj.data.swc.ReptilePaJsoup;
-import com.midream.sheep.swsj.data.swc.ReptileUrl;
-import com.midream.sheep.swsj.data.swc.RootReptile;
-import com.midream.sheep.swsj.util.classLoader.SWCJClassLoader;
-import com.midream.sheep.swsj.util.io.ISIO;
-import com.midream.sheep.swsj.util.io.SIO;
+import com.midream.sheep.swcj.Annotation.WebSpider;
+import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.cache.CacheCorn;
+import com.midream.sheep.swcj.data.Constant;
+import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
+import com.midream.sheep.swcj.data.swc.ReptileUrl;
+import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
+import com.midream.sheep.swcj.util.io.ISIO;
+import com.midream.sheep.swcj.util.io.SIO;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

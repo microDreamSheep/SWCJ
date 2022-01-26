@@ -1,8 +1,8 @@
-package com.midream.sheep.swsj.util.xml;
+package com.midream.sheep.swcj.util.xml;
 
-import com.midream.sheep.swsj.Exception.EmptyMatchMethodException;
-import com.midream.sheep.swsj.data.ReptileConfig;
-import com.midream.sheep.swsj.data.swc.RootReptile;
+import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.swc.RootReptile;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

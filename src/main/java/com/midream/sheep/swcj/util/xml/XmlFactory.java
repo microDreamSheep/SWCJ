@@ -1,10 +1,10 @@
-package com.midream.sheep.swsj.util.xml;
+package com.midream.sheep.swcj.util.xml;
 
-import com.midream.sheep.swsj.Exception.EmptyMatchMethodException;
-import com.midream.sheep.swsj.data.ReptileConfig;
-import com.midream.sheep.swsj.data.swc.ReptilePaJsoup;
-import com.midream.sheep.swsj.data.swc.ReptileUrl;
-import com.midream.sheep.swsj.data.swc.RootReptile;
+import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
+import com.midream.sheep.swcj.data.swc.ReptileUrl;
+import com.midream.sheep.swcj.data.swc.RootReptile;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
