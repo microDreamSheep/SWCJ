@@ -208,7 +208,6 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
         String varString = "";
-        System.out.println(varString);
         if(vars.length()!=0) {
             varString = vars.substring(0, vars.lastIndexOf(","));
         }
