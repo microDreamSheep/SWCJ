@@ -268,9 +268,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                             if(!s.equals("")){
                                 sbmethod.append("&&!element").append(".text().equals(\"").append(s).append("\")");
                             }
-                            sbmethod.append("){");
-                            bigParanthesesCount++;
                         }
+                        sbmethod.append("){");
+                        bigParanthesesCount++;
                     }
                     //开始循环
                     String string = element;//命名空间
@@ -285,9 +285,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                                 if(!s.equals("")){
                                     sbmethod.append("&&!element").append(i+2).append(".text().equals(\"").append(s).append("\")");
                                 }
-                                sbmethod.append("){");
-                                bigParanthesesCount++;
                             }
+                            bigParanthesesCount++;
+                            sbmethod.append("){");
                         }
                         string = element + (i + 2);
                         end = string;
