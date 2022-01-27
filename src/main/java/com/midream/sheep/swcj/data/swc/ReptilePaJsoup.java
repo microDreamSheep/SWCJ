@@ -7,6 +7,16 @@ public class ReptilePaJsoup {
     //jsoup格式
     private String paText;
     private String[] not;
+    private int step;
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
     public ReptilePaJsoup() {
     }
 

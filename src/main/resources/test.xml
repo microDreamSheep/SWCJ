@@ -62,7 +62,7 @@
                 -->
                 <jsoup>
                     <!--pa可配置属性来选取目标Document-->
-                    <pa not="下一页">
+                    <pa not="下一页" step="4">
                         #main>div.slist>ul>li>a
                     </pa>
                 </jsoup>

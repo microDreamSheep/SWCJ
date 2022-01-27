@@ -109,7 +109,7 @@ public class XmlFactory {
         }
     }
     //生成并配置爬虫实现类配置
-    private void pareSWC(Node n){
+    private void pareSWC(Node n) throws ConfigException {
         //实例化类
         RootReptile rr = new RootReptile();
         //分析根节点
@@ -142,7 +142,7 @@ public class XmlFactory {
         }
         this.rootReptiles.put(rr.getId(),rr);
     }
-    private void parseUrl(NodeList nl,ReptileUrl ru){
+    private void parseUrl(NodeList nl,ReptileUrl ru) throws ConfigException {
         for(int i=0;i<nl.getLength();i++){
             Node n = nl.item(i);
             switch (n.getNodeName()){
@@ -171,6 +171,16 @@ public class XmlFactory {
                                         String not = node.getAttributes().getNamedItem("not").getNodeValue();
                                         String[] split = not.split(",");
                                         rp.setNot(split);
+                                    }
+                                    if(node.getAttributes().getNamedItem("step")!=null){
+                                        String step = node.getAttributes().getNamedItem("step").getNodeValue().trim();
+                                        try {
+
+                                            int s = Integer.parseInt(step);
+                                            rp.setStep(s);
+                                        }catch (NumberFormatException e){
+                                            throw new ConfigException("类型转换异常，pa"+node.getAttributes().getNamedItem("not").getNodeValue()+"不是数字");
+                                        }
                                     }
                                     ru.addJsoup(rp);
                                 }

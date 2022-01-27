@@ -259,8 +259,12 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 {
                     //一级查询
                     ReptilePaJsoup rpj = ru.getJsoup().get(0);
-                    sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\n");
+                    sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\nboolean owdad = true;");
                     sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
+                    if(ru.getJsoup().get(0).getStep()!=0){
+                        sbmethod.append("if(owdad){i+=").append(ru.getJsoup().get(0).getStep()).append(";owdad=false;}");
+                        System.out.println(sbmethod);
+                    }
                     String element = "element";
                     if(ru.getJsoup().get(0).getNot()!=null){
                         sbmethod.append("if(1==1");
@@ -277,8 +281,12 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     String end = element;
                     for (int i = 1; i < ru.getJsoup().size(); i++) {
                         String uuid = UUID.randomUUID().toString().replace("-", "");
-                        sbmethod.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
-                        sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
+                        sbmethod.append("boolean asd = true;org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
+                        sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\n");
+                        if(ru.getJsoup().get(i).getStep()!=0){
+                            sbmethod.append("if(asd){c").append(uuid).append("+=").append(ru.getJsoup().get(i).getStep()).append(";asd=false;}");
+                        }
+                        sbmethod.append("org.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
                         if(ru.getJsoup().get(i).getNot()!=null){
                             sbmethod.append("if(1==1");
                             for (String s : ru.getJsoup().get(i).getNot()) {
@@ -308,6 +316,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
         sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
+        System.out.println(sbmethod);
         if(len!=0) {
             for(int i = 0;i<len;i++) {
                 //判断，使未使用的name不被注入
