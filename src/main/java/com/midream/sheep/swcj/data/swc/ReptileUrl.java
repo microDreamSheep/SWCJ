@@ -19,19 +19,16 @@ public class ReptileUrl {
     //方法名
     private String name="";
 
-    public String getInPutName() {
-        return inPutName;
-    }
-
-    public void setInPutName(String inPutName) {
-        this.inPutName = inPutName;
-    }
-
-    public ReptileCoreJsoup getJsoup() {
+    public List<ReptileCoreJsoup> getJsoup() {
         return jsoup;
     }
-
-    public void setJsoup(ReptileCoreJsoup jsoup) {
+    public void addJsoup(ReptileCoreJsoup reptileCoreJsoup){
+        if(this.jsoup==null){
+            jsoup = new ArrayList<>();
+        }
+        jsoup.add(reptileCoreJsoup);
+    }
+    public void setJsoup(List<ReptileCoreJsoup> jsoup) {
         this.jsoup = jsoup;
     }
 
@@ -42,9 +39,19 @@ public class ReptileUrl {
     //正则表达式
     private String reg="";
     //jsoup策略
-    private ReptileCoreJsoup jsoup;
+    private List<ReptileCoreJsoup> jsoup;
     //是否是html返回
     private boolean isHtml;
+
+
+    public String getInPutName() {
+        return inPutName;
+    }
+
+    public void setInPutName(String inPutName) {
+        this.inPutName = inPutName;
+    }
+
 
     @Override
     public String toString() {

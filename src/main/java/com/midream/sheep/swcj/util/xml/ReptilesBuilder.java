@@ -253,8 +253,8 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                             "}");
                     sbmethod.append("return result;\n");
                 }
-            } else if (ru.getJsoup().getJsoup() != null) {
-                List<ReptilePaJsoup> jsoup = ru.getJsoup().getJsoup();
+            } else if (ru.getJsoup().get(0).getJsoup() != null) {
+                List<ReptilePaJsoup> jsoup = ru.getJsoup().get(0).getJsoup();
                 int bigParanthesesCount = jsoup.size();
                 //拼接jsoup
                 {
@@ -344,12 +344,15 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             if(url.getName()==null||url.getName().equals("")){
                 throw new ConfigException("你的name未配置,在"+url.getName());
             }
-            for (int i = 0;i<url.getJsoup().getJsoup().size()-1;i++) {
-                String element = url.getJsoup().getJsoup().get(i).getElement();
+            for (int i = 0;i<url.getJsoup().get(0).getJsoup().size()-1;i++) {
+                String element = url.getJsoup().get(0).getJsoup().get(i).getElement();
                 if(element!=null&&!element.equals("")){
                     throw new ConfigException("元素获取必须在最后一个pa里定义,在"+url.getName());
                 }
             }
         }
+    }
+    private void spliceMethodJsoup(StringBuilder sb){
+
     }
 }
