@@ -125,7 +125,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     }
 
     @Override
-    public void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException {
+    public void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException, InterfaceIllegal {
         Class<?> ca = Class.forName(className);
         Method[] methods = ca.getMethods();
         for (Method method : methods) {
@@ -295,7 +295,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             sbmethod.append("Class<?> aClass = Class.forName(\"" + method.getReturnType().replace("[]","") + "\");");
             sbmethod.append("Object o = aClass.getDeclaredConstructor().newInstance();");
             for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
+                sbmethod.append("try{");
                 sbmethod.append("aClass.getDeclaredMethod(\"set" + StringUtil.StringToUpperCase(jsoup.getName()) + "\", String.class).invoke(o," + jsoup.getName() + ".get(i));");
+                sbmethod.append("}catch(Exception e){}");
             }
             sbmethod.append("lists.add((").append(method.getReturnType().replace("[]","")).append(")o").append(");");
             sbmethod.append("}");

@@ -5,6 +5,6 @@ import com.midream.sheep.swcj.Annotation.WebSpider;
 
 public interface WebTest {
     @WebSpider("a")
-    Novel[] a(String count);
+    void a(String count);
 
 }

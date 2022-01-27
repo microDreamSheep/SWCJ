@@ -19,7 +19,7 @@ public interface ReptilesBuilderInter {
     //构建对象
     Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, ClassNotFoundException, ConfigException, InterfaceIllegal;
     //获取接口所有方法
-    void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException;
+    void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException, InterfaceIllegal;
     //获取池中对象
     Object getObject(String Key)  throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException;
 }

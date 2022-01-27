@@ -1,5 +1,7 @@
 package com.midream.sheep.swcj.data;
 
+import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,8 +20,11 @@ public class Constant {
         CLASS_KEY_VALUE.put("int","int");
     }
     private Constant(){}
-    public static String getClassName(String key){
+    public static String getClassName(String key) throws InterfaceIllegal {
         String s = CLASS_KEY_VALUE.get(key);
+        if(key.equals("void")){
+            throw new InterfaceIllegal("接口返回值不能为void");
+        }
         if(s!=null){
             return s;
         }
