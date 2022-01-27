@@ -36,10 +36,13 @@ public class SWCJMethod {
     }
 
     public void setReturnType(String returnType) {
-        this.returnType = returnType;
+        this.returnType = returnType.replace("class ","");
     }
 
     public String getReturnType() {
+        if(returnType.startsWith("[L")){
+            return returnType.substring(2,returnType.length()-1)+"[]";
+        }
         return returnType;
     }
 }

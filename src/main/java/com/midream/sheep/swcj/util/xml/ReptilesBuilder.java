@@ -6,6 +6,7 @@ import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.swc.*;
 import com.midream.sheep.swcj.pojo.SWCJMethod;
 import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
+import com.midream.sheep.swcj.util.function.StringUtil;
 import com.midream.sheep.swcj.util.io.*;
 import com.midream.sheep.swcj.data.*;
 import java.io.File;
@@ -176,10 +177,11 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         return null;
     }
 
-    private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,SWCJMethod method) {
+    private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,SWCJMethod method) throws ConfigException {
         //方法体
         StringBuilder sbmethod = new StringBuilder();
         String stringBody = "String";
+        boolean isQuote = false;
         //获取参数传入列表
         StringBuilder vars = new StringBuilder();
         List<String> vars1 = method.getVars();
@@ -254,71 +256,50 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     sbmethod.append("return result;\n");
                 }
             } else if (ru.getJsoup().get(0).getJsoup() != null) {
-                List<ReptilePaJsoup> jsoup = ru.getJsoup().get(0).getJsoup();
-                int bigParanthesesCount = jsoup.size();
-                //拼接jsoup
-                {
-                    //一级查询
-                    ReptilePaJsoup rpj = jsoup.get(0);
-                    sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\nboolean owdad = true;");
-                    sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
-                    if(jsoup.get(0).getStep()!=0){
-                        sbmethod.append("if(owdad){i+=").append(jsoup.get(0).getStep()).append(";owdad=false;}");
-                        System.out.println(sbmethod);
-                    }
-                    String element = "element";
-                    if(jsoup.get(0).getNot()!=null){
-                        sbmethod.append("if(1==1");
-                        for (String s : jsoup.get(0).getNot()) {
-                            if(!s.equals("")){
-                                sbmethod.append("&&!element").append(".text().equals(\"").append(s).append("\")");
-                            }
+                if(method.getReturnType().equals("String")||method.getReturnType().equals("String[]")) {
+                    sbmethod.append("String[] result = null;");
+                }else {
+                    isQuote = true;
+                    for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
+                        if(jsoup.getName()!=null&&!jsoup.getName().equals("")){
+                            sbmethod.append("java.util.List<String> ").append(jsoup.getName()).append("= new java.util.LinkedList<>();");
+                        }else {
+                            throw new ConfigException("返回值为引用类型必须定义jsoup name");
                         }
-                        sbmethod.append("){");
-                        bigParanthesesCount++;
-                    }
-                    //开始循环
-                    String string = element;//命名空间
-                    String end = element;
-                    for (int i = 1; i < jsoup.size(); i++) {
-                        String uuid = UUID.randomUUID().toString().replace("-", "");
-                        sbmethod.append("boolean asd = true;org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(jsoup.get(i).getPaText()).append("\");\n");
-                        sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\n");
-                        if(jsoup.get(i).getStep()!=0){
-                            sbmethod.append("if(asd){c").append(uuid).append("+=").append(jsoup.get(i).getStep()).append(";asd=false;}");
-                        }
-                        sbmethod.append("org.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
-                        if(jsoup.get(i).getNot()!=null){
-                            sbmethod.append("if(1==1");
-                            for (String s : jsoup.get(i).getNot()) {
-                                if(!s.equals("")){
-                                    sbmethod.append("&&!element").append(i+2).append(".text().equals(\"").append(s).append("\")");
-                                }
-                            }
-                            bigParanthesesCount++;
-                            sbmethod.append("){");
-                        }
-                        string = element + (i + 2);
-                        end = string;
-                    }
-                    if(jsoup.get(jsoup.size()-1).getElement()!=null&&!jsoup.get(jsoup.size()-1).getElement().equals("")) {
-                        sbmethod.append("list.add(").append(end).append(".attr(\"").append(jsoup.get(jsoup.size()-1).getElement()).append("\"));");
-                    }else {
-                        sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
-                    }
-                    //添加括号
-                    for (int i = 0; i < bigParanthesesCount; i++) {
-                        sbmethod.append("}\n");
-                    }
-                    //返回数据
-                    sbmethod.append("String[] result = list.toArray(new String[]{});");
-                    if (method.getReturnType().equals(stringBody) || method.getReturnType().equals("java.lang.String")) {
-                        sbmethod.append("return result[0];");
-                    } else {
-                        sbmethod.append("return result;");
                     }
                 }
+                //拼接jsoup
+                for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
+                    spliceMethodJsoup(sbmethod,jsoup,ru,isQuote);
+                }
             }
+        }
+        if(!isQuote) {//不是引用类型返回字符串
+            if (method.getReturnType().equals(stringBody) || method.getReturnType().equals("java.lang.String")) {
+                sbmethod.append("return result[0];");
+            } else {
+                sbmethod.append("return result;");
+            }
+        }else {//是引用类型就注入数据
+            sbmethod.append("int[] casdsad = {");
+            for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
+                sbmethod.append(jsoup.getName()).append(".size(),");
+            }
+            sbmethod.substring(0, sbmethod.lastIndexOf(","));
+            sbmethod.append("};");
+            sbmethod.append("java.util.Arrays.sort(casdsad);\n" +
+                    "int maxawdwa = casdsad[casdsad.length-1];");
+            sbmethod.append("java.util.List<").append(method.getReturnType().replace("[]","")).append(">").append("lists").append("= new java.util.LinkedList<>();");
+            sbmethod.append("for(int i = 0;i<maxawdwa;i++){");
+            //开始执行反射生成数据
+            sbmethod.append("Class<?> aClass = Class.forName(\"" + method.getReturnType().replace("[]","") + "\");");
+            sbmethod.append("Object o = aClass.getDeclaredConstructor().newInstance();");
+            for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
+                sbmethod.append("aClass.getDeclaredMethod(\"set" + StringUtil.StringToUpperCase(jsoup.getName()) + "\", String.class).invoke(o," + jsoup.getName() + ".get(i));");
+            }
+            sbmethod.append("lists.add((").append(method.getReturnType().replace("[]","")).append(")o").append(");");
+            sbmethod.append("}");
+            sbmethod.append("return lists.toArray(new "+method.getReturnType()+"{});");
         }
         sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
         if(len!=0) {
@@ -352,7 +333,68 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
     }
-    private void spliceMethodJsoup(StringBuilder sb){
-
+    private void spliceMethodJsoup(StringBuilder sbmethod,ReptileCoreJsoup rcj,ReptileUrl ru,boolean isQuote){
+        sbmethod.append("{");
+        List<ReptilePaJsoup> jsoup = rcj.getJsoup();
+        int bigParanthesesCount = jsoup.size();
+        //一级查询
+        ReptilePaJsoup rpj = jsoup.get(0);
+        sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\nboolean owdad = true;");
+        sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
+        if(jsoup.get(0).getStep()!=0){
+            sbmethod.append("if(owdad){i+=").append(jsoup.get(0).getStep()).append(";owdad=false;}");
+            System.out.println(sbmethod);
+        }
+        String element = "element";
+        if(jsoup.get(0).getNot()!=null){
+            sbmethod.append("if(1==1");
+            for (String s : jsoup.get(0).getNot()) {
+                if(!s.equals("")){
+                    sbmethod.append("&&!element").append(".text().equals(\"").append(s).append("\")");
+                }
+            }
+            sbmethod.append("){");
+            bigParanthesesCount++;
+        }
+        //开始循环
+        String string = element;//命名空间
+        String end = element;
+        for (int i = 1; i < jsoup.size(); i++) {
+            String uuid = UUID.randomUUID().toString().replace("-", "");
+            sbmethod.append("boolean asd = true;org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(jsoup.get(i).getPaText()).append("\");\n");
+            sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\n");
+            if(jsoup.get(i).getStep()!=0){
+                sbmethod.append("if(asd){c").append(uuid).append("+=").append(jsoup.get(i).getStep()).append(";asd=false;}");
+            }
+            sbmethod.append("org.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
+            if(jsoup.get(i).getNot()!=null){
+                sbmethod.append("if(1==1");
+                for (String s : jsoup.get(i).getNot()) {
+                    if(!s.equals("")){
+                        sbmethod.append("&&!element").append(i+2).append(".text().equals(\"").append(s).append("\")");
+                    }
+                }
+                bigParanthesesCount++;
+                sbmethod.append("){");
+            }
+            string = element + (i + 2);
+            end = string;
+        }
+        if(jsoup.get(jsoup.size()-1).getElement()!=null&&!jsoup.get(jsoup.size()-1).getElement().equals("")) {
+            sbmethod.append("list.add(").append(end).append(".attr(\"").append(jsoup.get(jsoup.size()-1).getElement()).append("\"));");
+        }else {
+            sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
+        }
+        //添加括号
+        for (int i = 0; i < bigParanthesesCount; i++) {
+            sbmethod.append("}\n");
+        }
+        //返回数据
+        if(!isQuote) {
+            sbmethod.append("result = list.toArray(new String[]{});");
+        }else{
+            sbmethod.append(rcj.getName()).append("=list;");
+        }
+        sbmethod.append("}");
     }
 }

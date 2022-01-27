@@ -1,11 +1,10 @@
 package com.midream.sheep;
 
+import com.midream.sheep.pojo.Novel;
 import com.midream.sheep.swcj.Annotation.WebSpider;
 
 public interface WebTest {
-    @WebSpider("getHtml")
-    String[] test(String count,String type,String ad);
     @WebSpider("a")
-    String[] a(String count);
+    Novel[] a(String count);
 
 }

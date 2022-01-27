@@ -163,6 +163,9 @@ public class XmlFactory {
                         }else if(item.getNodeName().equals("jsoup")){
                             //实例化jsoup核心
                             ReptileCoreJsoup rcj = new ReptileCoreJsoup();
+                            if(item.getAttributes().getNamedItem("name")!=null&&!item.getAttributes().getNamedItem("name").getNodeValue().equals("")) {
+                                rcj.setName(item.getAttributes().getNamedItem("name").getNodeValue());
+                            }
                             //组合jsoup核心和ReptileUrl
                             ru.addJsoup(rcj);
                             NodeList childNodes = item.getChildNodes();

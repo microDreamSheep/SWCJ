@@ -7,9 +7,18 @@ import java.util.List;
  * @author midreamsheep
  */
 public class ReptileCoreJsoup {
-    private String returnClassName;
     //jsoup策略
     private List<ReptilePaJsoup> jsoup;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<ReptilePaJsoup> getJsoup() {
         return jsoup;
     }
