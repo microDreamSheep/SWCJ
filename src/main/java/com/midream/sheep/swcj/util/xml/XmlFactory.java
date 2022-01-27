@@ -4,6 +4,7 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.swc.ReptileCoreJsoup;
 import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.data.swc.ReptileUrl;
 import com.midream.sheep.swcj.data.swc.RootReptile;
@@ -143,6 +144,10 @@ public class XmlFactory {
         this.rootReptiles.put(rr.getId(),rr);
     }
     private void parseUrl(NodeList nl,ReptileUrl ru) throws ConfigException {
+        //实例化jsoup核心
+        ReptileCoreJsoup rcj = new ReptileCoreJsoup();
+        //组合jsoup核心和ReptileUrl
+        ru.setJsoup(rcj);
         for(int i=0;i<nl.getLength();i++){
             Node n = nl.item(i);
             switch (n.getNodeName()){
@@ -184,7 +189,7 @@ public class XmlFactory {
                                     if(node.getAttributes().getNamedItem("element")!=null){
                                         rp.setElement(node.getAttributes().getNamedItem("element").getNodeValue());
                                     }
-                                    ru.addJsoup(rp);
+                                    rcj.addJsoup(rp);
                                 }
                             }
                         }
