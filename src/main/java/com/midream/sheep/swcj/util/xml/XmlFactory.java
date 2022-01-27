@@ -167,6 +167,11 @@ public class XmlFactory {
                                     ReptilePaJsoup rp = new ReptilePaJsoup();
                                     Node node = childNodes.item(c);
                                     rp.setPaText(node.getTextContent().trim());
+                                    if(node.getAttributes().getNamedItem("not")!=null){
+                                        String not = node.getAttributes().getNamedItem("not").getNodeValue();
+                                        String[] split = not.split(",");
+                                        rp.setNot(split);
+                                    }
                                     ru.addJsoup(rp);
                                 }
                             }

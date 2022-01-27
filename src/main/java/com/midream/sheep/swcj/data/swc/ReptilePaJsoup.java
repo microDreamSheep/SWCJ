@@ -6,8 +6,16 @@ package com.midream.sheep.swcj.data.swc;
 public class ReptilePaJsoup {
     //jsoup格式
     private String paText;
-
+    private String[] not;
     public ReptilePaJsoup() {
+    }
+
+    public String[] getNot() {
+        return not;
+    }
+
+    public void setNot(String[] not) {
+        this.not = not;
     }
 
     public String getPaText() {
@@ -18,10 +26,4 @@ public class ReptilePaJsoup {
         this.paText = paText;
     }
 
-    @Override
-    public String toString() {
-        return "ReptilePaJsoup{" +
-                "paText='" + paText + '\'' +
-                '}';
-    }
 }

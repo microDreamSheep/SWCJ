@@ -199,7 +199,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
             }
         }else {
-            System.err.println("SWCJ警告：你的接口有部分参数没有用到");
+            System.err.println("SWCJ:警告：你的接口有部分参数没有用到,方法:"+ru.getName());
             for(int i = 0;i<len;i++){
                 vars.append(vars1.get(i)).append(" ").append(split2[i]).append(",");
             }
@@ -254,14 +254,24 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     sbmethod.append("return result;\n");
                 }
             } else if (ru.getJsoup() != null) {
+                int bigParanthesesCount = ru.getJsoup().size();
                 //拼接jsoup
                 {
                     //一级查询
                     ReptilePaJsoup rpj = ru.getJsoup().get(0);
                     sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\n");
                     sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
-
                     String element = "element";
+                    if(ru.getJsoup().get(0).getNot()!=null){
+                        sbmethod.append("if(1==1");
+                        for (String s : ru.getJsoup().get(0).getNot()) {
+                            if(!s.equals("")){
+                                sbmethod.append("&&!element").append(".text().equals(\"").append(s).append("\")");
+                            }
+                            sbmethod.append("){");
+                            bigParanthesesCount++;
+                        }
+                    }
                     //开始循环
                     String string = element;//命名空间
                     String end = element;
@@ -269,12 +279,22 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                         String uuid = UUID.randomUUID().toString().replace("-", "");
                         sbmethod.append("org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(ru.getJsoup().get(i).getPaText()).append("\");\n");
                         sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\norg.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
+                        if(ru.getJsoup().get(i).getNot()!=null){
+                            sbmethod.append("if(1==1");
+                            for (String s : ru.getJsoup().get(i).getNot()) {
+                                if(!s.equals("")){
+                                    sbmethod.append("&&!element").append(i+2).append(".text().equals(\"").append(s).append("\")");
+                                }
+                                sbmethod.append("){");
+                                bigParanthesesCount++;
+                            }
+                        }
                         string = element + (i + 2);
                         end = string;
                     }
                     sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
                     //添加括号
-                    for (int i = 0; i < ru.getJsoup().size(); i++) {
+                    for (int i = 0; i < bigParanthesesCount; i++) {
                         sbmethod.append("}\n");
                     }
                     //返回数据
@@ -296,8 +316,8 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 }else {
                     System.err.println("SWCJ:你的"+split2[i]+"参数并未使用，请检查是否需要");
                 }
-                }
             }
+        }
         sb.append(sbmethod);
     }
     private void throwsException(List<ReptileUrl> rus) throws ConfigException {

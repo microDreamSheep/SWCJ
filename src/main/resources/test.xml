@@ -37,7 +37,7 @@
             uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
         </cookies>
         <!--父类接口，爬虫通过接口调-->
-        <parentInterface class="com.midream.sheep.TestWeb"/>
+        <parentInterface class="com.midream.sheep.WebTest"/>
         <!--请求配置
         一个配置对应一个方法
         -->
@@ -57,10 +57,12 @@
 <!--                <regular reg="href="/>-->
                 <!--jsoup可以分为多层解析
                 即一次<pa>就是一次解析
+
+                not 排除固定文本
                 -->
                 <jsoup>
                     <!--pa可配置属性来选取目标Document-->
-                    <pa>
+                    <pa not="下一页">
                         #main>div.slist>ul>li>a
                     </pa>
                 </jsoup>
