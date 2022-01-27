@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})//只能作用到方法上
 @Retention(RetentionPolicy.RUNTIME)//定义运行策略
 public @interface WebSpider {
-    public String value();
+    String value();
 }
