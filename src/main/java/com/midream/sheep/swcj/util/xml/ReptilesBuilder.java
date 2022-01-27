@@ -316,7 +316,6 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
         sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
-        System.out.println(sbmethod);
         if(len!=0) {
             for(int i = 0;i<len;i++) {
                 //判断，使未使用的name不被注入
