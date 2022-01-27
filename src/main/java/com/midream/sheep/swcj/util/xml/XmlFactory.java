@@ -175,12 +175,14 @@ public class XmlFactory {
                                     if(node.getAttributes().getNamedItem("step")!=null){
                                         String step = node.getAttributes().getNamedItem("step").getNodeValue().trim();
                                         try {
-
                                             int s = Integer.parseInt(step);
                                             rp.setStep(s);
                                         }catch (NumberFormatException e){
                                             throw new ConfigException("类型转换异常，pa"+node.getAttributes().getNamedItem("not").getNodeValue()+"不是数字");
                                         }
+                                    }
+                                    if(node.getAttributes().getNamedItem("element")!=null){
+                                        rp.setElement(node.getAttributes().getNamedItem("element").getNodeValue());
                                     }
                                     ru.addJsoup(rp);
                                 }

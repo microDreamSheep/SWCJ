@@ -300,7 +300,11 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                         string = element + (i + 2);
                         end = string;
                     }
-                    sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
+                    if(ru.getJsoup().get(ru.getJsoup().size()-1).getElement()!=null&&!ru.getJsoup().get(ru.getJsoup().size()-1).getElement().equals("")) {
+                        sbmethod.append("list.add(").append(end).append(".attr(\"").append(ru.getJsoup().get(ru.getJsoup().size()-1).getElement()).append("\"));");
+                    }else {
+                        sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
+                    }
                     //添加括号
                     for (int i = 0; i < bigParanthesesCount; i++) {
                         sbmethod.append("}\n");
@@ -339,7 +343,12 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             if(url.getName()==null||url.getName().equals("")){
                 throw new ConfigException("你的name未配置,在"+url.getName());
             }
-
+            for (int i = 0;i<url.getJsoup().size()-1;i++) {
+                String element = url.getJsoup().get(i).getElement();
+                if(element!=null&&!element.equals("")){
+                    throw new ConfigException("元素获取必须在最后一个pa里定义,在"+url.getName());
+                }
+            }
         }
     }
 }

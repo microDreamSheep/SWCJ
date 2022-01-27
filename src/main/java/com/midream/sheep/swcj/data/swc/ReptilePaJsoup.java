@@ -8,6 +8,15 @@ public class ReptilePaJsoup {
     private String paText;
     private String[] not;
     private int step;
+    private String element;
+
+    public String getElement() {
+        return element;
+    }
+
+    public void setElement(String element) {
+        this.element = element;
+    }
 
     public int getStep() {
         return step;
