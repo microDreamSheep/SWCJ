@@ -180,13 +180,13 @@ public class XmlFactory {
                                         String[] split = not.split(",");
                                         rp.setNot(split);
                                     }
-                                    if(node.getAttributes().getNamedItem("step")!=null){
+                                    if(node.getAttributes().getNamedItem("step")!=null&&!node.getAttributes().getNamedItem("step").getNodeValue().equals("")){
                                         String step = node.getAttributes().getNamedItem("step").getNodeValue().trim();
                                         try {
                                             int s = Integer.parseInt(step);
                                             rp.setStep(s);
                                         }catch (NumberFormatException e){
-                                            throw new ConfigException("类型转换异常，pa"+node.getAttributes().getNamedItem("not").getNodeValue()+"不是数字");
+                                            throw new ConfigException("类型转换异常，step"+node.getAttributes().getNamedItem("not").getNodeValue()+"不是数字");
                                         }
                                     }
                                     if(node.getAttributes().getNamedItem("element")!=null){
