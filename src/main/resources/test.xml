@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE SWCJ PUBLIC "SWCJ" "http://150.158.199.193/test/NameSpace.dtd">
 <SWCJ>
     <!--全局配置-->
     <config>
@@ -60,7 +59,7 @@
                 即一次<pa>就是一次解析
                 not 排除固定文本
                 -->
-                <jsoup name="">
+                <jsoup name="writer">
                     <!--pa可配置属性来选取目标Document
                     not 排除文本
                     step跳过的步长

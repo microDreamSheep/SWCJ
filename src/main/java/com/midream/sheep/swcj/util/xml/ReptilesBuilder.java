@@ -269,7 +269,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                         if(jsoup.getName()!=null&&!jsoup.getName().equals("")){
                             sbmethod.append("java.util.List<String> ").append(jsoup.getName()).append("= new java.util.LinkedList<>();");
                         }else {
-                            throw new ConfigException("返回值为引用类型必须定义jsoup name");
+                            throw new ConfigException("jsoup name为空");
                         }
                     }
                 }
