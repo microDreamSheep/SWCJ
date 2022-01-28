@@ -19,6 +19,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     private static final SWCJClassLoader swcjcl;
 
     static {
+        //单例设计模式
         sio = new SIO();
         swcjcl = new SWCJClassLoader();
     }

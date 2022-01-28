@@ -1,3 +1,4 @@
+import com.midream.sheep.WEBSPI;
 import com.midream.sheep.WebTest;
 import com.midream.sheep.pojo.Novel;
 import com.midream.sheep.swcj.Exception.ConfigException;
@@ -9,8 +10,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.lang.reflect.Method;
-
 /**
  * @author midreamsheep
  */
@@ -18,7 +17,7 @@ public class daaddsa {
     @Test
     public void test() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, ConfigException, InterfaceIllegal {
         XmlFactory xf = new XmlFactory(daaddsa.class.getClassLoader().getResource("").getPath() + "/test.xml");
-        WebTest getHtml = (WebTest) xf.getWebSpider("getHtml");
+        WEBSPI getHtml = (WEBSPI) xf.getWebSpider("awds");
         String[] hrefs = getHtml.a("");
         for (String href : hrefs) {
             System.out.println(href);
