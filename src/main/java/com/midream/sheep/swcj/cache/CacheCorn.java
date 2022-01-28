@@ -9,9 +9,9 @@ import java.util.Map;
  */
 public class CacheCorn {
     //存放缓存中对象
-    private static Map<String,Object> OBJECTS_MAP = null;
+    private static final Map<String,Object> OBJECTS_MAP;
     //存储内存中已有的地址
-    private static Map<String,String> FILE_PATH_MAP = null;
+    private static final Map<String,String> FILE_PATH_MAP;
     static{
         OBJECTS_MAP = new HashMap<>();
         FILE_PATH_MAP = new HashMap<>();

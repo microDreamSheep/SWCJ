@@ -119,10 +119,16 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         }finally {
             if(javaFile!=null) {
                 //删掉java原文件
-                javaFile.delete();
+                boolean b = javaFile.delete();
+                if(!b){
+                    System.err.println("你的java源文件未删除");
+                }
             }
             if(classFile!=null) {
-                classFile.delete();
+                boolean b = classFile.delete();
+                if(!b){
+                    System.err.println("你的class源文件未删除");
+                }
             }
         }
         return null;
@@ -168,7 +174,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     }
 
     @Override
-    public Object getObject(String Key) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Object getObject(String Key) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Object ob = CacheCorn.getObject(Key);
         if (ob != null) {
             return ob;
@@ -297,16 +303,16 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             sbmethod.append("java.util.List<").append(method.getReturnType().replace("[]","")).append(">").append("lists").append("= new java.util.LinkedList<>();");
             sbmethod.append("for(int i = 0;i<maxawdwa;i++){");
             //开始执行反射生成数据
-            sbmethod.append("Class<?> aClass = Class.forName(\"" + method.getReturnType().replace("[]","") + "\");");
+            sbmethod.append("Class<?> aClass = Class.forName(\"").append(method.getReturnType().replace("[]", "")).append("\");");
             sbmethod.append("Object o = aClass.getDeclaredConstructor().newInstance();");
             for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
                 sbmethod.append("try{");
-                sbmethod.append("aClass.getDeclaredMethod(\"set" + StringUtil.StringToUpperCase(jsoup.getName()) + "\", String.class).invoke(o," + jsoup.getName() + ".get(i));");
+                sbmethod.append("aClass.getDeclaredMethod(\"set").append(StringUtil.StringToUpperCase(jsoup.getName())).append("\", String.class).invoke(o,").append(jsoup.getName()).append(".get(i));");
                 sbmethod.append("}catch(Exception e){}");
             }
             sbmethod.append("lists.add((").append(method.getReturnType().replace("[]","")).append(")o").append(");");
             sbmethod.append("}");
-            sbmethod.append("return lists.toArray(new "+method.getReturnType()+"{});");
+            sbmethod.append("return lists.toArray(new ").append(method.getReturnType()).append("{});");
         }
         sbmethod.append("}catch (Exception e){\ne.printStackTrace();\n}\nreturn null;\n}");
         if(len!=0) {

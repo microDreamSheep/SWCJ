@@ -19,16 +19,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 /**
  * 工厂类，读取配置文件，获取具体实现类
  * */
 public class XmlFactory {
-    private ReptileConfig rc = new ReptileConfig();
-    private Map<String,RootReptile> rootReptiles = new HashMap<>();;
-    private static ReptilesBuilder rb;
+    private final ReptileConfig rc = new ReptileConfig();
+    private final Map<String,RootReptile> rootReptiles = new HashMap<>();
+    private static final ReptilesBuilder rb;
     static {
         rb = new ReptilesBuilder();
     }
@@ -76,7 +77,7 @@ public class XmlFactory {
                 case "timeout":
                     NamedNodeMap timeout = child.getAttributes();
                     try {
-                        int time = Integer.parseInt(timeout.getNamedItem("value").getNodeValue().trim());
+                        Integer.parseInt(timeout.getNamedItem("value").getNodeValue().trim());
                     }catch (NumberFormatException e){
                         throw new ConfigException("类型转换异常，配置文件time中"+timeout.getNamedItem("value").getNodeValue().trim()+"不是数字");
                     }
@@ -85,7 +86,7 @@ public class XmlFactory {
                 case "constructionSpace":
                     NamedNodeMap constructionSpace = child.getAttributes();
                     if(Boolean.parseBoolean(constructionSpace.getNamedItem("isAbsolute").getNodeValue().trim())){
-                        rc.setWorkplace((XmlFactory.class.getClassLoader().getResource("").getPath()+constructionSpace
+                        rc.setWorkplace((Objects.requireNonNull(XmlFactory.class.getClassLoader().getResource("")).getPath()+constructionSpace
                         .getNamedItem("workSpace").getNodeValue().trim()).replace("file:/",""));
                     }else {
                         rc.setWorkplace(constructionSpace.getNamedItem("workSpace").getNodeValue().trim().replace("file:/",""));
@@ -133,8 +134,8 @@ public class XmlFactory {
                 case "url":
                     ReptileUrl ru = new ReptileUrl();
                     NamedNodeMap attributes1 = no.getAttributes();
-                    ru.setName(no.getAttributes().getNamedItem("name").getNodeValue());
-                    ru.setInPutName(no.getAttributes().getNamedItem("inPutName").getNodeValue());
+                    ru.setName(attributes1.getNamedItem("name").getNodeValue());
+                    ru.setInPutName(attributes1.getNamedItem("inPutName").getNodeValue());
                     parseUrl(no.getChildNodes(),ru);
                     //绑定两类-----组合设计模式
                     rr.addUrl(ru);

@@ -4,7 +4,6 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.data.swc.ReptileUrl;
 import com.midream.sheep.swcj.data.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.SWCJMethod;
 
