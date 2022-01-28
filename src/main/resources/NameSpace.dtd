@@ -1,0 +1,76 @@
+<!DOCTYPE SWCL [
+        <!--根标签-->
+        <!ELEMENT SWCL (config*,swc+)>
+
+        <!--全局配置标签-->
+        <!ELEMENT config (constructionSpace?,timeout?,userAgent?,createTactics?)>
+        <!--超时时间-->
+        <!ELEMENT timeout EMPTY>
+        <!--userAgent-->
+        <!ELEMENT userAgent (value*)>
+        <!--userAgent子标签-->
+        <!ELEMENT value (#PCDATA)>
+        <!--工作空间标签-->
+        <!ELEMENT constructionSpace EMPTY>
+        <!--爬虫策略标签-->
+        <!ELEMENT createTactics EMPTY>
+        <!--爬虫策略属性-->
+        <!ATTLIST createTactics
+                isCache CDATA #REQUIRED>
+        <!--timeout属性配置-->
+        <!ATTLIST timeout
+        value CDATA #REQUIRED
+        >
+        <!--工作空间属性配置-->
+        <!ATTLIST constructionSpace
+                isAbsolute CDATA #IMPLIED
+                workSpace CDATA #IMPLIED
+                >
+
+        
+        <!--具体爬虫标签-->
+        <!ELEMENT swc (cookies?,parentInterface?,url+)>
+        <!ELEMENT cookies (#PCDATA)>
+        <!ELEMENT parentInterface EMPTY>
+        <!ELEMENT url (type,path,parseProgram)>
+
+        <!ELEMENT type EMPTY>
+        <!ELEMENT path EMPTY>
+        <!ELEMENT parseProgram (regular|jsoup+)>
+
+        <!ELEMENT regular EMPTY>
+        <!ATTLIST regular
+                reg CDATA #REQUIRED
+                >
+        <!ELEMENT pa (#PCDATA)>
+        <!ELEMENT jsoup (pa+)>
+        <!ATTLIST jsoup
+                name CDATA #REQUIRED
+                >
+        <!ATTLIST pa
+                not CDATA #IMPLIED
+                step CDATA #IMPLIED
+                element CDATA #IMPLIED
+                >
+        <!ATTLIST parseProgram
+                isHtml (true|false) #REQUIRED
+                >
+        <!ATTLIST path
+                path CDATA #REQUIRED
+                >
+        <!ATTLIST type
+                type (GET|POST) #REQUIRED
+                >
+        <!ATTLIST swc
+                id CDATA #REQUIRED
+                >
+        <!ATTLIST parentInterface
+                class CDATA #REQUIRED>
+        <!ATTLIST url
+                name CDATA #REQUIRED
+                inPutName CDATA #IMPLIED
+                >
+
+
+
+                ]>

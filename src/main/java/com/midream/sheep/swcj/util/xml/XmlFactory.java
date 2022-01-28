@@ -47,7 +47,7 @@ public class XmlFactory {
         //2.创建DocumentBuilder对象
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document d = builder.parse(xmlFile);
-        NodeList root = d.getElementsByTagName("SWCL");
+        NodeList root = d.getElementsByTagName("SWCJ");
         parseXml(root.item(0));
     }
     //解析xml配置文件
@@ -150,7 +150,7 @@ public class XmlFactory {
                 case "type":
                     ru.setRequestType(n.getAttributes().getNamedItem("type").getNodeValue().trim());
                     break;
-                case "url":
+                case "path":
                     ru.setUrl(n.getAttributes().getNamedItem("path").getNodeValue().trim());
                     break;
                 case "parseProgram":

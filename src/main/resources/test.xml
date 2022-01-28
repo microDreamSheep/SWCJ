@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<SWCL>
+<!DOCTYPE SWCJ PUBLIC "SWCJ" "http://150.158.199.193/test/NameSpace.dtd">
+<SWCJ>
     <!--全局配置-->
     <config>
         <!--工作空间，生成的字节码会存储到里面
@@ -48,7 +49,7 @@
             -->
             <type type="GET"/>
             <!--url链接-->
-            <url path="https://pic.netbian.com/index_5.html"/>
+            <path path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
@@ -72,4 +73,4 @@
             </parseProgram>
         </url>
     </swc>
-</SWCL>
+</SWCJ>
