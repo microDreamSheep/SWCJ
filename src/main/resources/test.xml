@@ -48,7 +48,7 @@
             -->
             <type type="GET"/>
             <!--url链接-->
-            <url path="https://pic.netbian.com/index_#{count}.html"/>
+            <url path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
             并不支持同时使用
             <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
@@ -65,7 +65,7 @@
                     step跳过的步长
                     element获取元素(加上abs:是绝对链接)
                     -->
-                    <pa not="下一页" step="4" element="">
+                    <pa not="下一页" step="4" element="#{count}">
                         #main>div.slist>ul>li>a
                     </pa>
                 </jsoup>

@@ -4,7 +4,7 @@ import com.midream.sheep.pojo.Novel;
 import com.midream.sheep.swcj.Annotation.WebSpider;
 
 public interface WebTest {
-    @WebSpider("a")
-    void a(String count);
+    @WebSpider("getHtml")
+    Novel[] a(String count);
 
 }

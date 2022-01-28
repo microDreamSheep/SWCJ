@@ -27,6 +27,8 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
     public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
         //java源文件
         File javaFile = null;
+        //class 源文件
+        File classFile = null;
         //获取所有方法
         List<ReptileUrl> rus = rr.getRu();
         throwsException(rus);
@@ -99,17 +101,16 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             //编译类
             String s = swcjcl.compileJavaFile(javaFile);
             //实例化文件类
-            File classFile = new File(s);
+            classFile = new File(s);
             //加载类
             Class<?> aClass = swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + name, s);
             Object webc = aClass.getDeclaredConstructor().newInstance();
             if (rc.isCache()) {
                 //是缓存则进入对象池
                 CacheCorn.addObject(rr.getId(), webc);
-                classFile.delete();
             } else {
                 //非缓存则进入路径池
-                CacheCorn.addPath(rr.getId(), s);
+                CacheCorn.addPath(rr.getId(),name);
             }
             //返回类
             return webc;
@@ -119,6 +120,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             if(javaFile!=null) {
                 //删掉java原文件
                 javaFile.delete();
+            }
+            if(classFile!=null) {
+                classFile.delete();
             }
         }
         return null;
@@ -216,6 +220,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         //方法头 定义被重写
         sbmethod.append("\npublic ").append(method.getReturnType()).append(" ").append(method.getMethodName()).append("(").append(varString).append("){").append("\n").append("try{");
         //搭建局部变量
+        String StringMap = "A"+UUID.randomUUID().toString().replace("-","");
         {
             if (!(rr.getCookies().equals("")) && (rr.getCookies() != null)) {
                 //cookie字典
@@ -228,36 +233,36 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                     map.put(split1[0], split1[1]);
                 }
                 //拼接cookie接受map
-                sbmethod.append("java.util.Map<String,String> map = new java.util.HashMap<>();");
+                sbmethod.append("java.util.Map<String,String> ").append(StringMap).append(" = new java.util.HashMap<>();");
                 //开始注入cookie值
                 for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
-                    sbmethod.append("map.put(\"").append(stringStringEntry.getKey()).append("\",\"").append(stringStringEntry.getValue()).append("\");\n");
+                    sbmethod.append(StringMap).append(".put(\"").append(stringStringEntry.getKey()).append("\",\"").append(stringStringEntry.getValue()).append("\");\n");
                 }
             }
         }
         //搭建主要的方法体
         {
             //获取方法主体的类
-            String map = (!Objects.requireNonNull(rr.getCookies()).equals("")) ? ".cookies(map)" : "";
+            String map = (!Objects.requireNonNull(rr.getCookies()).equals("")) ? ".cookies("+StringMap+")" : "";
             sbmethod.append("\norg.jsoup.nodes.Document document = org.jsoup.Jsoup.connect(\"").append(ru.getUrl()).append("\").ignoreContentType(true).timeout(timeout)\n").append(map).append(".userAgent(userAgent[(int) (Math.random()*userAgent.length)]).").append(ru.getRequestType()!=null&&ru.getRequestType().equals("POST") ? "post" : "get").append("();");
             if (ru.getReg() != null && !ru.getReg().equals("")) {
                 //进入正则表达式方法
                 sbmethod.append("String text = document.").append(ru.isHtml() ? "html" : "text").append("();\n").append("java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(\"").append(ru.getReg()).append("\");\n").append("java.util.regex.Matcher matcher = pattern.matcher(text);\n");
                 if (method.getReturnType().equals(stringBody) || method.getReturnType().equals("java.lang.String") || method.getReturnType().equals("")) {
                     sbmethod.append("matcher.find();\n" +
-                            "String result =  matcher.group();\n");
+                            "String SWCJresult =  matcher.group();\n");
                 } else if (method.getReturnType().equals("String[]") || method.getReturnType().equals("java.lang.String[]")) {
                     sbmethod.append("matcher.find();\n" +
                             "int i = matcher.groupCount();\n" +
-                            "String[] result = new String[i];\n" +
+                            "String[] SWCJresult = new String[i];\n" +
                             "for(int d = 0;d<i;d++){\n" +
-                            "result[d] = matcher.group(d);\n" +
+                            "SWCJresult[d] = matcher.group(d);\n" +
                             "}");
-                    sbmethod.append("return result;\n");
+                    sbmethod.append("return SWCJresult;\n");
                 }
             } else if (ru.getJsoup().get(0).getJsoup() != null) {
                 if(method.getReturnType().equals("String")||method.getReturnType().equals("String[]")) {
-                    sbmethod.append("String[] result = null;");
+                    sbmethod.append("String[] SWCJresult = null;");
                 }else {
                     isQuote = true;
                     for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
@@ -276,9 +281,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         }
         if(!isQuote) {//不是引用类型返回字符串
             if (method.getReturnType().equals(stringBody) || method.getReturnType().equals("java.lang.String")) {
-                sbmethod.append("return result[0];");
+                sbmethod.append("return SWCJresult[0];");
             } else {
-                sbmethod.append("return result;");
+                sbmethod.append("return SWCJresult;");
             }
         }else {//是引用类型就注入数据
             sbmethod.append("int[] casdsad = {");
@@ -341,11 +346,10 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         int bigParanthesesCount = jsoup.size();
         //一级查询
         ReptilePaJsoup rpj = jsoup.get(0);
-        sbmethod.append("\njava.util.List<String> list = new java.util.ArrayList<>();\nboolean owdad = true;");
+        sbmethod.append("\njava.util.List<String> SWCJlist = new java.util.ArrayList<>();\nboolean owdad = true;");
         sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
         if(jsoup.get(0).getStep()!=0){
             sbmethod.append("if(owdad){i+=").append(jsoup.get(0).getStep()).append(";owdad=false;}");
-            System.out.println(sbmethod);
         }
         String element = "element";
         if(jsoup.get(0).getNot()!=null){
@@ -383,9 +387,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             end = string;
         }
         if(jsoup.get(jsoup.size()-1).getElement()!=null&&!jsoup.get(jsoup.size()-1).getElement().equals("")) {
-            sbmethod.append("list.add(").append(end).append(".attr(\"").append(jsoup.get(jsoup.size()-1).getElement()).append("\"));");
+            sbmethod.append("SWCJlist.add(").append(end).append(".attr(\"").append(jsoup.get(jsoup.size()-1).getElement()).append("\"));");
         }else {
-            sbmethod.append("list.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
+            sbmethod.append("SWCJlist.add(").append(end).append(ru.isHtml() ? ".html" : ".text").append("());\n");
         }
         //添加括号
         for (int i = 0; i < bigParanthesesCount; i++) {
@@ -393,9 +397,9 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         }
         //返回数据
         if(!isQuote) {
-            sbmethod.append("result = list.toArray(new String[]{});");
+            sbmethod.append("SWCJresult = SWCJlist.toArray(new String[]{});");
         }else{
-            sbmethod.append(rcj.getName()).append("=list;");
+            sbmethod.append(rcj.getName()).append("=SWCJlist;");
         }
         sbmethod.append("}");
     }
