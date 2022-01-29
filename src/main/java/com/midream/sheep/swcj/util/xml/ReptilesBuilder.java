@@ -79,10 +79,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
                 {
                     for (ReptileUrl reptileUrl : rus) {
                         SWCJMethod s = function.get(reptileUrl.getName());
-                        if(s==null){
-                            continue;
-                        }
-                        if(s.getAnnotation()!=null&&!s.getAnnotation().equals("")) {
+                        if(s!=null&&s.getAnnotation()!=null&&!s.getAnnotation().equals("")) {
                             spliceMethod(sb, reptileUrl, rr, s);
                             function.remove(reptileUrl.getName());
                         }
@@ -353,11 +350,21 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         int bigParanthesesCount = jsoup.size();
         //一级查询
         ReptilePaJsoup rpj = jsoup.get(0);
-        sbmethod.append("\njava.util.List<String> SWCJlist = new java.util.ArrayList<>();\nboolean owdad = true;");
-        sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\norg.jsoup.nodes.Element element = select.get(i);");
+        for (int i = 1; i < jsoup.size(); i++) {
+            if(jsoup.get(i).getAllStep()!=0){
+                sbmethod.append("int Welementi").append(i).append(" = 0;");
+            }
+        }
+        sbmethod.append("\njava.util.List<String> SWCJlist = new java.util.ArrayList<>();\nboolean owdad = true;int SWCJasd = 0;");
+        sbmethod.append("org.jsoup.select.Elements select = document.select(\"").append(rpj.getPaText()).append("\");\n").append("for (int i = 0;i<select.size();i++) {\n");
+        sbmethod.append("SWCJasd++;");
         if(jsoup.get(0).getStep()!=0){
             sbmethod.append("if(owdad){i+=").append(jsoup.get(0).getStep()).append(";owdad=false;}");
         }
+        if(rpj.getAllStep() != 0){
+            sbmethod.append("if((SWCJasd-1)%"+rpj.getAllStep()+"!=0){continue;}");
+        }
+        sbmethod.append("org.jsoup.nodes.Element element = select.get(i);");
         String element = "element";
         if(jsoup.get(0).getNot()!=null){
             sbmethod.append("if(1==1");
@@ -374,10 +381,13 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         String end = element;
         for (int i = 1; i < jsoup.size(); i++) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
-            sbmethod.append("boolean asd = true;org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(jsoup.get(i).getPaText()).append("\");\n");
+            sbmethod.append("boolean Belementi").append(i).append(" = true;org.jsoup.select.Elements elementi").append(i).append(" = ").append(string).append(".select(\"").append(jsoup.get(i).getPaText()).append("\");\n");
             sbmethod.append("for(int " + "c").append(uuid).append(" = 0;c").append(uuid).append("<elementi").append(i).append(".size();c").append(uuid).append("++) {\n");
             if(jsoup.get(i).getStep()!=0){
-                sbmethod.append("if(asd){c").append(uuid).append("+=").append(jsoup.get(i).getStep()).append(";asd=false;}");
+                sbmethod.append("if(Belementi").append(i).append("){c").append(uuid).append("+=").append(jsoup.get(i).getStep()).append(";asd=false;}");
+            }
+            if(jsoup.get(i).getAllStep() != 0){
+                sbmethod.append("Welementi").append(i).append("++;if((Welementi").append(i).append("-1)%").append(jsoup.get(i).getAllStep()).append("!=0){continue;}");
             }
             sbmethod.append("org.jsoup.nodes.Element element").append(i + 2).append(" = elementi").append(i).append(".get(c").append(uuid).append(");");
             if(jsoup.get(i).getNot()!=null){

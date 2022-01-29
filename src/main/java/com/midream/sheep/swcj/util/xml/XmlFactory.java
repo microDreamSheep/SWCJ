@@ -187,7 +187,17 @@ public class XmlFactory {
                                             int s = Integer.parseInt(step);
                                             rp.setStep(s);
                                         }catch (NumberFormatException e){
-                                            throw new ConfigException("类型转换异常，step"+node.getAttributes().getNamedItem("not").getNodeValue()+"不是数字");
+                                            throw new ConfigException("类型转换异常，step"+node.getAttributes().getNamedItem("step").getNodeValue()+"不是数字");
+                                        }
+                                    }
+                                    if(node.getAttributes().getNamedItem("allStep")!=null&&!node.getAttributes().getNamedItem("allStep").getNodeValue().equals("")){
+                                        String step = node.getAttributes().getNamedItem("allStep").getNodeValue().trim();
+                                        try {
+                                            int s = Integer.parseInt(step);
+                                            rp.setAllStep(s);
+                                            System.out.println(rp.getAllStep());
+                                        }catch (NumberFormatException e){
+                                            throw new ConfigException("类型转换异常，allStep"+node.getAttributes().getNamedItem("allStep").getNodeValue()+"不是数字");
                                         }
                                     }
                                     if(node.getAttributes().getNamedItem("element")!=null){

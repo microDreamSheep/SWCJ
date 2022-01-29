@@ -21,14 +21,13 @@
         </userAgent>
         <!--爬虫策略
         cache缓存，将生成的类直接转为字节码加载
-        非缓存，将生成的类输出到本地class在加载
+        非缓存，不会保存具体的对象
         -->
         <createTactics isCache="true"/>
     </config>
     <!--具体的某个爬虫类
-         inPutType:传入的数值类型（可以为空）
-         id 获取的方式
-        下面使用传入值时使用的标识符（可以为空）-->
+         id 获取的标识
+        -->
     <swc id="getHtml">
         <!--局部爬虫使用的cookies文本
         格式 键:值;···
@@ -40,6 +39,8 @@
         <parentInterface class="com.midream.sheep.WebTest"/>
         <!--请求配置
         一个配置对应一个方法
+        name——>注解名
+        inPutName 下文中使用的参数名
         -->
         <url name="getHtml" inPutName="">
             <!--请求类型
@@ -51,21 +52,24 @@
             <path path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
             并不支持同时使用
-            <regular>正则表达式 正则特殊值 ALL 即为返回所有文本
+            <regular>正则表达式 正则特殊值 ALL 即为返回所有文本（经过迭代不知道是否正常）
             <jsoup>jsoup配置-->
             <parseProgram  isHtml="false">
 <!--                <regular reg="href="/>-->
                 <!--jsoup可以分为多层解析
+                一个jsoup就是一次解析
                 即一次<pa>就是一次解析
                 not 排除固定文本
+                name 注入的属性
                 -->
                 <jsoup name="writer">
                     <!--pa可配置属性来选取目标Document
                     not 排除文本
                     step跳过的步长
                     element获取元素(加上abs:是绝对链接)
+                    allStep每次跳过的步长
                     -->
-                    <pa not="下一页" step="4" element="#{count}">
+                    <pa not="下一页" allStep="0" step="4" element="#{count}">
                         #main>div.slist>ul>li>a
                     </pa>
                 </jsoup>

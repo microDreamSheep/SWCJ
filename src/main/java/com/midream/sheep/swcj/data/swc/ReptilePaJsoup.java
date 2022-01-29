@@ -9,6 +9,15 @@ public class ReptilePaJsoup {
     private String[] not;
     private int step;
     private String element;
+    private int allStep;
+
+    public int getAllStep() {
+        return allStep;
+    }
+
+    public void setAllStep(int allStep) {
+        this.allStep = allStep;
+    }
 
     public String getElement() {
         return element;
