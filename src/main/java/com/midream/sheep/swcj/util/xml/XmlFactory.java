@@ -195,7 +195,6 @@ public class XmlFactory {
                                         try {
                                             int s = Integer.parseInt(step);
                                             rp.setAllStep(s);
-                                            System.out.println(rp.getAllStep());
                                         }catch (NumberFormatException e){
                                             throw new ConfigException("类型转换异常，allStep"+node.getAttributes().getNamedItem("allStep").getNodeValue()+"不是数字");
                                         }
