@@ -223,7 +223,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             varString = vars.substring(0, vars.lastIndexOf(","));
         }
         //方法头 定义被重写
-        sbmethod.append("\npublic ").append(method.getReturnType()).append(" ").append(method.getMethodName()).append("(").append(varString).append("){").append("\n").append("try{");
+        add(sbmethod,"\npublic ",method.getReturnType(),(" "),method.getMethodName(),"(",varString,"){","\n","try{");
         //搭建局部变量
         String StringMap = "A"+UUID.randomUUID().toString().replace("-","");
         {
@@ -299,8 +299,8 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             add(sbmethod,"};");
             add(sbmethod,"java.util.Arrays.sort(casdsad);\n" ,
                     "int maxawdwa = casdsad[casdsad.length-1];");
-            sbmethod.append("java.util.List<").append(method.getReturnType().replace("[]","")).append(">").append("lists").append("= new java.util.LinkedList<>();");
-            sbmethod.append("for(int i = 0;i<maxawdwa;i++){");
+            add(sbmethod,"java.util.List<",method.getReturnType().replace("[]",""),">","lists","= new java.util.LinkedList<>();");
+            add(sbmethod,"for(int i = 0;i<maxawdwa;i++){");
             //开始执行反射生成数据
             add(sbmethod,"Class<?> aClass = Class.forName(\"",method.getReturnType().replace("[]", ""),"\");");
             add(sbmethod,"Object o = aClass.getDeclaredConstructor().newInstance();");
