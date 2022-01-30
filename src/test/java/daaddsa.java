@@ -5,6 +5,8 @@ import com.midream.sheep.WebTest;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.build.ClassBuiderAbstract;
+import com.midream.sheep.swcj.build.builder.JsoupBuilder;
 import com.midream.sheep.swcj.util.xml.XmlFactory;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -18,11 +20,6 @@ import java.io.IOException;
 public class daaddsa {
     @Test
     public void test() throws IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, ConfigException, InterfaceIllegal {
-        XmlFactory xmlFactory = new XmlFactory(daaddsa.class.getClassLoader().getResource("").getPath() + "test.xml");
-        WebTest getHtml = (WebTest)xmlFactory.getWebSpider("getHtml");
-        Image[] a = getHtml.a("6");
-        for (Image image : a) {
-            System.out.println(image.toString());
-        }
+
     }
 }
