@@ -1,13 +1,15 @@
-package com.midream.sheep.swcj.util.xml;
+package com.midream.sheep.swcj.core.xmlfactory;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.core.SWCJXmlFactory;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.data.swc.ReptileCoreJsoup;
 import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.data.swc.ReptileUrl;
 import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.util.xml.ReptilesBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -26,7 +28,7 @@ import java.util.Objects;
 /**
  * 工厂类，读取配置文件，获取具体实现类
  * */
-public class XmlFactory {
+public class CoreXmlFactory implements SWCJXmlFactory {
     private final ReptileConfig rc = new ReptileConfig();
     private final Map<String,RootReptile> rootReptiles = new HashMap<>();
     private static final ReptilesBuilder rb;
@@ -34,15 +36,16 @@ public class XmlFactory {
         rb = new ReptilesBuilder();
     }
     //xml工厂提供的构造器
-    public XmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
+    public CoreXmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
         parse(new File(xmlFile));
     }
     //xml工厂提供的构造器
-    public XmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
+    public CoreXmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
         parse(xmlFile);
     }
     //解析文档
-    private void parse(File xmlFile) throws ParserConfigurationException, IOException, SAXException, ConfigException {
+    @Override
+    public void parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException {
         //1.创建DocumentBuilderFactory对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //2.创建DocumentBuilder对象
@@ -86,7 +89,7 @@ public class XmlFactory {
                 case "constructionSpace":
                     NamedNodeMap constructionSpace = child.getAttributes();
                     if(Boolean.parseBoolean(constructionSpace.getNamedItem("isAbsolute").getNodeValue().trim())){
-                        rc.setWorkplace((Objects.requireNonNull(XmlFactory.class.getClassLoader().getResource("")).getPath()+constructionSpace
+                        rc.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath()+constructionSpace
                         .getNamedItem("workSpace").getNodeValue().trim()).replace("file:/",""));
                     }else {
                         rc.setWorkplace(constructionSpace.getNamedItem("workSpace").getNodeValue().trim().replace("file:/",""));
@@ -211,6 +214,7 @@ public class XmlFactory {
             }
         }
     }
+    @Override
     public Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
         RootReptile rootReptile = rootReptiles.get(id);
         if(rootReptile==null){
