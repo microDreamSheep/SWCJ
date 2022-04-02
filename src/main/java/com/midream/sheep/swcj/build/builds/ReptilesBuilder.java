@@ -55,40 +55,9 @@ public class ReptilesBuilder {
         }
         //开始拼接类信息
         SWCJClass sclass = AssistTool.getSWCJClass(rr, rc);
-
-        //拼接实现
-        try {
-            //拼接类
-            StringBuilder sb = new StringBuilder();
-            //增加包名
-            add(sb,"package ",Constant.DEFAULT_PACKAGE_NAME,";\n");
-            //拼接类名
-            add(sb,"public class ",sclass.getClassName()," implements ",rr.getParentInter()," {");
-            //拼接方法
-            {
-                //搭建全局静态属性
-                {
-                    add(sb,sclass.getValue("int timeout ="));
-                    add(sb,sclass.getValue("String[] userAgent = new String[]{"),"\n");
-                }
-                {
-                    final List<ReptileUrl> rus = rr.getRu();
-                    Map<String, SWCJMethod> function = sclass.getMethods();
-                    for (ReptileUrl reptileUrl : rus) {
-                        SWCJMethod s = function.get(reptileUrl.getName());
-                        if(s!=null&&s.getAnnotation()!=null&&!s.getAnnotation().equals("")) {
-                            spliceMethod(sb, reptileUrl, rr, s);
-                            function.remove(reptileUrl.getName());
-                        }
-                    }
-                    if(function.size()!=0){
-                        throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
-                    }
-                }
-            }
-
-            //类封口
-            add(sb,"\n}");
+            try{
+                StringBuilder sb = new StringBuilder();
+                spliceClass(sclass,rr,sb);
             //实例化文件类
             javaFile = new File(rc.getWorkplace() + "//" + sclass.getClassName() + ".java");
             //输出到工作空间
@@ -127,6 +96,38 @@ public class ReptilesBuilder {
             }
         }
         return null;
+    }
+
+    private void spliceClass(SWCJClass sclass,RootReptile rr,StringBuilder sb) throws InterfaceIllegal, ConfigException {
+            //增加包名
+            add(sb, "package ", Constant.DEFAULT_PACKAGE_NAME, ";\n");
+            //拼接类名
+            add(sb, "public class ", sclass.getClassName(), " implements ", rr.getParentInter(), " {");
+            //拼接方法
+            {
+                //搭建全局静态属性
+                {
+                    add(sb, sclass.getValue("int timeout ="));
+                    add(sb, sclass.getValue("String[] userAgent = new String[]{"), "\n");
+                }
+                {
+                    final List<ReptileUrl> rus = rr.getRu();
+                    Map<String, SWCJMethod> function = sclass.getMethods();
+                    for (ReptileUrl reptileUrl : rus) {
+                        SWCJMethod s = function.get(reptileUrl.getName());
+                        if (s != null && s.getAnnotation() != null && !s.getAnnotation().equals("")) {
+                            spliceMethod(sb, reptileUrl, rr, s);
+                            function.remove(reptileUrl.getName());
+                        }
+                    }
+                    if (function.size() != 0) {
+                        throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
+                    }
+                }
+            }
+
+            //类封口
+            add(sb, "\n}");
     }
 
     private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,SWCJMethod method) throws ConfigException {
