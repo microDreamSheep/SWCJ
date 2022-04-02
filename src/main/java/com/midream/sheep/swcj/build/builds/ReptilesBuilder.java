@@ -1,21 +1,31 @@
-package com.midream.sheep.swcj.util.xml;
+package com.midream.sheep.swcj.build.builds;
 
-import com.midream.sheep.swcj.Annotation.WebSpider;
-import com.midream.sheep.swcj.Exception.*;
+import com.midream.sheep.swcj.Exception.ConfigException;
+import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
+import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.build.function.AssistTool;
 import com.midream.sheep.swcj.cache.CacheCorn;
-import com.midream.sheep.swcj.data.swc.*;
+import com.midream.sheep.swcj.data.Constant;
+import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.swc.ReptileCoreJsoup;
+import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
+import com.midream.sheep.swcj.data.swc.ReptileUrl;
+import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.SWCJClass;
 import com.midream.sheep.swcj.pojo.SWCJMethod;
 import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
-import com.midream.sheep.swcj.util.function.StringUtil;
-import com.midream.sheep.swcj.util.io.*;
-import com.midream.sheep.swcj.data.*;
+import com.midream.sheep.swcj.build.function.StringUtil;
+import com.midream.sheep.swcj.util.io.ISIO;
+import com.midream.sheep.swcj.util.io.SIO;
+
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import static com.midream.sheep.swcj.util.function.StringUtil.add;
 
-public class ReptilesBuilder implements ReptilesBuilderInter {
+import static com.midream.sheep.swcj.build.function.StringUtil.add;
+
+public class ReptilesBuilder {
     private static final ISIO sio;
     private static final SWCJClassLoader swcjcl;
 
@@ -25,59 +35,45 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         swcjcl = new SWCJClassLoader();
     }
 
-    @Override
     public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
         //java源文件
         File javaFile = null;
         //class 源文件
         File classFile = null;
-        //获取所有方法
-        List<ReptileUrl> rus = rr.getRu();
-        throwsException(rus);
-        //获取类名
-        String name = "a" + UUID.randomUUID().toString().replace("-", "");
-        //效验池中是否存在,如果存在直接返回
-        Object object = null;
-        try {
-            object = getObject(rr.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
+        //从池中寻找类
+        {
+            //效验池中是否存在,如果存在直接返回
+            Object object = null;
+            try {
+                object = AssistTool.getObjectFromTool(rr.getId(),swcjcl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (object != null) {
+                return object;
+            }
         }
-        if (object != null) {
-            return object;
-        }
-        //效验接口是否有方法,并返回方法名
-        Map<String,SWCJMethod> function = new HashMap<>();
-        try {
-            getFunction(rr.getParentInter(),function);
-        } catch (ClassNotFoundException e) {
-                throw new ConfigException("你的接口不存在："+rr.getParentInter());
-        }
-        if (function.size()==0) {
-                throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
-        }
+        //开始拼接类信息
+        SWCJClass sclass = AssistTool.getSWCJClass(rr, rc);
+
+        //拼接实现
         try {
             //拼接类
             StringBuilder sb = new StringBuilder();
             //增加包名
             add(sb,"package ",Constant.DEFAULT_PACKAGE_NAME,";\n");
             //拼接类名
-            add(sb,"public class ",name," implements ",rr.getParentInter()," {");
+            add(sb,"public class ",sclass.getClassName()," implements ",rr.getParentInter()," {");
             //拼接方法
             {
                 //搭建全局静态属性
                 {
-                    //timeout
-                    add(sb,"private static int timeout = ",rc.getTimeout(),";\n");
-                    //userAgent数组创建
-                    StringBuilder usreAgent = new StringBuilder();
-                    add(usreAgent,"private static String[] userAgent = new String[]{");
-                    for (int i = 0; i < rc.getUserAgents().size(); i++) {
-                        add(usreAgent,"\"",rc.getUserAgents().get(i),"\"",(i + 1 != rc.getUserAgents().size()) ? "," : "};");
-                    }
-                    add(sb,usreAgent,"\n");
+                    add(sb,sclass.getValue("int timeout ="));
+                    add(sb,sclass.getValue("String[] userAgent = new String[]{"),"\n");
                 }
                 {
+                    final List<ReptileUrl> rus = rr.getRu();
+                    Map<String, SWCJMethod> function = sclass.getMethods();
                     for (ReptileUrl reptileUrl : rus) {
                         SWCJMethod s = function.get(reptileUrl.getName());
                         if(s!=null&&s.getAnnotation()!=null&&!s.getAnnotation().equals("")) {
@@ -94,7 +90,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             //类封口
             add(sb,"\n}");
             //实例化文件类
-            javaFile = new File(rc.getWorkplace() + "//" + name + ".java");
+            javaFile = new File(rc.getWorkplace() + "//" + sclass.getClassName() + ".java");
             //输出到工作空间
             sio.outPutString(sb.toString(), javaFile);
             //编译类
@@ -102,14 +98,14 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             //实例化文件类
             classFile = new File(s);
             //加载类
-            Class<?> aClass = swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + name, s);
+            Class<?> aClass = swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), s);
             Object webc = aClass.getDeclaredConstructor().newInstance();
             if (rc.isCache()) {
                 //是缓存则进入对象池
                 CacheCorn.addObject(rr.getId(), webc);
             } else {
                 //非缓存则进入路径池
-                CacheCorn.addPath(rr.getId(),name);
+                CacheCorn.addPath(rr.getId(),sclass.getClassName());
             }
             //返回类
             return webc;
@@ -133,59 +129,6 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         return null;
     }
 
-    @Override
-    public void getFunction(String className, Map<String,SWCJMethod> function) throws ClassNotFoundException, InterfaceIllegal {
-        Class<?> ca = Class.forName(className);
-        Method[] methods = ca.getMethods();
-        for (Method method : methods) {
-            //实例化方法类
-            SWCJMethod swcjMethod = new SWCJMethod();
-            //设置方法名
-            swcjMethod.setMethodName(method.getName());
-            //设置方法属性
-            List<String> methodType = new ArrayList<>();
-            Parameter[] parameters = method.getParameters();
-            for (Parameter parameter : parameters) {
-                methodType.add(Constant.getClassName(parameter.getType().toString()));
-            }
-            swcjMethod.setVars(methodType);
-            //放入所有有注解的方法
-            if(method.getAnnotation(WebSpider.class)!=null&&!method.getAnnotation(WebSpider.class).value().equals("")){
-                swcjMethod.setAnnotation(method.getAnnotation(WebSpider.class).value());
-                if(!(Constant.getClassName(method.getReturnType().toString()).equals(""))) {
-                    swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
-                }else{
-                    try {
-                        throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
-                    } catch (InterfaceIllegal returnTypeIllegal) {
-                        returnTypeIllegal.printStackTrace();
-                    }
-                }
-                function.put(method.getAnnotation(WebSpider.class).value(),swcjMethod);
-            }else{
-                try {
-                    throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
-                } catch (InterfaceIllegal interfaceIllegal) {
-                    interfaceIllegal.printStackTrace();
-                }
-            }
-        }
-    }
-
-    @Override
-    public Object getObject(String Key) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Object ob = CacheCorn.getObject(Key);
-        if (ob != null) {
-            return ob;
-        }
-        String path = CacheCorn.getPath(Key);
-        if (path != null) {
-            String name = Constant.DEFAULT_PACKAGE_NAME + "." + path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
-            return swcjcl.findClass(name).getDeclaredConstructor().newInstance();
-        }
-        return null;
-    }
-
     private void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr,SWCJMethod method) throws ConfigException {
         //方法体
         StringBuilder sbmethod = new StringBuilder();
@@ -196,7 +139,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
         List<String> vars1 = method.getVars();
         String[] split2 = ru.getInPutName().split(",");
         int len = split2.length;
-        if(ru.getInPutName().equals("")){
+        if(ru.getInPutName().trim().equals("")){
             len = 0;
         }
         if(len>vars1.size()){
@@ -209,7 +152,7 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             for(int i = 0;i< split2.length;i++){
                 add(vars,vars1.get(i)," ",split2[i],",");
             }
-        }else {
+        }else if(len!=0){
             System.err.println("SWCJ:警告：你的接口有部分参数没有用到,方法:"+ru.getName());
             for(int i = 0;i<len;i++){
                 add(vars,vars1.get(i)," ",split2[i],",");
@@ -325,25 +268,6 @@ public class ReptilesBuilder implements ReptilesBuilderInter {
             }
         }
         sb.append(sbmethod);
-    }
-    private void throwsException(List<ReptileUrl> rus) throws ConfigException {
-        for (ReptileUrl url : rus) {
-            if(url.getUrl()==null||url.getUrl().equals("")){
-                    throw new ConfigException("你的path未配置,在"+url.getName());
-            }
-            if(url.getJsoup()==null&&url.getReg().equals("")){
-                throw new ConfigException("你的策略未配置,在"+url.getName());
-            }
-            if(url.getName()==null||url.getName().equals("")){
-                throw new ConfigException("你的name未配置,在"+url.getName());
-            }
-            for (int i = 0;i<url.getJsoup().get(0).getJsoup().size()-1;i++) {
-                String element = url.getJsoup().get(0).getJsoup().get(i).getElement();
-                if(element!=null&&!element.equals("")){
-                    throw new ConfigException("元素获取必须在最后一个pa里定义,在"+url.getName());
-                }
-            }
-        }
     }
     private void spliceMethodJsoup(StringBuilder sbmethod,ReptileCoreJsoup rcj,ReptileUrl ru,boolean isQuote){
         add(sbmethod,"{");

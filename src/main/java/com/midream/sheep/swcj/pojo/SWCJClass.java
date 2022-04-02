@@ -20,14 +20,14 @@ public final class SWCJClass {
     }
 
     private String itIterface;
-    private ArrayList<SWCJMethod> methods;
+    private Map<String,SWCJMethod> methods;
     private Map<String,String> value;
     public String getClassName() {
         return className;
     }
 
-    public Map<String, String> getValue() {
-        return value;
+    public String getValue(String name) {
+        return value.get(name);
     }
 
     public void setValue(Map<String, String> value) {
@@ -38,14 +38,14 @@ public final class SWCJClass {
         if(this.value==null){
             this.value = new HashMap<>();
         }
-        this.value.put("private "+filed+(value.equals("")?"":"="),value);
+        this.value.put(filed,"private static "+filed+(value.equals("")?"":(""+value))+";");
     }
-    public void addMethod(SWCJMethod swcjMethod) {
+    public void addMethod(String name,SWCJMethod swcjMethod) {
         if(this.methods==null){
-            this.methods = new ArrayList<>();
+            this.methods = new HashMap<>();
         }
         if(swcjMethod!=null){
-            methods.add(swcjMethod);
+            methods.put(name,swcjMethod);
         }
     }
 
@@ -57,12 +57,11 @@ public final class SWCJClass {
         }
     }
 
-
-    public ArrayList<SWCJMethod> getMethods() {
+    public Map<String, SWCJMethod> getMethods() {
         return methods;
     }
 
-    public void setMethods(ArrayList<SWCJMethod> methods) {
+    public void setMethods(Map<String, SWCJMethod> methods) {
         this.methods = methods;
     }
 }

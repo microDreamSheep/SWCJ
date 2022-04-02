@@ -14,6 +14,7 @@ public class ReptileConfig {
     private int timeout = 10000;
     //浏览器模拟
     private List<String> userAgents = new ArrayList<>();
+
     private boolean isCache = true;//是否缓存
     /**
      * 增加浏览器
