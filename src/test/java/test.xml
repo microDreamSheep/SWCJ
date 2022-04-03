@@ -6,7 +6,7 @@
         isAbsolute->是否是相对路径
         workplace->文件夹路径
         -->
-        <constructionSpace isAbsolute="false" workSpace="E:\临时文件"/>
+        <constructionSpace isAbsolute="true" workSpace="E:\临时文件"/>
         <!--超时时间，请求超过这个时间报异常
         value->超时具体时间
         -->
@@ -62,14 +62,25 @@
                 not 排除固定文本
                 name 注入的属性
                 -->
-                <jsoup name="">
+                <jsoup name="name">
                     <!--pa可配置属性来选取目标Document
                     not 排除文本
                     step跳过的步长
                     element获取元素(加上abs:是绝对链接)
                     allStep每次跳过的步长
                     -->
-                    <pa not="下一页" allStep="0" step="4" element="#{count}">
+                    <pa not="下一页" allStep="0" step="4" element="">
+                        #main>div.slist>ul>li>a
+                    </pa>
+                </jsoup>
+                <jsoup name="url">
+                    <!--pa可配置属性来选取目标Document
+                    not 排除文本
+                    step跳过的步长
+                    element获取元素(加上abs:是绝对链接)
+                    allStep每次跳过的步长
+                    -->
+                    <pa not="下一页" allStep="0" step="4" element="abs:src">
                         #main>div.slist>ul>li>a
                     </pa>
                 </jsoup>

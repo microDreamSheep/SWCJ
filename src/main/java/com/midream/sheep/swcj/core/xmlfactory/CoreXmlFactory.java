@@ -88,7 +88,7 @@ public class CoreXmlFactory implements SWCJXmlFactory {
                     break;
                 case "constructionSpace":
                     NamedNodeMap constructionSpace = child.getAttributes();
-                    if(Boolean.parseBoolean(constructionSpace.getNamedItem("isAbsolute").getNodeValue().trim())){
+                    if(!Boolean.parseBoolean(constructionSpace.getNamedItem("isAbsolute").getNodeValue().trim())){
                         rc.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath()+constructionSpace
                         .getNamedItem("workSpace").getNodeValue().trim()).replace("file:/",""));
                     }else {
@@ -197,7 +197,7 @@ public class CoreXmlFactory implements SWCJXmlFactory {
                                         String step = node.getAttributes().getNamedItem("allStep").getNodeValue().trim();
                                         try {
                                             int s = Integer.parseInt(step);
-                                            rp.setAllStep(s);
+                                            rp.setAllStep(s+1);
                                         }catch (NumberFormatException e){
                                             throw new ConfigException("类型转换异常，allStep"+node.getAttributes().getNamedItem("allStep").getNodeValue()+"不是数字");
                                         }

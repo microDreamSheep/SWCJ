@@ -31,11 +31,6 @@ public class AssistTool {
         if (ob != null) {
             return ob;
         }
-        String path = CacheCorn.getPath(className);
-        if (path != null) {
-            String name = Constant.DEFAULT_PACKAGE_NAME + "." + path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
-            return swcjcl.findClass(name).getDeclaredConstructor().newInstance();
-        }
         return null;
     }
 

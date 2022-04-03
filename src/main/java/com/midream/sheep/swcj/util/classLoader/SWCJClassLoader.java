@@ -1,5 +1,7 @@
 package com.midream.sheep.swcj.util.classLoader;
 
+import com.midream.sheep.swcj.util.Compiler.DynamicCompiler;
+
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
@@ -59,5 +61,10 @@ public class SWCJClassLoader extends ClassLoader {
         task.call();
         return tofile.getPath().replace(".java", ".class");
     }
-
+    public Class<?> compileJavaFile(String className,String allClass) throws IOException, ClassNotFoundException {
+        DynamicCompiler compiler = new DynamicCompiler();
+        Class<?> clz = compiler.compileAndLoad(className,allClass);
+        compiler.close();
+        return clz;
+    }
 }
