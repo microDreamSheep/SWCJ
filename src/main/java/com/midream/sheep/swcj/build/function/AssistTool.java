@@ -26,16 +26,8 @@ import static com.midream.sheep.swcj.build.function.StringUtil.add;
  * @author midreamsheep
  */
 public class AssistTool {
-    public static Object getObjectFromTool(String className, SWCJClassLoader swcjcl) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Object ob = CacheCorn.getObject(className);
-        if (ob != null) {
-            return ob;
-        }
-        return null;
-    }
-
     public static Object getObjectFromTool(String className) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        return getObjectFromTool(className,new SWCJClassLoader());
+        return CacheCorn.getObject(className);
     }
     public static SWCJClass getSWCJClass(RootReptile rr, ReptileConfig rc) throws ConfigException, EmptyMatchMethodException,InterfaceIllegal {
         SWCJClass sclass = new SWCJClass();

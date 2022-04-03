@@ -41,7 +41,7 @@ public class ReptilesBuilder {
             //效验池中是否存在,如果存在直接返回
             Object object = null;
             try {
-                object = AssistTool.getObjectFromTool(rr.getId(), swcjcl);
+                object = AssistTool.getObjectFromTool(rr.getId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -74,7 +74,10 @@ public class ReptilesBuilder {
             String s = swcjcl.compileJavaFile(javaFile);
             //加载类
             aClass = swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), s);
-            javaFile.delete();
+            boolean delete = javaFile.delete();
+            if(!delete){
+                System.err.println("文件删除失败");
+            }
         }
         Object webc = aClass.getDeclaredConstructor().newInstance();
         if (rc.isCache()) {

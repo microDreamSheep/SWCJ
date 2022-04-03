@@ -1,5 +1,7 @@
 package com.midream.sheep.swcj.data;
 
+import com.midream.sheep.swcj.Exception.ConfigException;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +58,15 @@ public class ReptileConfig {
         return workplace;
     }
 
-    public void setWorkplace(String workplace) {
+    public void setWorkplace(String workplace) throws ConfigException {
         this.workplace = workplace.replace("file:/","").replace("file:\\","");
         File place = new File(workplace);
         //生成文件夹
         if(!place.exists()){
-            place.mkdirs();
+            boolean b = place.mkdirs();
+            if(!b){
+                throw new ConfigException("命名空间异常");
+            }
         }
     }
 
