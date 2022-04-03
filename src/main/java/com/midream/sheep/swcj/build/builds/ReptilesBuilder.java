@@ -283,9 +283,10 @@ public class ReptilesBuilder {
         }
         add(sbmethod, "org.jsoup.nodes.Element element = select.get(i);");
         String element = "element";
-        if (jsoup.get(0).getNot() != null) {
+        String[] not = jsoup.get(0).getNot();
+        if (not != null) {
             add(sbmethod, "if(1==1");
-            for (String s : jsoup.get(0).getNot()) {
+            for (String s : not) {
                 if (!s.equals("")) {
                     add(sbmethod, "&&!element", ".text().equals(\"", s, "\")");
                 }

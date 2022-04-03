@@ -35,7 +35,7 @@ jar包见仓库附件
 ```java
 import com.midream.sheep.swsj.Annotation.WebSpider;
 
-public interface test {
+public interface Test {
     @WebSpider("getHtml")//url的id,返回值与传参需要与配置文件一致
     String[] getData(int count);
     @WebSpider("getli")//支持多方法,非传参
@@ -54,7 +54,7 @@ public interface test {
         <createTactics isCache="true"/>
     </config>
     <swc id="getHtml">
-        <parentInterface class="com.midream.sheep.test"/>
+        <parentInterface class="com.midream.sheep.Test"/>
         <url name="getHtml" inPutName="count">
             <type type="GET"/>
             <path path="https://pic.netbian.com/index_#{count}.html"/>
@@ -88,8 +88,8 @@ public interface test {
 ```java
 XmlFactory xf = null;
         try {
-            xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("").getPath()+"com/midream/sheep/test.xml");
-            test getHtml = (test)xf.getWebSpider("getHtml");
+            xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("").getPath()+"com/midream/sheep/Test.xml");
+            Test getHtml = (Test)xf.getWebSpider("getHtml");
             String[] li = getHtml.getLi();
             for (String s : li) {
                 System.out.println(s);
@@ -168,7 +168,7 @@ public interface TestWeb {
 ```
 
 ```xml
-<swc id="test">
+<swc id="Test">
         <!--父类接口，爬虫通过接口调-->
         <parentInterface class="com.midream.demo.interfaces.TestWeb"/>
         <url name="getAllPages" inPutName="novelName">
@@ -221,7 +221,7 @@ public interface TestWeb {
         </userAgent>
         <createTactics isCache="true"/>
     </config>
-    <swc id="test">
+    <swc id="Test">
         <parentInterface class="com.midream.demo.interfaces.TestWeb"/>
         <url name="getAllPages" inPutName="novelName">
             <type type="GET"/>
@@ -251,9 +251,9 @@ public interface TestWeb {
 调用
 
 ````java
-        XmlFactory xf = new XmlFactory("E:\\item\\webDemo\\out\\production\\webDemo\\test.xml");
-        TestWeb test = (TestWeb) xf.getWebSpider("test");
-        Page[] pages = test.getAllPages("%CD%F2%B9%C5");
+        XmlFactory xf = new XmlFactory("E:\\item\\webDemo\\out\\production\\webDemo\\Test.xml");
+        TestWeb Test = (TestWeb) xf.getWebSpider("Test");
+        Page[] pages = Test.getAllPages("%CD%F2%B9%C5");
 ````
 
 暂不完善，欢迎提出bug
