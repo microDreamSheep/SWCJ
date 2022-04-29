@@ -6,10 +6,10 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.build.builds.ReptilesBuilder;
 import com.midream.sheep.swcj.core.SWCJXmlFactory;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.data.swc.ReptileCoreJsoup;
-import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
-import com.midream.sheep.swcj.data.swc.ReptileUrl;
-import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
+import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;
+import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
+import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -52,7 +52,9 @@ public class CoreXmlFactory implements SWCJXmlFactory {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document d = builder.parse(xmlFile);
         NodeList root = d.getElementsByTagName("SWCJ");
-        parseXml(root.item(0));
+        if(root.getLength()!=0) {
+            parseXml(root.item(0));
+        }
     }
     //解析xml配置文件
     private void parseXml(Node root) throws ConfigException {
@@ -221,6 +223,15 @@ public class CoreXmlFactory implements SWCJXmlFactory {
             throw new ConfigException("你的配置找不到 id为："+id);
         }
         return rb.Builder(rootReptile,rc);
+    }
+
+    @Override
+    public void addResource(String File) {
+        try {
+            parse(new File(File));
+        } catch (IOException | SAXException | ConfigException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,9 +1,6 @@
 package com.midream.sheep.swcj.pojo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author midreamsheep
@@ -21,24 +18,24 @@ public final class SWCJClass {
 
     private String itIterface;
     private Map<String,SWCJMethod> methods;
-    private Map<String,String> value;
+    private List<String> value;
     public String getClassName() {
         return className;
     }
 
-    public String getValue(String name) {
-        return value.get(name);
+    public List<String> getValue() {
+        return value;
     }
 
-    public void setValue(Map<String, String> value) {
+    public void setValue(List<String> value) {
         this.value = value;
     }
 
-    public void addValue(String filed,String value) {
+    public void addValue(String value) {
         if(this.value==null){
-            this.value = new HashMap<>();
+            this.value = new ArrayList<>();
         }
-        this.value.put(filed,"private static "+filed+(value.equals("")?"":(""+value))+";");
+        this.value.add(value);
     }
     public void addMethod(String name,SWCJMethod swcjMethod) {
         if(this.methods==null){

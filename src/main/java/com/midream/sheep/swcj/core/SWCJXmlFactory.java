@@ -10,6 +10,10 @@ import java.io.File;
 import java.io.IOException;
 
 public interface SWCJXmlFactory {
+    //解析文件
     void parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException;
+    //获取类
     Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal;
+    //增加资源文件
+    void addResource(String File);
 }

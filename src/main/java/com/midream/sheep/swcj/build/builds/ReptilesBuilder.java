@@ -7,10 +7,10 @@ import com.midream.sheep.swcj.build.function.AssistTool;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.data.swc.ReptileCoreJsoup;
-import com.midream.sheep.swcj.data.swc.ReptilePaJsoup;
-import com.midream.sheep.swcj.data.swc.ReptileUrl;
-import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
+import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;
+import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
+import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.SWCJClass;
 import com.midream.sheep.swcj.pojo.SWCJMethod;
 import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
@@ -97,8 +97,9 @@ public class ReptilesBuilder {
         {
             //搭建全局静态属性
             {
-                add(sb, sclass.getValue("int timeout ="));
-                add(sb, sclass.getValue("String[] userAgent = new String[]{"), "\n");
+                for (String property : sclass.getValue()) {
+                    add(sb,property,"\n");
+                }
             }
             {
                 final List<ReptileUrl> rus = rr.getRu();

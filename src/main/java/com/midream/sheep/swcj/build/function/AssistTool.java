@@ -7,11 +7,10 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.data.swc.ReptileUrl;
-import com.midream.sheep.swcj.data.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
+import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.SWCJClass;
 import com.midream.sheep.swcj.pojo.SWCJMethod;
-import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,13 +46,13 @@ public class AssistTool {
             throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
         }
         //拼接超时时间
-        sclass.addValue("int timeout =",rc.getTimeout()+"");
+        sclass.addValue("int timeout ="+rc.getTimeout()+";");
         //拼接浏览器标识
         StringBuilder usreAgent = new StringBuilder();
         for (int i = 0; i < rc.getUserAgents().size(); i++) {
             add(usreAgent,"\"",rc.getUserAgents().get(i),"\"",(i + 1 != rc.getUserAgents().size()) ? "," : "};");
         }
-        sclass.addValue("String[] userAgent = new String[]{", usreAgent.toString());
+        sclass.addValue("String[] userAgent = new String[]{"+usreAgent);
         return sclass;
     }
     private static void throwsException(List<ReptileUrl> rus) throws ConfigException {
