@@ -15,4 +15,5 @@ public interface ISIO {
     byte[] inPutBytes(String file) throws IOException;
     //输出字符串
     void outPutString(String data,File tofile) throws IOException;
+    void outPutData(byte[] datas,File toFile) throws IOException;
 }

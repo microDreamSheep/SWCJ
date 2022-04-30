@@ -56,4 +56,11 @@ public class SIO implements ISIO{
             }
         }
     }
+
+    @Override
+    public void outPutData(byte[] datas, File toFile) throws IOException {
+        OutputStream outputStream = new FileOutputStream(toFile);
+        outputStream.write(datas);
+        outputStream.close();
+    }
 }

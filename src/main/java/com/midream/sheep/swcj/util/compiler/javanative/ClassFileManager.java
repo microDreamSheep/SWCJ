@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.util.Compiler;
+package com.midream.sheep.swcj.util.compiler.javanative;
 
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;

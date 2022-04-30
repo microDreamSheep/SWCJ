@@ -3,6 +3,8 @@ package com.midream.sheep.swcj.core;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.build.inter.SWCJBuilder;
+import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,7 +15,11 @@ public interface SWCJXmlFactory {
     //解析文件
     void parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException;
     //获取类
-    Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal;
+    Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal, ClassNotFoundException;
     //增加资源文件
     void addResource(String File);
+    //设置编译器
+    void setCompiler(SWCJCompiler swcjCompiler);
+    //设置构建器
+    void setBuilder(SWCJBuilder swcjBuilder);
 }

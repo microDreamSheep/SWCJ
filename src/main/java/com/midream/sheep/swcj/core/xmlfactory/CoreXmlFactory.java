@@ -4,12 +4,15 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.build.builds.ReptilesBuilder;
+import com.midream.sheep.swcj.build.function.AssistTool;
+import com.midream.sheep.swcj.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.SWCJXmlFactory;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -31,6 +34,7 @@ import java.util.Objects;
 public class CoreXmlFactory implements SWCJXmlFactory {
     private final ReptileConfig rc = new ReptileConfig();
     private final Map<String,RootReptile> rootReptiles = new HashMap<>();
+    private SWCJBuilder swcjBuilder = null;
     private static final ReptilesBuilder rb;
     static {
         rb = new ReptilesBuilder();
@@ -217,10 +221,20 @@ public class CoreXmlFactory implements SWCJXmlFactory {
         }
     }
     @Override
-    public Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
+    public Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal, ClassNotFoundException {
         RootReptile rootReptile = rootReptiles.get(id);
         if(rootReptile==null){
             throw new ConfigException("你的配置找不到 id为："+id);
+        }
+        //效验池中是否存在,如果存在直接返回
+        Object object = null;
+        try {
+            object = AssistTool.getObjectFromTool(rootReptile.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (object != null) {
+            return object;
         }
         return rb.Builder(rootReptile,rc);
     }
@@ -234,4 +248,16 @@ public class CoreXmlFactory implements SWCJXmlFactory {
         }
     }
 
+    @Override
+    public void setCompiler(SWCJCompiler swcjCompiler) {
+        if(swcjBuilder==null){
+            swcjBuilder = new ReptilesBuilder();
+        }
+        this.swcjBuilder.setCompiler(swcjCompiler);
+    }
+
+    @Override
+    public void setBuilder(SWCJBuilder swcjBuilder) {
+        this.swcjBuilder = swcjBuilder;
+    }
 }

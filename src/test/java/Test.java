@@ -9,20 +9,24 @@ import test.pojo;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author midreamsheep
  */
 public class Test {
     @org.junit.Test
-    public void test() throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
+    public void test() throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory(Test.class.getClassLoader().getResource("").getPath() + "/test.xml");
-        swcjXmlFactory.addResource(Test.class.getClassLoader().getResource("").getPath() + "/tes.xml");
         pojo html = (pojo)swcjXmlFactory.getWebSpider("getHtml");
         image[] it = html.getIt();
         for (image image : it) {
             System.out.println(image.toString());
         }
+
+    }
+    @org.junit.Test
+    public void ts() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
     }
 }

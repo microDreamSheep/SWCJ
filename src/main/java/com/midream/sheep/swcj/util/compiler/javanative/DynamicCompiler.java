@@ -1,4 +1,6 @@
-package com.midream.sheep.swcj.util.Compiler;
+package com.midream.sheep.swcj.util.compiler.javanative;
+
+import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 
 import javax.tools.*;
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * 运行时编译
  */
-public class DynamicCompiler {
+public class DynamicCompiler implements SWCJCompiler {
     private JavaFileManager fileManager;
 
     public DynamicCompiler() {
@@ -34,7 +36,8 @@ public class DynamicCompiler {
      * @return
      * @throws ClassNotFoundException
      */
-    public Class compileAndLoad(String fullName, String sourceCode) throws ClassNotFoundException {
+    @Override
+    public Class<?> compileAndLoad(String fullName, String sourceCode) throws ClassNotFoundException {
         JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
         List<JavaFileObject> javaFileObjectList = new ArrayList<JavaFileObject>();
         javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sourceCode));

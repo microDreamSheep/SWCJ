@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.util.classLoader;
 
-import com.midream.sheep.swcj.util.Compiler.DynamicCompiler;
+import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.util.compiler.javanative.DynamicCompiler;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
  * 自定义编译类
  */
 public class SWCJClassLoader extends ClassLoader {
+    private SWCJCompiler swcjCompiler = null;
     //通过文件加载一个class
     public Class<?> loadData(String className, String file) {
         byte[] data = loderClassData(file);
@@ -23,7 +25,9 @@ public class SWCJClassLoader extends ClassLoader {
         }
         return null;
     }
-
+    public void setSwcjCompiler(SWCJCompiler swcjCompiler){
+        this.swcjCompiler = swcjCompiler;
+    }
     public Class<?> loadData(String className, byte[] datas) {
         if (datas != null) {
             return super.defineClass(className, datas, 0, datas.length);
@@ -46,25 +50,11 @@ public class SWCJClassLoader extends ClassLoader {
         }
         return datas;
     }
-
-    //java编译器,编译一个java文件为class
-    public String compileJavaFile(File tofile) {
-        //获取系统Java编译器
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        //获取Java文件管理器
-        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-        //通过源文件获取到要编译的Java类源码迭代器，包括所有内部类，其中每个类都是一个 JavaFileObject，也被称为一个汇编单元
-        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(tofile);
-        //生成编译任务
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
-        //执行编译任务
-        task.call();
-        return tofile.getPath().replace(".java", ".class");
-    }
+    //字符串加载
     public Class<?> compileJavaFile(String className,String allClass) throws IOException, ClassNotFoundException {
-        DynamicCompiler compiler = new DynamicCompiler();
-        Class<?> clz = compiler.compileAndLoad(className,allClass);
-        compiler.close();
-        return clz;
+        if (swcjCompiler==null){
+            swcjCompiler = new DynamicCompiler();
+        }
+        return swcjCompiler.compileAndLoad(className,allClass);
     }
 }

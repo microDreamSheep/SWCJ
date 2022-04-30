@@ -7,6 +7,10 @@ import java.util.*;
  */
 public final class SWCJClass {
     private String className;
+    private String itIterface;
+    private Map<String,SWCJMethod> methods;
+    private List<String> value;
+
 
     public String getItIterface() {
         return itIterface;
@@ -15,10 +19,6 @@ public final class SWCJClass {
     public void setItIterface(String itIterface) {
         this.itIterface = itIterface;
     }
-
-    private String itIterface;
-    private Map<String,SWCJMethod> methods;
-    private List<String> value;
     public String getClassName() {
         return className;
     }

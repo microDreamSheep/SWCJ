@@ -10,6 +10,15 @@ public class SWCJMethod {
     private String methodName;
     private List<String> vars;
     private String returnType;
+    private String body;
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public String getAnnotation() {
         return annotation;
