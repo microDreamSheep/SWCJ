@@ -8,20 +8,15 @@ import com.midream.sheep.swcj.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
-import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.SWCJClass;
 import com.midream.sheep.swcj.pojo.SWCJMethod;
 import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
-import com.midream.sheep.swcj.build.function.StringUtil;
 import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.util.io.ISIO;
 import com.midream.sheep.swcj.util.io.SIO;
-import sun.misc.ProxyGenerator;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -96,7 +91,6 @@ public class ReptilesBuilder implements SWCJBuilder {
                 }
             }
         }
-
         //类封口
         add(sb, "\n}");
     }
