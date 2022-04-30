@@ -24,7 +24,7 @@ import static com.midream.sheep.swcj.build.function.StringUtil.add;
 /**
  * @author midreamsheep
  */
-public class AssistTool {
+public class BuildTool {
     public static Object getObjectFromTool(String className) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         return CacheCorn.getObject(className);
     }
@@ -191,7 +191,8 @@ public class AssistTool {
 
     }
 
-    public static void spliceMethod(StringBuilder sb, ReptileUrl ru, RootReptile rr, SWCJMethod method) throws ConfigException {
+    public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method) throws ConfigException {
+        StringBuilder sb = new StringBuilder();
         //方法体
         StringBuilder sbmethod = new StringBuilder();
         String stringBody = "String";
@@ -330,5 +331,6 @@ public class AssistTool {
             }
         }
         sb.append(sbmethod);
+        return sb.toString();
     }
 }

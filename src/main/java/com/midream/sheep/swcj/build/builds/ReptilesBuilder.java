@@ -3,7 +3,7 @@ package com.midream.sheep.swcj.build.builds;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.build.function.AssistTool;
+import com.midream.sheep.swcj.build.function.BuildTool;
 import com.midream.sheep.swcj.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
@@ -38,19 +38,18 @@ public class ReptilesBuilder implements SWCJBuilder {
     @Override
     public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal, ClassNotFoundException {
         //开始拼接类信息
-        SWCJClass sclass = AssistTool.getSWCJClass(rr, rc);
+        SWCJClass sclass = BuildTool.getSWCJClass(rr, rc);
         try {
-            StringBuilder sb = new StringBuilder();
-            spliceClass(sclass, rr, sb);
-            return loadClass(rr, rc, sclass, sb.toString());
+            getAllMethod(sclass, rr);
+            return loadClass(rr, rc, sclass);
         } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
             System.err.println("类加载异常");
         }
         return null;
     }
 
-    private Object loadClass(RootReptile rr, ReptileConfig rc, SWCJClass sclass, String sb) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
-        Class<?> aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sb);
+    private Object loadClass(RootReptile rr, ReptileConfig rc, SWCJClass sclass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, IOException, ClassNotFoundException, InterfaceIllegal {
+        Class<?> aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
         if (rc.isCache()) {
             System.err.println("缓存功能暂未实现");
         }
@@ -63,35 +62,20 @@ public class ReptilesBuilder implements SWCJBuilder {
         return webc;
     }
 
-    private void spliceClass(SWCJClass sclass, RootReptile rr, StringBuilder sb) throws InterfaceIllegal, ConfigException {
-        //增加包名
-        add(sb, "package ", Constant.DEFAULT_PACKAGE_NAME, ";\n");
-        //拼接类名
-        add(sb, "public class ", sclass.getClassName(), " implements ", rr.getParentInter(), " {");
-        //拼接方法
-        {
-            //搭建全局静态属性
-            {
-                for (String property : sclass.getValue()) {
-                    add(sb,property,"\n");
-                }
-            }
-            {
-                final List<ReptileUrl> rus = rr.getRu();
-                Map<String, SWCJMethod> function = sclass.getMethods();
-                for (ReptileUrl reptileUrl : rus) {
-                    SWCJMethod s = function.get(reptileUrl.getName());
-                    if (s != null && s.getAnnotation() != null && !s.getAnnotation().equals("")) {
-                        AssistTool.spliceMethod(sb, reptileUrl, rr, s);
-                        function.remove(reptileUrl.getName());
-                    }
-                }
-                if (function.size() != 0) {
-                    throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
-                }
+    private void getAllMethod(SWCJClass sclass, RootReptile rr) throws InterfaceIllegal, ConfigException {
+        int count = 0;
+        final List<ReptileUrl> rus = rr.getRu();
+        Map<String, SWCJMethod> function = sclass.getMethods();
+        for (ReptileUrl reptileUrl : rus) {
+            SWCJMethod s = function.get(reptileUrl.getName());
+            if (s != null && s.getAnnotation() != null && !s.getAnnotation().equals("")) {
+                String s1 = BuildTool.spliceMethod(reptileUrl, rr, s);
+                s.setBody(s1);
+                count++;
             }
         }
-        //类封口
-        add(sb, "\n}");
+        if (function.size() != count) {
+            throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
+        }
     }
 }

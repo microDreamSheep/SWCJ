@@ -55,6 +55,9 @@ public final class SWCJClass {
     }
 
     public Map<String, SWCJMethod> getMethods() {
+        if(methods==null){
+            methods = new HashMap<>();
+        }
         return methods;
     }
 

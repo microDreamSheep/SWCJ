@@ -4,7 +4,7 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.build.builds.ReptilesBuilder;
-import com.midream.sheep.swcj.build.function.AssistTool;
+import com.midream.sheep.swcj.build.function.BuildTool;
 import com.midream.sheep.swcj.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.SWCJXmlFactory;
 import com.midream.sheep.swcj.data.ReptileConfig;
@@ -229,7 +229,7 @@ public class CoreXmlFactory implements SWCJXmlFactory {
         //效验池中是否存在,如果存在直接返回
         Object object = null;
         try {
-            object = AssistTool.getObjectFromTool(rootReptile.getId());
+            object = BuildTool.getObjectFromTool(rootReptile.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
