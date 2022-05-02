@@ -7,12 +7,13 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.pojo.buildup.SWCJValue;
 import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
-import com.midream.sheep.swcj.pojo.SWCJClass;
-import com.midream.sheep.swcj.pojo.SWCJMethod;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
+import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,13 +48,21 @@ public class BuildTool {
             throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
         }
         //拼接超时时间
-        sclass.addValue("int timeout ="+rc.getTimeout()+";");
+        SWCJValue time = new SWCJValue();
+        time.setType("int");
+        time.setName("timeout");
+        time.setValue(rc.getTimeout()+"");
+        sclass.addValue(time);
         //拼接浏览器标识
         StringBuilder usreAgent = new StringBuilder();
         for (int i = 0; i < rc.getUserAgents().size(); i++) {
             add(usreAgent,"\"",rc.getUserAgents().get(i),"\"",(i + 1 != rc.getUserAgents().size()) ? "," : "};");
         }
-        sclass.addValue("String[] userAgent = new String[]{"+usreAgent);
+        SWCJValue users = new SWCJValue();
+        users.setValue("new String[]{"+usreAgent);
+        users.setType("[Ljava.lang.String;");
+        users.setName("userAgent");
+        sclass.addValue(users);
         return sclass;
     }
     private static void throwsException(List<ReptileUrl> rus) throws ConfigException {
@@ -228,6 +237,7 @@ public class BuildTool {
         if (vars.length() != 0) {
             varString = vars.substring(0, vars.lastIndexOf(","));
         }
+
         //方法头 定义被重写
         add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString, "){", "\n", "try{");
         //搭建局部变量

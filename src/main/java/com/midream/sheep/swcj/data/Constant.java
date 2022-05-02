@@ -15,15 +15,12 @@ public class Constant {
     private static final Map<String,String> CLASS_KEY_VALUE;
     static {
         CLASS_KEY_VALUE = new HashMap<>();
-        CLASS_KEY_VALUE.put("class java.lang.String","String");
-        CLASS_KEY_VALUE.put("class [Ljava.lang.String;","String[]");
+        CLASS_KEY_VALUE.put("java.lang.String","String");
+        CLASS_KEY_VALUE.put("[Ljava.lang.String;","String[]");
     }
     private Constant(){}
-    public static String getClassName(String key) throws InterfaceIllegal {
+    public static String getClassName(String key) {
         String s = CLASS_KEY_VALUE.get(key);
-        if(key.equals("void")){
-            throw new InterfaceIllegal("接口返回值不能为void");
-        }
         if(s!=null){
             return s;
         }

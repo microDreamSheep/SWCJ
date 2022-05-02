@@ -33,9 +33,9 @@
         </dependency>
         <!--动态编译-->
         <dependency>
-            <groupId>javassist</groupId>
+            <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.12.1.GA</version>
+            <version>3.24.1-GA</version>
         </dependency>
 
         <!--测试单元-->

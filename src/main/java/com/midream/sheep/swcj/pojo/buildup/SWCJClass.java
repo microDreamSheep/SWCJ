@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.pojo;
+package com.midream.sheep.swcj.pojo.buildup;
 
 import java.util.*;
 
@@ -9,7 +9,7 @@ public final class SWCJClass {
     private String className;
     private String itIterface;
     private Map<String,SWCJMethod> methods;
-    private List<String> value;
+    private List<SWCJValue> value;
 
 
     public String getItIterface() {
@@ -23,15 +23,15 @@ public final class SWCJClass {
         return className;
     }
 
-    public List<String> getValue() {
+    public List<SWCJValue> getValue() {
         return value;
     }
 
-    public void setValue(List<String> value) {
+    public void setValue(List<SWCJValue> value) {
         this.value = value;
     }
 
-    public void addValue(String value) {
+    public void addValue(SWCJValue value) {
         if(this.value==null){
             this.value = new ArrayList<>();
         }

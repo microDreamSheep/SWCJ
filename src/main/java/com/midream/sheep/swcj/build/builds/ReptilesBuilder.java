@@ -10,18 +10,18 @@ import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
-import com.midream.sheep.swcj.pojo.SWCJClass;
-import com.midream.sheep.swcj.pojo.SWCJMethod;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
+import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.util.classLoader.SWCJClassLoader;
 import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.util.io.ISIO;
 import com.midream.sheep.swcj.util.io.SIO;
+import javassist.CannotCompileException;
+import javassist.NotFoundException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
-import static com.midream.sheep.swcj.build.function.StringUtil.add;
 
 public class ReptilesBuilder implements SWCJBuilder {
     private static final ISIO sio;
@@ -42,13 +42,14 @@ public class ReptilesBuilder implements SWCJBuilder {
         try {
             getAllMethod(sclass, rr);
             return loadClass(rr, rc, sclass);
-        } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException | CannotCompileException | NotFoundException e) {
             System.err.println("类加载异常");
+            e.printStackTrace();
         }
         return null;
     }
 
-    private Object loadClass(RootReptile rr, ReptileConfig rc, SWCJClass sclass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, IOException, ClassNotFoundException, InterfaceIllegal {
+    private Object loadClass(RootReptile rr, ReptileConfig rc, SWCJClass sclass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, IOException, ClassNotFoundException, InterfaceIllegal, CannotCompileException, NotFoundException {
         Class<?> aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
         if (rc.isCache()) {
             System.err.println("缓存功能暂未实现");

@@ -18,15 +18,20 @@ public class Test {
     @org.junit.Test
     public void test() throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory(Test.class.getClassLoader().getResource("").getPath() + "/test.xml");
-        pojo html = (pojo)swcjXmlFactory.getWebSpider("getHtml");
+        long start = System.currentTimeMillis();
+        pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
+        long end = System.currentTimeMillis();
+        System.out.println(end-start);
         image[] it = html.getIt();
         for (image image : it) {
             System.out.println(image.toString());
         }
 
     }
+
     @org.junit.Test
     public void ts() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
     }
+
 }

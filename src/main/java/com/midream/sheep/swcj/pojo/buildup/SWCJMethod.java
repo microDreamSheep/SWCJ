@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.pojo;
+package com.midream.sheep.swcj.pojo.buildup;
 
 import java.util.List;
 

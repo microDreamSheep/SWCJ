@@ -1,25 +1,15 @@
 package com.midream.sheep.swcj.util.classLoader;
 
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.build.function.BuildTool;
-import com.midream.sheep.swcj.data.Constant;
-import com.midream.sheep.swcj.pojo.SWCJClass;
-import com.midream.sheep.swcj.pojo.SWCJMethod;
-import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.util.compiler.javanative.DynamicCompiler;
+import javassist.CannotCompileException;
+import javassist.NotFoundException;
 
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-
-import static com.midream.sheep.swcj.build.function.StringUtil.add;
 
 /**
  * @author midreamSheep
@@ -61,7 +51,7 @@ public class SWCJClassLoader extends ClassLoader {
         return datas;
     }
     //字符串加载
-    public Class<?> compileJavaFile(String className, SWCJClass sclass) throws IOException, ClassNotFoundException, InterfaceIllegal {
+    public Class<?> compileJavaFile(String className, SWCJClass sclass) throws IOException, ClassNotFoundException, InterfaceIllegal, CannotCompileException, NotFoundException {
         if (swcjCompiler==null){
             swcjCompiler = new DynamicCompiler();
         }

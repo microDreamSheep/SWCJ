@@ -1,8 +1,9 @@
 package com.midream.sheep.swcj.util.compiler.javanative;
 
 import com.midream.sheep.swcj.data.Constant;
-import com.midream.sheep.swcj.pojo.SWCJClass;
-import com.midream.sheep.swcj.pojo.SWCJMethod;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
+import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
+import com.midream.sheep.swcj.pojo.buildup.SWCJValue;
 import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 
 import javax.tools.*;
@@ -53,8 +54,8 @@ public class DynamicCompiler implements SWCJCompiler {
         {
             //搭建全局静态属性
             {
-                for (String property : sclass.getValue()) {
-                    add(sb,property,"\n");
+                for (SWCJValue property : sclass.getValue()) {
+                    add(sb,property.toString(),"\n");
                 }
             }
             {
