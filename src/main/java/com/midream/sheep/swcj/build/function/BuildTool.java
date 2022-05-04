@@ -1,6 +1,6 @@
 package com.midream.sheep.swcj.build.function;
 
-import com.midream.sheep.swcj.Annotation.WebSpider;
+import com.midream.sheep.swcj.annotation.WebSpider;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
@@ -56,7 +56,7 @@ public class BuildTool {
         //拼接浏览器标识
         StringBuilder usreAgent = new StringBuilder();
         for (int i = 0; i < rc.getUserAgents().size(); i++) {
-            add(usreAgent,"\"",rc.getUserAgents().get(i),"\"",(i + 1 != rc.getUserAgents().size()) ? "," : "};");
+            add(usreAgent,"\"",rc.getUserAgents().get(i),"\"",(i + 1 != rc.getUserAgents().size()) ? "," : "}");
         }
         SWCJValue users = new SWCJValue();
         users.setValue("new String[]{"+usreAgent);
@@ -197,7 +197,6 @@ public class BuildTool {
             add(sbmethod, rcj.getName(), "=SWCJlist;");
         }
         add(sbmethod, "}");
-
     }
 
     public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method) throws ConfigException {
@@ -282,13 +281,13 @@ public class BuildTool {
                     add(sbmethod, "return SWCJresult;\n");
                 }
             } else if (ru.getJsoup().get(0).getJsoup() != null) {
-                if (method.getReturnType().equals("String") || method.getReturnType().equals("String[]")) {
+                if (method.getReturnType().equals("java.lang.String") || method.getReturnType().equals("java.lang.String[]")) {
                     add(sbmethod, "String[] SWCJresult = null;");
                 } else {
                     isQuote = true;
                     for (ReptileCoreJsoup jsoup : ru.getJsoup()) {
                         if (jsoup.getName() != null && !jsoup.getName().equals("")) {
-                            add(sbmethod, "java.util.List<String> ", jsoup.getName(), "= new java.util.LinkedList<>();");
+                            add(sbmethod, "java.util.List<String> ", jsoup.getName(), ";");
                         } else {
                             throw new ConfigException("jsoup name为空");
                         }

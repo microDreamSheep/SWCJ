@@ -1,6 +1,6 @@
 package test;
 
-import com.midream.sheep.swcj.Annotation.WebSpider;
+import com.midream.sheep.swcj.annotation.WebSpider;
 
 public interface pojo {
     @WebSpider("getHtml")
