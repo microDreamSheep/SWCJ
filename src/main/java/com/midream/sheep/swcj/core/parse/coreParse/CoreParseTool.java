@@ -1,8 +1,8 @@
-package com.midream.sheep.swcj.core.parse;
+package com.midream.sheep.swcj.core.parse.coreParse;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
-import com.midream.sheep.swcj.core.IParseTool;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
+import com.midream.sheep.swcj.core.parse.IParseTool;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;

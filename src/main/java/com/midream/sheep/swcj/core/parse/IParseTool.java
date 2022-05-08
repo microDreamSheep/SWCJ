@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.core;
+package com.midream.sheep.swcj.core.parse;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.data.ReptileConfig;
