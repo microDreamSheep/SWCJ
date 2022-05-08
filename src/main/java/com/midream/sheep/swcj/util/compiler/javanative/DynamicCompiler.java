@@ -18,33 +18,12 @@ import static com.midream.sheep.swcj.build.function.StringUtil.add;
  * 运行时编译
  */
 public class DynamicCompiler implements SWCJCompiler {
-    private JavaFileManager fileManager;
+    private final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 
-    public DynamicCompiler() {
-        this.fileManager = initManger();
-    }
-
-    private JavaFileManager initManger() {
-        if (fileManager != null) {
-            return fileManager;
-        } else {
-            JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
-            DiagnosticCollector diagnosticCollector = new DiagnosticCollector();
-            fileManager = new ClassFileManager(javaCompiler.getStandardFileManager(diagnosticCollector, null, null));
-            return fileManager;
-        }
-    }
-
-    /**
-     * 编译源码并加载，获取Class对象
-     *
-     * @param fullName
-     * @param sclass
-     * @return
-     * @throws ClassNotFoundException
-     */
     @Override
     public Class<?> compileAndLoad(String fullName, SWCJClass sclass) throws ClassNotFoundException {
+        DiagnosticCollector diagnosticCollector = new DiagnosticCollector();
+        JavaFileManager fileManager = new ClassFileManager(javaCompiler.getStandardFileManager(diagnosticCollector, null, null));
         StringBuilder sb = new StringBuilder();
         //增加包名
         add(sb, "package ", Constant.DEFAULT_PACKAGE_NAME, ";\n");
@@ -67,7 +46,6 @@ public class DynamicCompiler implements SWCJCompiler {
         }
         //类封口
         add(sb, "\n}");
-        JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
         List<JavaFileObject> javaFileObjectList = new ArrayList<JavaFileObject>();
         javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sb.toString()));
         boolean result = javaCompiler.getTask(null, fileManager, null, null, null, javaFileObjectList).call();
@@ -77,18 +55,16 @@ public class DynamicCompiler implements SWCJCompiler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return this.fileManager.getClassLoader(null).loadClass(fullName);
+            Class<?> aClass = fileManager.getClassLoader(null).loadClass(fullName);
+            try {
+                fileManager.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return aClass;
         } else {
             return Class.forName(fullName);
         }
     }
 
-    /**
-     * 关闭fileManager
-     *
-     * @throws IOException
-     */
-    public void close() throws IOException {
-        this.fileManager.close();
-    }
 }
