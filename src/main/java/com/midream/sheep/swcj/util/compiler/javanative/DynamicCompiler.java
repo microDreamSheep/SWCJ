@@ -72,6 +72,11 @@ public class DynamicCompiler implements SWCJCompiler {
         javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sb.toString()));
         boolean result = javaCompiler.getTask(null, fileManager, null, null, null, javaFileObjectList).call();
         if (result) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return this.fileManager.getClassLoader(null).loadClass(fullName);
         } else {
             return Class.forName(fullName);

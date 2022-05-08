@@ -1,9 +1,10 @@
-package com.midream.sheep.swcj.core;
+package com.midream.sheep.swcj.core.factory;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.build.inter.SWCJBuilder;
+import com.midream.sheep.swcj.core.IParseTool;
 import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
 import org.xml.sax.SAXException;
 
@@ -22,4 +23,6 @@ public interface SWCJXmlFactory {
     void setCompiler(SWCJCompiler swcjCompiler);
     //设置构建器
     void setBuilder(SWCJBuilder swcjBuilder);
+    //设置解析器
+    void setParseTool(IParseTool iParseTool);
 }

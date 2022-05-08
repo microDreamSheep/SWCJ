@@ -19,7 +19,7 @@ public class ReptileConfig {
 
     private boolean isCache = true;//是否缓存
     /**
-     * 增加浏览器
+     * 增加浏览器标识
      * */
     public void addUserAgent(String userAgent){
         userAgents.add(userAgent);

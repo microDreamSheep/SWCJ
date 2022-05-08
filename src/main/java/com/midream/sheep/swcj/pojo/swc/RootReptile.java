@@ -8,6 +8,20 @@ import java.util.List;
  * 核心爬虫配置文件
  * */
 public class RootReptile {
+    private boolean isLoad;
+
+    public boolean isLoad() {
+        return isLoad;
+    }
+
+    public void setLoad(boolean load) {
+        isLoad = load;
+    }
+
+    public void setRu(List<ReptileUrl> ru) {
+        this.ru = ru;
+    }
+
     //url策略
     private List<ReptileUrl> ru = new LinkedList<>();
     //携带cookies

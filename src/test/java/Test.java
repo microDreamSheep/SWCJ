@@ -1,9 +1,10 @@
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.core.SWCJXmlFactory;
-import com.midream.sheep.swcj.core.xmlfactory.CoreXmlFactory;
+import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
+import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import org.xml.sax.SAXException;
+import test.POJOTEST;
 import test.image;
 import test.pojo;
 
@@ -15,10 +16,15 @@ import java.io.IOException;
  */
 public class Test {
     @org.junit.Test
-    public void test() throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException {
-        SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory(Test.class.getClassLoader().getResource("").getPath() + "/test.xml");
+    public void test() throws ConfigException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException, InterruptedException {
+        SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
+        swcjXmlFactory.addResource(Test.class.getClassLoader().getResource("").getPath() + "/test.xml");
+        Thread.sleep(2000);
+        long start = System.currentTimeMillis();
         pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
-        image[] it = html.getIt();
+        long end = System.currentTimeMillis();
+        System.out.println("获取类消耗了"+(end-start)+"ms");
+        image[] it = html.getIt(5);
         for (image image : it) {
             System.out.println(image.toString());
         }
