@@ -1,10 +1,10 @@
-package com.midream.sheep.swcj.util.compiler.javanative;
+package com.midream.sheep.swcj.classtool.compiler.javanative;
 
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.pojo.buildup.SWCJValue;
-import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.classtool.compiler.SWCJCompiler;
 
 import javax.tools.*;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.midream.sheep.swcj.build.function.StringUtil.add;
+import static com.midream.sheep.swcj.core.build.function.StringUtil.add;
 
 /**
  * 运行时编译

@@ -1,9 +1,9 @@
-package com.midream.sheep.swcj.util.classloader;
+package com.midream.sheep.swcj.classtool.classloader;
 
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
-import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
-import com.midream.sheep.swcj.util.compiler.javanative.DynamicCompiler;
+import com.midream.sheep.swcj.classtool.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.classtool.compiler.javanative.DynamicCompiler;
 
 import java.io.*;
 import java.nio.file.Files;

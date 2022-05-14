@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.util.compiler.javanative;
+package com.midream.sheep.swcj.classtool.compiler.javanative;
 
 import javax.tools.SimpleJavaFileObject;
 import java.io.IOException;

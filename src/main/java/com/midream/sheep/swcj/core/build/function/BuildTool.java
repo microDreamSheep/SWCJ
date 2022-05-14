@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.build.function;
+package com.midream.sheep.swcj.core.build.function;
 
 import com.midream.sheep.swcj.annotation.WebSpider;
 import com.midream.sheep.swcj.Exception.ConfigException;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
-import static com.midream.sheep.swcj.build.function.StringUtil.add;
+import static com.midream.sheep.swcj.core.build.function.StringUtil.add;
 
 /**
  * @author midreamsheep

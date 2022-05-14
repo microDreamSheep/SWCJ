@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.util.compiler;
+package com.midream.sheep.swcj.classtool.compiler;
 
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 

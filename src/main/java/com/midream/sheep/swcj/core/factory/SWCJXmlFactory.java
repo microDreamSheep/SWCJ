@@ -3,9 +3,9 @@ package com.midream.sheep.swcj.core.factory;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.build.inter.SWCJBuilder;
-import com.midream.sheep.swcj.core.parse.IParseTool;
-import com.midream.sheep.swcj.util.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
+import com.midream.sheep.swcj.core.factory.parse.IParseTool;
+import com.midream.sheep.swcj.classtool.compiler.SWCJCompiler;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.build.function;
+package com.midream.sheep.swcj.core.build.function;
 
 /**
  * @author midreamsheep
