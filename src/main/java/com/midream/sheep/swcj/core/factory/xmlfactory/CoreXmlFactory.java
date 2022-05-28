@@ -3,8 +3,8 @@ package com.midream.sheep.swcj.core.factory.xmlfactory;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.core.build.builds.ReptilesBuilder;
-import com.midream.sheep.swcj.core.build.function.BuildTool;
+import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
+import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.factory.parse.IParseTool;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
@@ -12,6 +12,7 @@ import com.midream.sheep.swcj.core.factory.parse.coreParse.CoreParseTool;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.classtool.compiler.SWCJCompiler;
+import com.sun.corba.se.spi.orbutil.threadpool.ThreadPool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 工厂类，读取配置文件，获取具体实现类
@@ -36,6 +39,7 @@ public class CoreXmlFactory implements SWCJXmlFactory {
     private SWCJBuilder swcjBuilder = null;
     private static ReptilesBuilder rb;
     private static IParseTool parseTool;
+
     //xml工厂提供的构造器
     public CoreXmlFactory(String xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
         parse(new File(xmlFile));
@@ -66,7 +70,7 @@ public class CoreXmlFactory implements SWCJXmlFactory {
             parseTool = new CoreParseTool();
         }
         NodeList nodes = root.getChildNodes();
-        new Thread(()-> {
+        new Thread(() -> {
             List<RootReptile> list = new ArrayList<>();
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node item = nodes.item(i);
@@ -135,7 +139,7 @@ public class CoreXmlFactory implements SWCJXmlFactory {
                 }
                 continue;
             }
-            if(rootReptile.isLoad()){
+            if(!rootReptile.isLoad()){
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

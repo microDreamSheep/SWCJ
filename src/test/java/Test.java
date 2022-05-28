@@ -1,15 +1,16 @@
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.core.executetool.SWCJExecute;
+import com.midream.sheep.swcj.core.executetool.execute.SRequest;
+import com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
-import org.xml.sax.SAXException;
-import test.POJOTEST;
+import com.midream.sheep.swcj.pojo.ExecuteValue;
 import test.image;
 import test.pojo;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author midreamsheep
@@ -18,7 +19,7 @@ public class Test {
     @org.junit.Test
     public void test() throws ConfigException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException, InterruptedException {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
-        swcjXmlFactory.addResource(Test.class.getClassLoader().getResource("").getPath() + "/test.xml");
+        swcjXmlFactory.addResource(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml");
         Thread.sleep(100);
         long start = System.currentTimeMillis();
         pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
@@ -30,7 +31,4 @@ public class Test {
         }
     }
 
-    @org.junit.Test
-    public void sda() {
-    }
 }

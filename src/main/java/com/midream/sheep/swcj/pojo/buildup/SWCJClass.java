@@ -9,8 +9,19 @@ public final class SWCJClass {
     private String className;
     private String itIterface;
     private Map<String,SWCJMethod> methods;
-    private List<SWCJValue> value;
+    private String[] imports = new String[]{
+            "import com.midream.sheep.swcj.core.executetool.SWCJExecute;",
+            "import com.midream.sheep.swcj.pojo.ExecuteValue;",
+            "import com.midream.sheep.swcj.util.function.StringUtil;"
+    };
 
+    public String[] getImports() {
+        return imports;
+    }
+
+    public void setImports(String[] imports) {
+        this.imports = imports;
+    }
 
     public String getItIterface() {
         return itIterface;
@@ -23,20 +34,6 @@ public final class SWCJClass {
         return className;
     }
 
-    public List<SWCJValue> getValue() {
-        return value;
-    }
-
-    public void setValue(List<SWCJValue> value) {
-        this.value = value;
-    }
-
-    public void addValue(SWCJValue value) {
-        if(this.value==null){
-            this.value = new ArrayList<>();
-        }
-        this.value.add(value);
-    }
     public void addMethod(String name,SWCJMethod swcjMethod) {
         if(this.methods==null){
             this.methods = new HashMap<>();

@@ -1,9 +1,8 @@
-package com.midream.sheep.swcj.core.build.builds;
+package com.midream.sheep.swcj.core.build.builds.javanative;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.core.build.function.BuildTool;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
@@ -30,6 +29,7 @@ public class ReptilesBuilder implements SWCJBuilder {
         sio = new SIO();
         swcjcl = new SWCJClassLoader();
     }
+    @Override
     public void setCompiler(SWCJCompiler swcjCompiler){
         swcjcl.setSwcjCompiler(swcjCompiler);
     }
@@ -38,7 +38,7 @@ public class ReptilesBuilder implements SWCJBuilder {
         //开始拼接类信息
         SWCJClass sclass = BuildTool.getSWCJClass(rr, rc);
         try {
-            getAllMethod(sclass, rr);
+            getAllMethod(sclass, rr,rc);
             return loadClass(rr, rc, sclass);
         } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
             System.err.println("类加载异常");
@@ -61,14 +61,14 @@ public class ReptilesBuilder implements SWCJBuilder {
         return webc;
     }
 
-    private void getAllMethod(SWCJClass sclass, RootReptile rr) throws InterfaceIllegal, ConfigException {
+    private void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) throws InterfaceIllegal, ConfigException {
         int count = 0;
         final List<ReptileUrl> rus = rr.getRu();
         Map<String, SWCJMethod> function = sclass.getMethods();
         for (ReptileUrl reptileUrl : rus) {
             SWCJMethod s = function.get(reptileUrl.getName());
             if (s != null && s.getAnnotation() != null && !s.getAnnotation().equals("")) {
-                String s1 = BuildTool.spliceMethod(reptileUrl, rr, s);
+                String s1 = BuildTool.spliceMethod(reptileUrl, rr, s,rc);
                 s.setBody(s1);
                 count++;
             }

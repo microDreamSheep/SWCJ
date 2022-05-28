@@ -3,14 +3,16 @@ package com.midream.sheep.swcj.core.factory.parse.coreParse;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import com.midream.sheep.swcj.core.factory.parse.IParseTool;
+import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.ReptileCoreJsoup;
-import com.midream.sheep.swcj.pojo.swc.ReptilePaJsoup;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 import java.util.Objects;
 
@@ -29,9 +31,9 @@ public class CoreParseTool implements IParseTool {
         //获取根节点子节点
         NodeList nl = n.getChildNodes();
         //分析配置并配置
-        for(int i=0;i<nl.getLength();i++){
+        for (int i = 0; i < nl.getLength(); i++) {
             Node no = nl.item(i);
-            switch (no.getNodeName()){
+            switch (no.getNodeName()) {
                 case "cookies":
                     rr.setCookies(no.getTextContent().trim());
                     break;
@@ -44,7 +46,7 @@ public class CoreParseTool implements IParseTool {
                     NamedNodeMap attributes1 = no.getAttributes();
                     ru.setName(attributes1.getNamedItem("name").getNodeValue());
                     ru.setInPutName(attributes1.getNamedItem("inPutName").getNodeValue());
-                    parseUrl(no.getChildNodes(),ru);
+                    parseUrl(no.getChildNodes(), ru);
                     //绑定两类-----组合设计模式
                     rr.addUrl(ru);
                     break;
@@ -56,7 +58,7 @@ public class CoreParseTool implements IParseTool {
     @Override
     public void parseConfig(Node nodes, ReptileConfig rc) throws ConfigException {
         NodeList nl = nodes.getChildNodes();
-        for(int i = 0;i<nl.getLength();i++) {
+        for (int i = 0; i < nl.getLength(); i++) {
             Node child = nl.item(i);
             switch (child.getNodeName()) {
                 //设置超时时间
@@ -97,71 +99,35 @@ public class CoreParseTool implements IParseTool {
         }
     }
 
-    private void parseUrl(NodeList nl,ReptileUrl ru) throws ConfigException{
-        for(int i=0;i<nl.getLength();i++){
+    private void parseUrl(NodeList nl, ReptileUrl ru) throws ConfigException {
+        for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
-            switch (n.getNodeName()){
+            switch (n.getNodeName()) {
                 case "type":
                     ru.setRequestType(n.getAttributes().getNamedItem("type").getNodeValue().trim());
                     break;
                 case "path":
                     ru.setUrl(n.getAttributes().getNamedItem("path").getNodeValue().trim());
                     break;
+                case "value":
+                    ru.setValues(n.getTextContent().trim());
+                    break;
                 case "parseProgram":
-                    NodeList nodes = n.getChildNodes();
                     ru.setHtml(Boolean.parseBoolean(n.getAttributes().getNamedItem("isHtml").getNodeValue().trim()));
-                    for(int a = 0;a<nodes.getLength();a++){
-                        Node item = nodes.item(a);
-                        if(item.getNodeName().equals("regular")){
-                            ru.setReg(item.getAttributes().getNamedItem("reg").getNodeValue().trim());
-                        }else if(item.getNodeName().equals("jsoup")){
-                            //实例化jsoup核心
-                            ReptileCoreJsoup rcj = new ReptileCoreJsoup();
-                            if(item.getAttributes().getNamedItem("name")!=null&&!item.getAttributes().getNamedItem("name").getNodeValue().equals("")) {
-                                rcj.setName(item.getAttributes().getNamedItem("name").getNodeValue());
-                            }
-                            //组合jsoup核心和ReptileUrl
-                            ru.addJsoup(rcj);
-                            NodeList childNodes = item.getChildNodes();
-                            for(int c=0;c<childNodes.getLength();c++){
-                                if(childNodes.item(c).getNodeName().equals("pa")){
-                                    //实例化一个ReptilePaJsoup
-                                    ReptilePaJsoup rp = new ReptilePaJsoup();
-                                    Node node = childNodes.item(c);
-                                    rp.setPaText(node.getTextContent().trim());
-                                    if(node.getAttributes().getNamedItem("not")!=null){
-                                        String not = node.getAttributes().getNamedItem("not").getNodeValue();
-                                        String[] split = not.split(",");
-                                        rp.setNot(split);
-                                    }
-                                    if(node.getAttributes().getNamedItem("step")!=null&&!node.getAttributes().getNamedItem("step").getNodeValue().equals("")){
-                                        String step = node.getAttributes().getNamedItem("step").getNodeValue().trim();
-                                        try {
-                                            int s = Integer.parseInt(step);
-                                            rp.setStep(s);
-                                        }catch (NumberFormatException e){
-                                            throw new ConfigException("类型转换异常，step"+node.getAttributes().getNamedItem("step").getNodeValue()+"不是数字");
-                                        }
-                                    }
-                                    if(node.getAttributes().getNamedItem("allStep")!=null&&!node.getAttributes().getNamedItem("allStep").getNodeValue().equals("")){
-                                        String step = node.getAttributes().getNamedItem("allStep").getNodeValue().trim();
-                                        try {
-                                            int s = Integer.parseInt(step);
-                                            rp.setAllStep(s+1);
-                                        }catch (NumberFormatException e){
-                                            throw new ConfigException("类型转换异常，allStep"+node.getAttributes().getNamedItem("allStep").getNodeValue()+"不是数字");
-                                        }
-                                    }
-                                    if(node.getAttributes().getNamedItem("element")!=null){
-                                        rp.setElement(node.getAttributes().getNamedItem("element").getNodeValue());
-                                    }
-                                    rcj.addJsoup(rp);
-                                }
-                            }
-                        }
-                    }
+                    ru.setExecutClassName(Constant.EXECUTE_CLASS_NAME.get(n.getAttributes().getNamedItem("type").getNodeValue().trim()));
+                    ru.setParseProgram(getProgram(n.getChildNodes().item(1)));
                     break;
             }
         }
+    }
+    private String getProgram(Node node){
+        Document document = node.getOwnerDocument();
+
+        DOMImplementationLS domImplLS = (DOMImplementationLS) document.getImplementation();
+
+        LSSerializer serializer = domImplLS.createLSSerializer();
+
+        String str = serializer.writeToString(node);
+        return str.replace("<?xml version=\"1.0\" encoding=\"UTF-16\"?>","");
     }
 }
