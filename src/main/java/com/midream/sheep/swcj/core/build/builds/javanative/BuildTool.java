@@ -25,8 +25,8 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
  * @author midreamsheep
  */
 public class BuildTool {
-    private static String Template = "try {\n" +
-            "SWCJExecute swcjExecute = new #[class]<#[fx]>();\n" +
+    private static final String Template = "try {\n" +
+            "SWCJExecute<#[fx]> swcjExecute = new #[class]<#[fx]>();\n" +
             "String corn = \"#[method]\";\n" +
             "ExecuteValue executeValue = new ExecuteValue();\n" +
             "executeValue.setHtml(#[isHtml]);\n" +

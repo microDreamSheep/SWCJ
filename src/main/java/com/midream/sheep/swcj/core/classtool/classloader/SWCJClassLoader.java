@@ -1,9 +1,9 @@
-package com.midream.sheep.swcj.classtool.classloader;
+package com.midream.sheep.swcj.core.classtool.classloader;
 
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
-import com.midream.sheep.swcj.classtool.compiler.SWCJCompiler;
-import com.midream.sheep.swcj.classtool.compiler.javanative.DynamicCompiler;
+import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.core.classtool.compiler.javanative.DynamicCompiler;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 /**
  * @author midreamSheep
- * 自定义编译类
+ * 自定义加载器，暂不支持拓展
  */
 public class SWCJClassLoader extends ClassLoader {
     private SWCJCompiler swcjCompiler = null;

@@ -1,10 +1,9 @@
-package com.midream.sheep.swcj.classtool.compiler.javanative;
+package com.midream.sheep.swcj.core.classtool.compiler.javanative;
 
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
-import com.midream.sheep.swcj.pojo.buildup.SWCJValue;
-import com.midream.sheep.swcj.classtool.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 
 import javax.tools.*;
 import java.io.IOException;
@@ -47,21 +46,7 @@ public class DynamicCompiler implements SWCJCompiler {
         add(sb, "\n}");
         List<JavaFileObject> javaFileObjectList = new ArrayList<JavaFileObject>();
         javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sb.toString()));
-        boolean result = javaCompiler.getTask(new Writer() {
-            @Override
-            public void write(char[] cbuf, int off, int len) throws IOException {
-            }
-
-            @Override
-            public void flush() throws IOException {
-
-            }
-
-            @Override
-            public void close() throws IOException {
-
-            }
-        }, fileManager, null, null, null, javaFileObjectList).call();
+        boolean result = javaCompiler.getTask(new Writer() {@Override public void write(char[] cbuf, int off, int len) throws IOException { }@Override public void flush() throws IOException { }@Override public void close() throws IOException { }}, fileManager, null, null, null, javaFileObjectList).call();
         if (result) {
             try {
                 Thread.sleep(100);
@@ -69,11 +54,6 @@ public class DynamicCompiler implements SWCJCompiler {
                 e.printStackTrace();
             }
             Class<?> aClass = fileManager.getClassLoader(null).loadClass(fullName);
-            try {
-                fileManager.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             try {
                 fileManager.close();
             } catch (IOException e) {

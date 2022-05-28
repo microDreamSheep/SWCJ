@@ -1,12 +1,10 @@
 package com.midream.sheep.swcj.core.executetool;
 
-import com.midream.sheep.swcj.core.executetool.execute.SRequest;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 
-public interface SWCJExecute {
+public interface SWCJExecute<T> {
     /**
      * @param executeValue execute value
      * @param args Additional Required Implementation Information
@@ -14,5 +12,5 @@ public interface SWCJExecute {
      *             1 reflection class
      * @return the returned instantiated object
      * */
-    List execute(ExecuteValue executeValue, String ...args) throws Exception;
+    List<T> execute(ExecuteValue executeValue, String ...args) throws Exception;
 }
