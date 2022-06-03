@@ -9,10 +9,7 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -81,7 +78,7 @@ public class SWCJregular implements SWCJExecute {
 
         BufferedReader buffer;
         StringBuilder resultBuffer;
-
+        InputStream inputStream = null;
         try {
             URL url = new URL(executeValue.getUrl());
             //得到连接对象
@@ -104,7 +101,7 @@ public class SWCJregular implements SWCJExecute {
 
             if(responseCode == HttpURLConnection.HTTP_OK){
                 //得到响应流
-                InputStream inputStream = con.getInputStream();
+                inputStream = con.getInputStream();
                 //将响应流转换成字符串
                 resultBuffer = new StringBuilder();
                 String line;
@@ -114,9 +111,16 @@ public class SWCJregular implements SWCJExecute {
                 }
                 return resultBuffer.toString();
             }
-
         }catch(Exception e) {
             e.printStackTrace();
+        }finally {
+            if(inputStream!=null){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return "";
     }

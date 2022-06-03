@@ -5,11 +5,9 @@ import java.io.*;
 public class SIO{
     public static String inPutString(File file) throws IOException {
         //字符串
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         //实例化输入流
-        InputStream is = null;
-        try {
-            is = new FileInputStream(file);
+        try (InputStream is = new FileInputStream(file)) {
             //建立1024大小的缓冲区
             int len = -1;
             byte[] datas = new byte[1024];
@@ -17,12 +15,8 @@ public class SIO{
             while ((len = is.read(datas)) != -1) {
                 sb.append(new String(datas, 0, len));
             }
-        }finally {
-            if(is!=null) {
-                //关闭流
-                is.close();
-            }
         }
+        //关闭流
         //返回
         return sb.toString();
     }
@@ -41,15 +35,9 @@ public class SIO{
     }
 
     public static void outPutString(String data, File tofile) throws IOException {
-        OutputStream os = null;
-        try {
-            os = new FileOutputStream(tofile);
+        try (OutputStream os = new FileOutputStream(tofile)) {
             os.write(data.getBytes());
             os.flush();
-        }finally {
-            if(os!=null) {
-                os.close();
-            }
         }
     }
 

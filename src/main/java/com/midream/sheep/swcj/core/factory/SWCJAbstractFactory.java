@@ -42,7 +42,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
             RootReptile rootReptile = rootReptiles.get(id);
             if(rootReptile==null){
                 try {
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(200);
                     i++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -54,7 +54,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
             }
             if(!rootReptile.isLoad()){
                 try {
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
