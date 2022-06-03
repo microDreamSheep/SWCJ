@@ -27,6 +27,17 @@
         -->
         <createTactics isCache="false"/>
     </config>
+    <!--execute
+配置解析策略
+-->
+    <executes>
+        <execute>
+            <!--type-->
+            <key>jsoup</key>
+            <!--className-->
+            <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+        </execute>
+    </executes>
     <!--具体的某个爬虫类
          id 获取的标识
         -->

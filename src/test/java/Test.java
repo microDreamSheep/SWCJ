@@ -24,7 +24,7 @@ public class Test {
     @org.junit.Test
     public void test() throws ConfigException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException, InterruptedException, IOException, ParserConfigurationException, SAXException {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
-        swcjXmlFactory.parse(Objects.requireNonNull(new File(Test.class.getClassLoader().getResource("").getPath() + "/test.xml")));
+        swcjXmlFactory.parse(new File(Test.class.getClassLoader().getResource("").getPath() + "/test.xml"));
         long start = System.currentTimeMillis();
         pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
         long end = System.currentTimeMillis();
