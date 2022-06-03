@@ -5,16 +5,13 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
-import com.midream.sheep.swcj.util.function.StringUtil;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.buildup.SWCJValue;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -45,7 +42,7 @@ public class BuildTool {
     public static Object getObjectFromTool(String className) {
         return CacheCorn.getObject(className);
     }
-    public static SWCJClass getSWCJClass(RootReptile rr, ReptileConfig rc) throws ConfigException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException {
+    public static SWCJClass getSWCJClass(RootReptile rr) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
         SWCJClass sclass = new SWCJClass();
         //获取所有方法
         List<ReptileUrl> rus = rr.getRu();
@@ -56,7 +53,7 @@ public class BuildTool {
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并返回方法名
         try {
-            getFunction(sclass,rr);
+            getFunction(sclass);
         } catch (ClassNotFoundException e) {
             throw new ConfigException("你的接口不存在：" + rr.getParentInter());
         }
@@ -70,12 +67,12 @@ public class BuildTool {
             if(url.getUrl()==null||url.getUrl().equals("")){
                 throw new ConfigException("你的path未配置,在"+url.getName());
             }
-            if(url.getParseProgram()==null&&url.getParseProgram().equals("")){
+            if(url.getParseProgram()==null||url.getParseProgram().equals("")){
                 throw new ConfigException("你的策略未配置,在"+url.getName());
             }
         }
     }
-    private static void getFunction(SWCJClass swcjClass,RootReptile rr) throws ClassNotFoundException, InterfaceIllegal {
+    private static void getFunction(SWCJClass swcjClass) throws ClassNotFoundException {
         Class<?> ca = Class.forName(swcjClass.getItIterface());
         Method[] methods = ca.getMethods();
         for (Method method : methods) {
@@ -112,12 +109,10 @@ public class BuildTool {
             }
         }
     }
-    public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method,ReptileConfig rc) throws ConfigException {
+    public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method,ReptileConfig rc) {
         StringBuilder sb = new StringBuilder();
         //方法体
         StringBuilder sbmethod = new StringBuilder();
-        String stringBody = "String";
-        boolean isQuote = false;
         //获取参数传入列表
         StringBuilder vars = new StringBuilder();
         List<String> vars1 = method.getVars();

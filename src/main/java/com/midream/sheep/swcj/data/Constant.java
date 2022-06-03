@@ -1,7 +1,5 @@
 package com.midream.sheep.swcj.data;
 
-import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-
 import java.util.HashMap;
 import java.util.Map;
 

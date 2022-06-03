@@ -19,9 +19,8 @@ public class CharSequenceJavaFileObject extends SimpleJavaFileObject {
  
     /**
      * 获取需要编译的源代码
-     * @param ignoreEncodingErrors
-     * @return
-     * @throws IOException
+     * @param ignoreEncodingErrors d
+     * @throws IOException io
      */
     @Override
     public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {

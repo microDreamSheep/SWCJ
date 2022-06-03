@@ -1,6 +1,5 @@
 package com.midream.sheep.swcj.core.classtool.classloader;
 
-import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.classtool.DataInComplier;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
@@ -50,7 +49,7 @@ public class SWCJClassLoader extends ClassLoader {
         return datas;
     }
     //字符串加载
-    public Class<?> compileJavaFile(String className, SWCJClass sclass) throws IOException, ClassNotFoundException, InterfaceIllegal {
+    public Class<?> compileJavaFile(String className, SWCJClass sclass) throws ClassNotFoundException {
         if (swcjCompiler==null){
             swcjCompiler = new DynamicCompiler();
         }

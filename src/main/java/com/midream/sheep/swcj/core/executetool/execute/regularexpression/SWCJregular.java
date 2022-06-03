@@ -77,10 +77,10 @@ public class SWCJregular implements SWCJExecute {
      * 获取字符串
      * */
     private String getText(ExecuteValue executeValue){
-        HttpURLConnection con = null;
+        HttpURLConnection con;
 
-        BufferedReader buffer = null;
-        StringBuffer resultBuffer = null;
+        BufferedReader buffer;
+        StringBuilder resultBuffer;
 
         try {
             URL url = new URL(executeValue.getUrl());
@@ -106,7 +106,7 @@ public class SWCJregular implements SWCJExecute {
                 //得到响应流
                 InputStream inputStream = con.getInputStream();
                 //将响应流转换成字符串
-                resultBuffer = new StringBuffer();
+                resultBuffer = new StringBuilder();
                 String line;
                 buffer = new BufferedReader(new InputStreamReader(inputStream,"GBK"));
                 while ((line = buffer.readLine()) != null) {

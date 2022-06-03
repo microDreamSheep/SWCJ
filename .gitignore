@@ -24,7 +24,8 @@ buildNumber.properties
 *.ipr
 *.iws
 /out/
-
+/lib/
+lib
 /target/
 
 .idea_modules/

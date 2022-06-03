@@ -34,12 +34,12 @@ public class ReptilesBuilder implements SWCJBuilder {
         //开始拼接类信息
         SWCJClass sclass = null;
         try {
-            sclass = BuildTool.getSWCJClass(rr, rc);
+            sclass = BuildTool.getSWCJClass(rr);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            getAllMethod(sclass, rr,rc);
+            getAllMethod(Objects.requireNonNull(sclass), rr,rc);
             return loadClass(rr, rc, sclass);
         } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
             System.err.println("类加载异常");
@@ -62,7 +62,7 @@ public class ReptilesBuilder implements SWCJBuilder {
         return webc;
     }
 
-    private void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) throws InterfaceIllegal, ConfigException {
+    private void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) throws InterfaceIllegal {
         int count = 0;
         final List<ReptileUrl> rus = rr.getRu();
         Map<String, SWCJMethod> function = sclass.getMethods();

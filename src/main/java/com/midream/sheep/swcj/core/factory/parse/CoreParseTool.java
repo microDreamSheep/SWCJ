@@ -177,7 +177,7 @@ public class CoreParseTool implements SWCJParseI {
             }
         }
 
-    private void parseUrl(NodeList nl, ReptileUrl ru) throws ConfigException {
+    private void parseUrl(NodeList nl, ReptileUrl ru) {
             for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
                 switch (n.getNodeName()) {

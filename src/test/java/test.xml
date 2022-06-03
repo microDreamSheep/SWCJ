@@ -26,18 +26,18 @@
         非缓存，不会保存具体的对象
         -->
         <createTactics isCache="false"/>
+        <!--execute
+    配置解析策略
+    -->
+        <executes>
+            <execute>
+                <!--type-->
+                <key>jsoup</key>
+                <!--className-->
+                <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+            </execute>
+        </executes>
     </config>
-    <!--execute
-配置解析策略
--->
-    <executes>
-        <execute>
-            <!--type-->
-            <key>jsoup</key>
-            <!--className-->
-            <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
-        </execute>
-    </executes>
     <!--具体的某个爬虫类
          id 获取的标识
         -->
@@ -55,7 +55,7 @@
         name——>注解名
         inPutName 下文中使用的参数名
         -->
-        <url name="getHtml" inPutName="">
+        <url name="getHtml" inPutName="count">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"
