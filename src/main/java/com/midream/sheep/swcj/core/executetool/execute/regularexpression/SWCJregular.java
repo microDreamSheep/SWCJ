@@ -1,7 +1,6 @@
 package com.midream.sheep.swcj.core.executetool.execute.regularexpression;
 
 import com.midream.sheep.swcj.core.executetool.SWCJExecute;
-import com.midream.sheep.swcj.core.executetool.execute.jsoup.pojo.Jsoup;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
 import org.w3c.dom.Node;

@@ -73,8 +73,12 @@
             <path path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
             语法见具体实现-->
-            <parseProgram isHtml="false" type="jsoup">
-
+            <parseProgram isHtml="false" type="reg">
+                <reg>
+                    <reg name=""></reg>
+                    <reg name=""></reg>
+                    <reg name=""></reg>
+                </reg>
             </parseProgram>
         </url>
     </swc>

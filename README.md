@@ -2,7 +2,7 @@
 
 ## 什么是SWCJ
 
-**SWCJ**是一个基于**jsoup和反射机制**的java**爬虫**框架，能够使你的爬虫与代码分离开，**降低解耦性**，同时
+**SWCJ**是一个java**爬虫**框架，能够使你的爬虫与代码分离开，**降低解耦性**，同时
 
 你的爬虫可以通过配置文件来配置，这意味这当你的某些需求更改时，能直接修改配置文件而不必去修改你的代码
 
@@ -26,6 +26,14 @@ jar包见仓库附件
 
 就可以通过工厂获取爬虫的实例，强转成接口就可以直接调用方法
 
+### 正则模板
+```xml
+<reg>
+    <reg name="属性">你的表达式</reg>
+    <reg name=""></reg>
+    <reg name=""></reg>
+</reg>
+```
 ### 一个返回字符串的简单具体实例
 
 1.导入jar包（废话），暂不完善，并未上传maven
@@ -43,7 +51,7 @@ public interface Test {
 }
 ```
 
-3.配置文件
+3.配置文件(导入jsoup增强jar包，原生只支持正则):https://gitee.com/midreamsheep/jsoup-for-swcj
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -60,9 +68,11 @@ public interface Test {
             <path path="https://pic.netbian.com/index_#{count}.html"/>
             <parseProgram  isHtml="true">
                 <jsoup>
+                <jsoup>
                     <pa>
                         #main>div.slist>ul.clearfix>li>a
                     </pa>
+                </jsoup>
                 </jsoup>
             </parseProgram>
         </url>
@@ -71,9 +81,11 @@ public interface Test {
             <path path="https://pic.netbian.com/index_5.html"/>
             <parseProgram  isHtml="true">
                 <jsoup>
+                <jsoup>
                     <pa>
                         #main>div.slist>ul.clearfix>li
                     </pa>
+                </jsoup>
                 </jsoup>
             </parseProgram>
         </url>
@@ -86,9 +98,9 @@ public interface Test {
 4.调方法
 
 ```java
-XmlFactory xf = null;
+            XmlFactory xf = null;
         try {
-            xf = new XmlFactory(XmlFactory.class.getClassLoader().getResource("").getPath()+"com/midream/sheep/Test.xml");
+            xf = new XmlFactory(new File(XmlFactory.class.getClassLoader().getResource("").getPath()+"com/midream/sheep/Test.xml"));
             Test getHtml = (Test)xf.getWebSpider("getHtml");
             String[] li = getHtml.getLi();
             for (String s : li) {
@@ -182,12 +194,8 @@ public interface TestWeb {
 配置爬虫策略
 
 ```xml
-            <parseProgram  isHtml="false">
-<!--                <regular reg="href="/>-->
-                <!--jsoup可以分为多层解析
-                即一次<pa>就是一次解析
-                not 排除固定文本
-                -->
+            <parseProgram  isHtml="false" type="jsoup">
+            <jsoup>
                 <jsoup name="writer">
                     <pa not="" step="1" element="">
                         #nr>td.odd
@@ -203,6 +211,7 @@ public interface TestWeb {
                         #nr>td.odd>a
                     </pa>
                 </jsoup>
+            </jsoup>
             </parseProgram>
 ```
 
@@ -227,20 +236,22 @@ public interface TestWeb {
             <type type="GET"/>
             <path path="https://www.qbiqu.com/modules/article/search.php?searchkey=#{novelName}"/>
             <parseProgram  isHtml="false">
-                <jsoup name="writer">
-                    <pa not="" allStep="1" step="1" element="">
-                        #nr>td.odd
-                    </pa>
-                </jsoup>
-                <jsoup name="title">
-                    <pa not="" step="0" element="">
-                        #nr>td.odd>a
-                    </pa>
-                </jsoup>
-                <jsoup name="url">
-                    <pa not="" step="0" element="abs:href">
-                        #nr>td.odd>a
-                    </pa>
+                <jsoup>
+                    <jsoup name="writer">
+                        <pa not="" step="1" element="">
+                            #nr>td.odd
+                        </pa>
+                    </jsoup>
+                    <jsoup name="title">
+                        <pa not="" step="0" element="">
+                            #nr>td.odd>a
+                        </pa>
+                    </jsoup>
+                    <jsoup name="url">
+                        <pa not="" step="0" element="abs:href">
+                            #nr>td.odd>a
+                        </pa>
+                    </jsoup>
                 </jsoup>
             </parseProgram>
         </url>
@@ -263,7 +274,9 @@ public interface TestWeb {
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <SWCJ>
-    <!--全局配置-->
+    <!--全局配置
+    配置更据不同的实现不一定生效
+    -->
     <config>
         <!--工作空间，生成的字节码会存储到里面
         isAbsolute->是否是相对路径
@@ -278,7 +291,9 @@ public interface TestWeb {
         value->具体的userAgent文本
         -->
         <userAgent>
-            <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62</value>
+            <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71
+                Safari/537.36 Edg/97.0.1072.62
+            </value>
             <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; TencentTraveler 4.0)</value>
             <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)</value>
         </userAgent>
@@ -287,6 +302,17 @@ public interface TestWeb {
         非缓存，不会保存具体的对象
         -->
         <createTactics isCache="true"/>
+        <!--execute
+    配置解析策略
+    -->
+        <executes>
+            <execute>
+                <!--type-->
+                <key>jsoup</key>
+                <!--className-->
+                <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+            </execute>
+        </executes>
     </config>
     <!--具体的某个爬虫类
          id 获取的标识
@@ -299,7 +325,7 @@ public interface TestWeb {
             uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
         </cookies>
         <!--父类接口，爬虫通过接口调-->
-        <parentInterface class="com.midream.sheep.WebTest"/>
+        <parentInterface class="com.midream.sheep.pojo"/>
         <!--请求配置
         一个配置对应一个方法
         name——>注解名
@@ -311,31 +337,18 @@ public interface TestWeb {
             type="POST||GET"
             -->
             <type type="GET"/>
+            <!--value
+            格式 key=value;key=value......
+            -->
+            <value>
+
+            </value>
             <!--url链接-->
             <path path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
-            并不支持同时使用
-            <regular>正则表达式 正则特殊值 ALL 即为返回所有文本（经过迭代不知道是否正常）
-            <jsoup>jsoup配置-->
-            <parseProgram  isHtml="false">
-<!--                <regular reg="href="/>-->
-                <!--jsoup可以分为多层解析
-                一个jsoup就是一次解析
-                即一次<pa>就是一次解析
-                not 排除固定文本
-                name 注入的属性
-                -->
-                <jsoup name="writer">
-                    <!--pa可配置属性来选取目标Document
-                    not 排除文本
-                    step跳过的步长
-                    element获取元素(加上abs:是绝对链接)
-                    allStep每次跳过的步长
-                    -->
-                    <pa not="下一页" allStep="0" step="4" element="#{count}">
-                        #main>div.slist>ul>li>a
-                    </pa>
-                </jsoup>
+            语法见具体实现-->
+            <parseProgram isHtml="false" type="jsoup">
+
             </parseProgram>
         </url>
     </swc>
