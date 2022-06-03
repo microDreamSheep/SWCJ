@@ -1,10 +1,9 @@
-package com.midream.sheep.swcj.util.io;
+package com.midream.sheep.swcj.util.function;
 
 import java.io.*;
 
-public class SIO implements ISIO{
-    @Override
-    public String inPutString(File file) throws IOException {
+public class SIO{
+    public static String inPutString(File file) throws IOException {
         //字符串
         StringBuffer sb = new StringBuffer();
         //实例化输入流
@@ -28,23 +27,20 @@ public class SIO implements ISIO{
         return sb.toString();
     }
 
-    @Override
-    public String inPutString(String file) throws IOException {
+
+    public static String inPutString(String file) throws IOException {
         return inPutString(new File(file));
     }
 
-    @Override
-    public byte[] inPutBytes(File file) throws IOException {
+    public static byte[] inPutBytes(File file) throws IOException {
         return null;
     }
 
-    @Override
-    public byte[] inPutBytes(String file) throws IOException {
+    public static byte[] inPutBytes(String file) throws IOException {
         return inPutBytes(new File(file));
     }
 
-    @Override
-    public void outPutString(String data, File tofile) throws IOException {
+    public static void outPutString(String data, File tofile) throws IOException {
         OutputStream os = null;
         try {
             os = new FileOutputStream(tofile);
@@ -57,8 +53,7 @@ public class SIO implements ISIO{
         }
     }
 
-    @Override
-    public void outPutData(byte[] datas, File toFile) throws IOException {
+    public static void outPutData(byte[] datas, File toFile) throws IOException {
         OutputStream outputStream = new FileOutputStream(toFile);
         outputStream.write(datas);
         outputStream.close();

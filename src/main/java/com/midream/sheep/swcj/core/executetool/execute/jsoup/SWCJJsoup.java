@@ -26,9 +26,10 @@ import java.util.*;
 /**
  * @author midreamsheep
  */
-public class SWCJJsoup<T> implements SWCJExecute {
+public class SWCJJsoup<T> implements SWCJExecute<T> {
     @Override
-    public List<T> execute(ExecuteValue executeValue, String... args) throws Exception {
+    @SuppressWarnings("all")
+    public List execute(ExecuteValue executeValue, String... args) throws Exception {
         //获取节点对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -37,7 +38,7 @@ public class SWCJJsoup<T> implements SWCJExecute {
         Document document = getConnection(executeValue);
         Map<String, List<String>> map = executeCorn(document, parse, executeValue.isHtml());
         if(executeValue.getClassNameReturn().equals(Constant.STRING_CLASS_NAME)){
-            return (List<T>) map.get("string");
+            return map.get("string");
         }
         Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",""));
         List<Integer> list = new ArrayList<>();
@@ -45,7 +46,7 @@ public class SWCJJsoup<T> implements SWCJExecute {
             list.add(map.get(jsoup.getName()).size());
         }
         int max = Collections.min(Arrays.asList(list.toArray(new Integer[]{})));
-        List<T> listw = new ArrayList<>();
+        List listw = new ArrayList<>();
 
         for (int i = 0;i< max;i++) {
             Object o = aClass.getDeclaredConstructor().newInstance();
@@ -55,39 +56,38 @@ public class SWCJJsoup<T> implements SWCJExecute {
                 List<String> list1 = map.get(name);
                 repay1.invoke(o, list1.size() > i ? map.get(name).get(i) : "");
             }
-            listw.add((T) o);
+            listw.add(o);
         }
         return listw;
     }
     private Map<String,List<String>> executeCorn(Document document,Jsoup[] parse,boolean isHtml){
         Map<String,List<String>> values = new LinkedHashMap<>();
-        for (int i = 0;i< parse.length;i++) {
-            Jsoup js = parse[i];
+        for (Jsoup js : parse) {
             List<String> list = new ArrayList<>();
-            values.put("".equals(js.getName())?"string":js.getName(),list);
+            values.put("".equals(js.getName()) ? "string" : js.getName(), list);
             Elements elements = null;
-            for (int a = 0;a<js.getPas().length;a++) {
+            for (int a = 0; a < js.getPas().length; a++) {
                 Pa pa = js.getPas()[a];
-                if(a==0) {
-                    elements = executePa(pa,document.select(pa.getValue()), isHtml);
-                }else {
+                if (a == 0) {
+                    elements = executePa(pa, document.select(pa.getValue()));
+                } else {
                     Elements elements1 = new Elements();
                     for (Element element : elements) {
-                        Elements pa1 = executePa(pa, element.select(pa.getValue()), isHtml);
+                        Elements pa1 = executePa(pa, element.select(pa.getValue()));
                         elements1.addAll(pa1);
                     }
                     elements = elements1;
                 }
-                if(a==js.getPas().length-1){
+                if (a == js.getPas().length - 1) {
                     for (Element element : elements) {
-                        String in = js.getPas()[js.getPas().length-1].getElement();
-                        if("".equals(in)){
-                            if(isHtml){
+                        String in = js.getPas()[js.getPas().length - 1].getElement();
+                        if ("".equals(in)) {
+                            if (isHtml) {
                                 list.add(element.html());
-                            }else {
+                            } else {
                                 list.add(element.text());
                             }
-                        }else {
+                        } else {
                             list.add(element.attr(in));
                         }
                     }
@@ -96,7 +96,7 @@ public class SWCJJsoup<T> implements SWCJExecute {
         }
         return values;
     }
-    private Elements executePa(Pa p,Elements select,boolean isHtml){
+    private Elements executePa(Pa p,Elements select){
         Elements elements = new Elements();
         for(int i = p.getStep();i<select.size();i+=(p.getAllstep()+1)){
             Element element = select.get(i);
@@ -115,7 +115,7 @@ public class SWCJJsoup<T> implements SWCJExecute {
         Connection connection = org.jsoup.Jsoup.connect(executeValue.getUrl()).userAgent(executeValue.getUserAge()).
                 cookies(executeValue.getValues()).ignoreContentType(true).data(executeValue.getValues()).
                 timeout(Integer.parseInt(executeValue.getTimeout()));
-        Document document = null;
+        Document document;
         switch (executeValue.getType()){
             case GET:
                 document = connection.get();

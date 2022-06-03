@@ -13,20 +13,16 @@ import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
-import com.midream.sheep.swcj.util.io.ISIO;
-import com.midream.sheep.swcj.util.io.SIO;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ReptilesBuilder implements SWCJBuilder {
-    private static final ISIO sio;
     private static final SWCJClassLoader swcjcl;
 
     static {
         //单例设计模式
-        sio = new SIO();
         swcjcl = new SWCJClassLoader();
     }
     @Override

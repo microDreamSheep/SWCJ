@@ -22,9 +22,9 @@ public interface SWCJXmlFactory {
     void parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException;
     /**
      * 通过文件流解析文件
-     * @param File 文件绝对路径
+     * @param xmlString xml字符串
      * */
-    void parse(String File);
+    void parse(String xmlString);
     /**
      * 获取具体的实现类
      * @param id 配置文件的具体id
@@ -41,4 +41,9 @@ public interface SWCJXmlFactory {
      * @param swcjBuilder 构建器
      * */
     void setBuilder(SWCJBuilder swcjBuilder);
+    /**
+     * 设置解析器
+     * @param swcjParseI 解析器
+     * */
+    void setParseTool(SWCJParseI swcjParseI);
 }
