@@ -26,7 +26,7 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
  */
 public class BuildTool {
     private static final String Template = "try {\n" +
-            "SWCJExecute<#[fx]> swcjExecute = new #[class]<#[fx]>();\n" +
+            "SWCJExecute swcjExecute = new #[class]();\n" +
             "String corn = \"#[method]\";\n" +
             "ExecuteValue executeValue = new ExecuteValue();\n" +
             "executeValue.setHtml(#[isHtml]);\n" +
@@ -154,7 +154,7 @@ public class BuildTool {
         add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString, "){");
         //开始拼接方法
         {
-            String in = ru.getParseProgram().replace("\"","\\\"").replace("&gt;",">").replace("\n","");
+            String in = ru.getParseProgram().replace("\\","\\\\").replace("\"","\\\"").replace("\n","");
             String s = Template.replace("#[method]", in)
                     .replace("#[isHtml]", String.valueOf(ru.isHtml()))
                     .replace("#[type]", ru.getRequestType())
@@ -164,8 +164,7 @@ public class BuildTool {
                     .replace("#[cookies]", rr.getCookies())
                     .replace("#[values]", ru.getValues())
                     .replace("#[timeout]", rc.getTimeout() + "")
-                    .replace("#[class]",ru.getExecutClassName())
-                    .replace("#[fx]",method.getReturnType().replace("[]",""));
+                    .replace("#[class]",ru.getExecutClassName());
             add(sbmethod,s);
         }
         add(sbmethod,"}");

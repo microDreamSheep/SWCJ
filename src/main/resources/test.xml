@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <SWCJ>
-    <!--全局配置-->
+    <!--全局配置
+    配置更据不同的实现不一定生效
+    -->
     <config>
         <!--工作空间，生成的字节码会存储到里面
         isAbsolute->是否是相对路径
@@ -27,6 +29,17 @@
         -->
         <createTactics isCache="true"/>
     </config>
+    <!--execute
+配置解析策略
+-->
+    <executes>
+        <execute>
+            <!--type-->
+            <key>jsoup</key>
+            <!--className-->
+            <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+        </execute>
+    </executes>
     <!--具体的某个爬虫类
          id 获取的标识
         -->
@@ -59,30 +72,9 @@
             <!--url链接-->
             <path path="https://pic.netbian.com/index_5.html"/>
             <!--解析html方案
-            并不支持同时使用
-            <regular>正则表达式 正则特殊值 ALL 即为返回所有文本（经过迭代不知道是否正常）
-            <jsoup>jsoup配置-->
+            语法见具体实现-->
             <parseProgram isHtml="false" type="jsoup">
-                <jsoup>
-                    <!--                <regular reg="href="/>-->
-                    <!--jsoup可以分为多层解析
-                    一个jsoup就是一次解析
-                    即一次<pa>就是一次解析
-                    not 排除固定文本
-                    name 注入的属性
-                    -->
-                    <jsoup name="">
-                        <!--pa可配置属性来选取目标Document
-                        not 排除文本
-                        step跳过的步长
-                        element获取元素(加上abs:是绝对链接)
-                        allStep每次跳过的步长
-                        -->
-                        <pa not="下一页" allStep="0" step="4" element="#{count}">
-                            #main>div.slist>ul>li>a
-                        </pa>
-                    </jsoup>
-                </jsoup>
+
             </parseProgram>
         </url>
     </swc>

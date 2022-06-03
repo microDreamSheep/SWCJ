@@ -92,7 +92,6 @@ public class ExecuteValue {
         }
         return type;
     }
-
     public void setType(SRequest type) {
         this.type = type;
     }

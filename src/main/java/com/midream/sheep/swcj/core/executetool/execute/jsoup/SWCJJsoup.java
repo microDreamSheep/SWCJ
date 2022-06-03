@@ -26,14 +26,14 @@ import java.util.*;
 /**
  * @author midreamsheep
  */
-public class SWCJJsoup<T> implements SWCJExecute<T> {
+public class SWCJJsoup implements SWCJExecute {
     @Override
     @SuppressWarnings("all")
     public List execute(ExecuteValue executeValue, String... args) throws Exception {
         //获取节点对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        NodeList d = builder.parse(new InputSource(new StringReader(args[0].trim()))).getElementsByTagName("jsoup");
+        NodeList d = builder.parse(new InputSource(new StringReader(args[0].replace("&gt;",">").trim()))).getElementsByTagName("jsoup");
         Jsoup[] parse = Parse.parse(d);
         Document document = getConnection(executeValue);
         Map<String, List<String>> map = executeCorn(document, parse, executeValue.isHtml());
@@ -41,12 +41,12 @@ public class SWCJJsoup<T> implements SWCJExecute<T> {
             return map.get("string");
         }
         Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",""));
-        List<Integer> list = new ArrayList<>();
+        List<Integer> list = new LinkedList<>();
         for (Jsoup jsoup : parse) {
             list.add(map.get(jsoup.getName()).size());
         }
         int max = Collections.min(Arrays.asList(list.toArray(new Integer[]{})));
-        List listw = new ArrayList<>();
+        List listw = new LinkedList();
 
         for (int i = 0;i< max;i++) {
             Object o = aClass.getDeclaredConstructor().newInstance();
@@ -63,7 +63,7 @@ public class SWCJJsoup<T> implements SWCJExecute<T> {
     private Map<String,List<String>> executeCorn(Document document,Jsoup[] parse,boolean isHtml){
         Map<String,List<String>> values = new LinkedHashMap<>();
         for (Jsoup js : parse) {
-            List<String> list = new ArrayList<>();
+            List<String> list = new LinkedList<>();
             values.put("".equals(js.getName()) ? "string" : js.getName(), list);
             Elements elements = null;
             for (int a = 0; a < js.getPas().length; a++) {
@@ -151,7 +151,7 @@ public class SWCJJsoup<T> implements SWCJExecute<T> {
             return jsoups;
         }
         private static Jsoup[] parseJsoup(NodeList jsoup){
-            List<Jsoup> list = new ArrayList<>();
+            List<Jsoup> list = new LinkedList<>();
             for (int i = 0; i < jsoup.getLength(); i++) {
                 Node item = jsoup.item(i);
                 if(item.getNodeName().equals("#text")){
@@ -165,7 +165,7 @@ public class SWCJJsoup<T> implements SWCJExecute<T> {
             return list.toArray(new Jsoup[]{});
         }
         private static Pa[] parsePa(NodeList pa){
-            List<Pa> list = new ArrayList<>();
+            List<Pa> list = new LinkedList<>();
             for (int i = 1; i < pa.getLength(); i+=2) {
                 Node item = pa.item(i);
                 NamedNodeMap nodeMap = item.getAttributes();

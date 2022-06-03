@@ -4,7 +4,7 @@ import com.midream.sheep.swcj.pojo.ExecuteValue;
 
 import java.util.List;
 
-public interface SWCJExecute<T> {
+public interface SWCJExecute {
     /**
      * @param executeValue execute value
      * @param args Additional Required Implementation Information
@@ -12,5 +12,6 @@ public interface SWCJExecute<T> {
      *             1 reflection class
      * @return the returned instantiated object
      * */
-    List<T> execute(ExecuteValue executeValue, String ...args) throws Exception;
+    @SuppressWarnings("all")
+    List execute(ExecuteValue executeValue, String ...args) throws Exception;
 }

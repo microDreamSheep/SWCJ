@@ -151,6 +151,26 @@ public class CoreParseTool implements SWCJParseI {
                         NamedNodeMap attributes = child.getAttributes();
                         rc.setCache(Boolean.parseBoolean((attributes.getNamedItem("isCache").getNodeValue().equals("true") ? "true" : "false")));
                         break;
+                    case "executes":
+                        NodeList childs = child.getChildNodes();
+                        for(int a = 0;a<childs.getLength();a++){
+                            Node item = childs.item(a);
+                            if(item.getNodeName().equals("execute")){
+                                String key = "";
+                                String value = "";
+                                NodeList nodes1 = item.getChildNodes();
+                                for(int b = 0;b<nodes1.getLength();b++){
+                                    Node it = nodes1.item(b);
+                                    if(it.getNodeName().equals("key")){
+                                        key = it.getTextContent().trim();
+                                    }else if(it.getNodeName().equals("value")){
+                                        value = it.getTextContent().trim();
+                                    }
+                                }
+                                Constant.EXECUTE_CLASS_NAME.put(key,value);
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
