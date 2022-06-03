@@ -19,7 +19,7 @@ public interface SWCJXmlFactory {
      * 通过文件流解析文件
      * @param xmlFile 文件流
      * */
-    void parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException;
+    void parse(File xmlFile);
     /**
      * 通过文件流解析文件
      * @param xmlString xml字符串

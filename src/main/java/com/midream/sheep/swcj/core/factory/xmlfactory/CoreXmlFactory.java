@@ -24,7 +24,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     private static final ExecutorService execute = Executors.newFixedThreadPool(1);
 
     //xml工厂提供的构造器
-    public CoreXmlFactory(String value) throws IOException, ParserConfigurationException, SAXException, ConfigException {
+    public CoreXmlFactory(String value) {
         parse(value);
     }
 
@@ -33,7 +33,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     }
 
     //xml工厂提供的构造器
-    public CoreXmlFactory(File xmlFile) throws IOException, ParserConfigurationException, SAXException, ConfigException {
+    public CoreXmlFactory(File xmlFile) {
         parse(xmlFile);
     }
 
@@ -67,6 +67,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         });
         execute.execute(thread);
     }
+
     private void parse(List<RootReptile> list){
         for (RootReptile reptile : list) {
             rootReptiles.put(reptile.getId(), reptile);

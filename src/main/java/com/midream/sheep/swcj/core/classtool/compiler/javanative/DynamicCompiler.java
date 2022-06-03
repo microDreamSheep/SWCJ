@@ -1,5 +1,6 @@
 package com.midream.sheep.swcj.core.classtool.compiler.javanative;
 
+import com.midream.sheep.swcj.core.classtool.DataInComplier;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
@@ -21,7 +22,10 @@ public class DynamicCompiler implements SWCJCompiler {
     private final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 
     @Override
-    public Class<?> compileAndLoad(String fullName, SWCJClass sclass) throws ClassNotFoundException {
+    @SuppressWarnings("all")
+    public DataInComplier compileAndLoad(String fullName, SWCJClass sclass) throws ClassNotFoundException {
+        DataInComplier dataInComplier = new DataInComplier();
+        dataInComplier.setIsload(true);
         DiagnosticCollector diagnosticCollector = new DiagnosticCollector();
         JavaFileManager fileManager = new ClassFileManager(javaCompiler.getStandardFileManager(diagnosticCollector, null, null));
         StringBuilder sb = new StringBuilder();
@@ -59,14 +63,16 @@ public class DynamicCompiler implements SWCJCompiler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return aClass;
+            dataInComplier.setaClass(aClass);
+            return dataInComplier;
         } else {
             try {
                 fileManager.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return Class.forName(fullName);
+            dataInComplier.setaClass(Class.forName(fullName));
+            return dataInComplier;
         }
     }
 

@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.core.classtool.classloader;
 
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.core.classtool.DataInComplier;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.core.classtool.compiler.javanative.DynamicCompiler;
@@ -53,6 +54,10 @@ public class SWCJClassLoader extends ClassLoader {
         if (swcjCompiler==null){
             swcjCompiler = new DynamicCompiler();
         }
-        return swcjCompiler.compileAndLoad(className,sclass);
+        DataInComplier dataInComplier = swcjCompiler.compileAndLoad(className, sclass);
+        if(dataInComplier.isIsload()){
+            return dataInComplier.getaClass();
+        }
+        return loadData(dataInComplier.getCalssName(),dataInComplier.getDatas());
     }
 }
