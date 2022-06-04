@@ -64,7 +64,6 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
             }
         }
     }
-
     @Override
     public void setCompiler(SWCJCompiler swcjCompiler) {
         if(swcjBuilder==null){
@@ -72,12 +71,10 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         }
         this.swcjBuilder.setCompiler(swcjCompiler);
     }
-
     @Override
     public void setBuilder(SWCJBuilder swcjBuilder) {
         this.swcjBuilder = swcjBuilder;
     }
-
     @Override
     public void setParseTool(SWCJParseI swcjParseI) {
         this.swcjParseI = swcjParseI;

@@ -41,9 +41,11 @@ public class SIO{
         }
     }
 
-    public static void outPutData(byte[] datas, File toFile) throws IOException {
-        OutputStream outputStream = new FileOutputStream(toFile);
-        outputStream.write(datas);
-        outputStream.close();
+    public static void outPutData(byte[] datas, File toFile) throws IOException{
+        try (OutputStream outputStream = new FileOutputStream(toFile)) {
+            outputStream.write(datas);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

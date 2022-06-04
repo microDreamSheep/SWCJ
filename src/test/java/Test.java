@@ -16,8 +16,7 @@ import java.util.Objects;
  * @author midreamsheep
  */
 public class Test {
-    @org.junit.Test
-    public void test() throws ConfigException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException, InterruptedException, IOException, ParserConfigurationException, SAXException {
+    public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
         long start = System.currentTimeMillis();
@@ -29,5 +28,4 @@ public class Test {
             System.out.println(image.toString());
         }
     }
-
 }

@@ -23,7 +23,7 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
  */
 public class BuildTool {
     private static final String Template = "try {\n" +
-            "SWCJExecute swcjExecute = new #[class]();\n" +
+            "SWCJExecute<#[fx]> swcjExecute = new #[class]<#[fx]>();\n" +
             "String corn = \"#[method]\";\n" +
             "ExecuteValue executeValue = new ExecuteValue();\n" +
             "executeValue.setHtml(#[isHtml]);\n" +
@@ -34,7 +34,7 @@ public class BuildTool {
             "executeValue.setCookies(\"#[cookies]\");\n" +
             "executeValue.setValues(StringUtil.changeString(\"#[values]\"));\n" +
             "executeValue.setTimeout(\"#[timeout]\");\n" +
-            "return (#[returntype])swcjExecute.execute(executeValue, corn).toArray(new #[returntype]{});\n" +
+            "return swcjExecute.execute(executeValue,new #[fx][0],corn);\n" +
             "} catch (Exception e) {\n" +
             "e.printStackTrace();\n" +
             "}\n" +
@@ -159,7 +159,8 @@ public class BuildTool {
                     .replace("#[cookies]", rr.getCookies())
                     .replace("#[values]", ru.getValues())
                     .replace("#[timeout]", rc.getTimeout() + "")
-                    .replace("#[class]",ru.getExecutClassName());
+                    .replace("#[class]",ru.getExecutClassName())
+                    .replace("#[fx]",method.getReturnType().replace("[]",""));
             add(sbmethod,s);
         }
         add(sbmethod,"}");

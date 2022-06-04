@@ -20,11 +20,10 @@ import java.util.regex.Pattern;
 /**
  * @author midreamsheep
  */
-public class SWCJregular implements SWCJExecute {
+public class SWCJregular<T> implements SWCJExecute<T> {
     int max = 0;
     @Override
-    @SuppressWarnings("all")
-    public List execute(ExecuteValue executeValue, String... args) throws Exception {
+    public T[] execute(ExecuteValue executeValue,T[] in, String... args) throws Exception {
         String text = getText(executeValue);
         Map<String,List<String>> values = new LinkedHashMap<>();
         //获取节点对象
@@ -53,12 +52,13 @@ public class SWCJregular implements SWCJExecute {
             }
         }
         if(values.size()==1){
-            return  values.get("str");
+            return  values.get("str").toArray(in);
         }
         Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",""));
-        List listw = new LinkedList();
+        List<T> listw = new LinkedList<>();
         for(int i = 0;i<max;i++){
-            listw.add(aClass.getDeclaredConstructor().newInstance());
+            Object t = aClass.getDeclaredConstructor().newInstance();
+            listw.add((T)t);
         }
         for (Map.Entry<String, List<String>> entry : values.entrySet()) {
             for(int i = 0;i<entry.getValue().size();i++){
@@ -67,7 +67,7 @@ public class SWCJregular implements SWCJExecute {
                 repay1.invoke(o,entry.getValue().get(i));
             }
         }
-        return listw;
+        return listw.toArray(in);
     }
     /**
      * 获取字符串

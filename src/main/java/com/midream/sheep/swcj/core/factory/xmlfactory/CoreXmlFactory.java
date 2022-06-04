@@ -20,23 +20,19 @@ import java.util.concurrent.Executors;
  * 工厂类，读取配置文件，获取具体实现类
  */
 public class CoreXmlFactory extends SWCJAbstractFactory {
-
     private static final ExecutorService execute = Executors.newFixedThreadPool(1);
 
     //xml工厂提供的构造器
     public CoreXmlFactory(String value) {
         parse(value);
     }
-
     //xml工厂提供的默认构造器
     public CoreXmlFactory() {
     }
-
     //xml工厂提供的构造器
     public CoreXmlFactory(File xmlFile) {
         parse(xmlFile);
     }
-
     //解析文档
     @Override
     public void parse(File xmlFile) {
@@ -52,7 +48,6 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         });
         execute.execute(thread);
     }
-
     @Override
     public void parse(String File) {
         if (this.swcjParseI == null) {
@@ -67,7 +62,6 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         });
         execute.execute(thread);
     }
-
     private void parse(List<RootReptile> list){
         for (RootReptile reptile : list) {
             rootReptiles.put(reptile.getId(), reptile);
