@@ -7,11 +7,10 @@ import java.util.List;
 public interface SWCJExecute<T> {
     /**
      * @param executeValue execute value
+     * @param type 类型数据
      * @param args Additional Required Implementation Information
      *             0 xml execute text
-     *             1 reflection class
      * @return the returned instantiated object
      * */
-    @SuppressWarnings("all")
-    T[] execute(ExecuteValue executeValue,T[] in, String ...args) throws Exception;
+    T[] execute(ExecuteValue executeValue,T[] type, String ...args) throws Exception;
 }
