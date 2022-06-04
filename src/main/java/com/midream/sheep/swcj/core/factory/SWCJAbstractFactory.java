@@ -52,7 +52,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 }
                 continue;
             }
-            if(!rootReptile.isLoad()){
+            if(rootReptile.isLoad()){
                 try {
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {

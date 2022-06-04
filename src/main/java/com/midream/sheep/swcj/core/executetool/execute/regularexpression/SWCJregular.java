@@ -53,7 +53,7 @@ public class SWCJregular implements SWCJExecute {
             }
         }
         if(values.size()==1){
-            return values.get("str");
+            return  values.get("str");
         }
         Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",""));
         List listw = new LinkedList();
@@ -63,7 +63,6 @@ public class SWCJregular implements SWCJExecute {
         for (Map.Entry<String, List<String>> entry : values.entrySet()) {
             for(int i = 0;i<entry.getValue().size();i++){
                 Object o = listw.get(i);
-                System.out.println(entry.getKey());
                 Method repay1 = aClass.getMethod("set" + StringUtil.StringToUpperCase(entry.getKey()), String.class);
                 repay1.invoke(o,entry.getValue().get(i));
             }

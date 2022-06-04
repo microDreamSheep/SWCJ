@@ -77,10 +77,10 @@
                         </pa>
                     </jsoup>
                     <jsoup name="url">
-                        <pa not="下一页" allStep="15" step="0" element="">
+                        <pa not="下一页" allStep="0" step="0" element="">
                             #main>div.slist>ul
                         </pa>
-                        <pa not="下一页" allStep="15" step="0" element="abs:href">
+                        <pa not="下一页" allStep="0" step="0" element="abs:href">
                             li>a
                         </pa>
                     </jsoup>

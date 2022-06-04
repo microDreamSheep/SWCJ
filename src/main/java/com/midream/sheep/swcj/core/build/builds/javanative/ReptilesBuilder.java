@@ -54,11 +54,7 @@ public class ReptilesBuilder implements SWCJBuilder {
             System.err.println("缓存功能暂未实现");
         }
         Object webc = aClass.getDeclaredConstructor().newInstance();
-        if (rc.isCache()) {
-            //进入对象池
-            CacheCorn.addObject(rr.getId(), webc);
-        }
-        //返回类
+        CacheCorn.addObject(rr.getId(), webc);
         return webc;
     }
 
