@@ -46,6 +46,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
                 e.printStackTrace();
             }
         });
+        thread.setDaemon(true);
         execute.execute(thread);
     }
     @Override
@@ -60,6 +61,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
                 e.printStackTrace();
             }
         });
+        thread.setDaemon(true);
         execute.execute(thread);
     }
     private void parse(List<RootReptile> list){

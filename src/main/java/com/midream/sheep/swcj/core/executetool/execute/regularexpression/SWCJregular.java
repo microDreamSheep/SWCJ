@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.core.executetool.execute.regularexpression;
 
 import com.midream.sheep.swcj.core.executetool.SWCJExecute;
+import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
 import org.w3c.dom.Node;
@@ -29,18 +30,18 @@ public class SWCJregular<T> implements SWCJExecute<T> {
         //获取节点对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        NodeList d = builder.parse(new InputSource(new StringReader(args[0].trim()))).getElementsByTagName("reg").item(0).getChildNodes();
+        NodeList d = builder.parse(new InputSource(new StringReader(args[0].trim()))).getElementsByTagName(RegConstants.regTag).item(0).getChildNodes();
         for(int i = 0;i<d.getLength();i++){
             Node item = d.item(i);
-            if(item.getNodeName().equals("reg")){
+            if(item.getNodeName().equals(RegConstants.regTag)){
                 List<String> list = new LinkedList<>();
-                Node name = item.getAttributes().getNamedItem("name");
-                if(name!=null&&!name.getNodeValue().trim().equals("")){
+                Node name = item.getAttributes().getNamedItem(RegConstants.nameAttribute);
+                if(name!=null&&!name.getNodeValue().trim().equals(Constant.nullString)){
                     values.put(name.getNodeValue(),list);
                 }else {
-                    values.put("str",list);
+                    values.put(RegConstants.strName,list);
                 }
-                String trim = item.getTextContent().replace("&gt;",">").replace("&lt;","<").trim();
+                String trim = item.getTextContent().replace(Constant.gtTag,">").replace(Constant.ltTag,"<").trim();
                 Pattern r = Pattern.compile(trim);
                 Matcher matcher = r.matcher(text);
                 while (matcher.find()){
@@ -52,13 +53,13 @@ public class SWCJregular<T> implements SWCJExecute<T> {
             }
         }
         if(values.size()==1){
-            return  values.get("str").toArray(in);
+            return  values.get(RegConstants.strName).toArray(in);
         }
-        Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",""));
+        Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",Constant.nullString));
         List<T> listw = new LinkedList<>();
         for(int i = 0;i<max;i++){
-            Object t = aClass.getDeclaredConstructor().newInstance();
-            listw.add((T)t);
+            T t = (T)aClass.getDeclaredConstructor().newInstance();
+            listw.add(t);
         }
         for (Map.Entry<String, List<String>> entry : values.entrySet()) {
             for(int i = 0;i<entry.getValue().size();i++){

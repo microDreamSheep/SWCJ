@@ -8,13 +8,19 @@ import java.util.Map;
  * 字符常量池
  * */
 public class Constant {
+    //空字符
+    public static final String nullString = "";
+    //>字符替换
+    public static final String ltTag = "&lt;";
+    //<字符替换
+    public static final String gtTag = "&gt;";
     //默认生成的包名
     public static final String DEFAULT_PACKAGE_NAME = "com";
-    //String class name
-    public static final String STRING_CLASS_NAME = "java.lang.String[]";
+
     private static final Map<String,String> CLASS_KEY_VALUE=new HashMap<>();
     //实现的执行策略名
     public static final Map<String,String> EXECUTE_CLASS_NAME = new HashMap<>();
+
     static {
         CLASS_KEY_VALUE.put("java.lang.String","String");
         CLASS_KEY_VALUE.put("[Ljava.lang.String;","String[]");

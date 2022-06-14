@@ -144,7 +144,6 @@ public class BuildTool {
         if (vars.length() != 0) {
             varString = vars.substring(0, vars.lastIndexOf(","));
         }
-
         //方法头 定义被重写
         add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString, "){");
         //开始拼接方法
