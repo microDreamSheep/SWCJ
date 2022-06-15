@@ -65,18 +65,21 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         }
     }
     @Override
-    public void setCompiler(SWCJCompiler swcjCompiler) {
+    public SWCJXmlFactory setCompiler(SWCJCompiler swcjCompiler) {
         if(swcjBuilder==null){
             swcjBuilder = new ReptilesBuilder();
         }
         this.swcjBuilder.setCompiler(swcjCompiler);
+        return this;
     }
     @Override
-    public void setBuilder(SWCJBuilder swcjBuilder) {
+    public SWCJXmlFactory setBuilder(SWCJBuilder swcjBuilder) {
         this.swcjBuilder = swcjBuilder;
+        return this;
     }
     @Override
-    public void setParseTool(SWCJParseI swcjParseI) {
+    public SWCJXmlFactory setParseTool(SWCJParseI swcjParseI) {
         this.swcjParseI = swcjParseI;
+        return this;
     }
 }

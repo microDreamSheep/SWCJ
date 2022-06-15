@@ -19,12 +19,12 @@ public interface SWCJXmlFactory {
      * 通过文件流解析文件
      * @param xmlFile 文件流
      * */
-    void parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException;
+    SWCJXmlFactory parse(File xmlFile) throws IOException, SAXException, ConfigException, ParserConfigurationException;
     /**
      * 通过文件流解析文件
      * @param xmlString 文件
      * */
-    void parse(String xmlString) throws IOException, SAXException, ConfigException, ParserConfigurationException;
+    SWCJXmlFactory parse(String xmlString) throws IOException, SAXException, ConfigException, ParserConfigurationException;
     /**
      * 获取具体的实现类
      * @param id 配置文件的具体id
@@ -35,15 +35,15 @@ public interface SWCJXmlFactory {
      * 设置编译器
      * @param swcjCompiler 编译器
      * */
-    void setCompiler(SWCJCompiler swcjCompiler);
+    SWCJXmlFactory setCompiler(SWCJCompiler swcjCompiler);
     /**
      * 设置构建器
      * @param swcjBuilder 构建器
      * */
-    void setBuilder(SWCJBuilder swcjBuilder);
+    SWCJXmlFactory setBuilder(SWCJBuilder swcjBuilder);
     /**
      * 设置解析器
      * @param swcjParseI 解析器
      * */
-    void setParseTool(SWCJParseI swcjParseI);
+    SWCJXmlFactory setParseTool(SWCJParseI swcjParseI);
 }

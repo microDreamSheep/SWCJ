@@ -5,6 +5,7 @@ import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
+import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.parse.CoreParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import org.xml.sax.SAXException;
@@ -35,7 +36,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     }
     //解析文档
     @Override
-    public void parse(File xmlFile) {
+    public SWCJXmlFactory parse(File xmlFile) {
         if (this.swcjParseI == null) {
             this.swcjParseI = new CoreParseTool();
         }
@@ -48,9 +49,10 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         });
         thread.setDaemon(true);
         execute.execute(thread);
+        return this;
     }
     @Override
-    public void parse(String File) {
+    public SWCJXmlFactory parse(String File) {
         if (this.swcjParseI == null) {
             this.swcjParseI = new CoreParseTool();
         }
@@ -63,6 +65,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         });
         thread.setDaemon(true);
         execute.execute(thread);
+        return this;
     }
     private void parse(List<RootReptile> list){
         for (RootReptile reptile : list) {
