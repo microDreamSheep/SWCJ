@@ -13,8 +13,12 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
     public List<T> execute(String in, Object... args) {
         ExecuteValue executeValue = new ExecuteValue();
         String[] split = in.split("\\[swcj;\\]");
-        for(int i = 0;i<split.length;i++){
-            System.out.println(i+"---->"+split[i]);
+        //数据注入
+        String[] injections = split[0].split(";");
+        for (String s : injections) {
+            String[] split1 = s.split(":");
+            split[Integer.parseInt(split1[1])-1] = split[Integer.parseInt(split1[1])-1]
+                    .replace(split1[2],args[Integer.parseInt(split1[0])-1]+"");
         }
         //数据封装
         executeValue.setClassNameReturn(split[1]+"[]");
@@ -25,11 +29,9 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
         executeValue.setCookies(split[6]);
         executeValue.setValues(StringUtil.changeString(split[7]));
         executeValue.setTimeout(split[8]);
-
         try {
-            SWCJExecute<T> swcjExecute = (SWCJExecute<T>) Class.forName(split[9]).newInstance();
-            List<T> ts = swcjExecute.execute(executeValue, split[10]);
-            return ts;
+            SWCJExecute<T> swcjExecute = (SWCJExecute) Class.forName(split[9]).newInstance();
+            return swcjExecute.execute(executeValue, split[10]);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
