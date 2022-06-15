@@ -12,6 +12,9 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     protected SWCJClassLoader swcjcl;
     @Override
     public void setCompiler(SWCJCompiler swcjCompiler) {
+        if(this.swcjcl==null){
+            swcjcl = new SWCJClassLoader();
+        }
         this.swcjcl.setSwcjCompiler(swcjCompiler);
     }
     @Override
