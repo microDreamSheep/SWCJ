@@ -131,12 +131,12 @@ public class CoreParseTool implements SWCJParseI {
                         break;
                     case "constructionSpace":
                         NamedNodeMap constructionSpace = child.getAttributes();
-                        if (!Boolean.parseBoolean(constructionSpace.getNamedItem("isAbsolute").getNodeValue().trim())) {
-                            rc.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + constructionSpace
-                                    .getNamedItem("workSpace").getNodeValue().trim()).replace("file:/", ""));
-                        } else {
+                        if (Boolean.parseBoolean(constructionSpace.getNamedItem("isAbsolute").getNodeValue().trim())) {
                             rc.setWorkplace(constructionSpace.getNamedItem("workSpace").getNodeValue().trim().replace("file:/", ""));
+                            continue;
                         }
+                        rc.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + constructionSpace
+                                .getNamedItem("workSpace").getNodeValue().trim()).replace("file:/", ""));
                         break;
                     case "userAgent":
                         NodeList childNodes = child.getChildNodes();
@@ -155,20 +155,21 @@ public class CoreParseTool implements SWCJParseI {
                         NodeList childs = child.getChildNodes();
                         for(int a = 0;a<childs.getLength();a++){
                             Node item = childs.item(a);
-                            if(item.getNodeName().equals("execute")){
-                                String key = "";
-                                String value = "";
-                                NodeList nodes1 = item.getChildNodes();
-                                for(int b = 0;b<nodes1.getLength();b++){
-                                    Node it = nodes1.item(b);
-                                    if(it.getNodeName().equals("key")){
-                                        key = it.getTextContent().trim();
-                                    }else if(it.getNodeName().equals("value")){
-                                        value = it.getTextContent().trim();
-                                    }
-                                }
-                                Constant.putExecute(key,value);
+                            if(!item.getNodeName().equals("execute")){
+                                continue;
                             }
+                            String key = "";
+                            String value = "";
+                            NodeList nodes1 = item.getChildNodes();
+                            for(int b = 0;b<nodes1.getLength();b++){
+                                Node it = nodes1.item(b);
+                                if(it.getNodeName().equals("key")){
+                                    key = it.getTextContent().trim();
+                                }else if(it.getNodeName().equals("value")){
+                                    value = it.getTextContent().trim();
+                                }
+                            }
+                            Constant.putExecute(key,value);
                         }
                         break;
                     default:
