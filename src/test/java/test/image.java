@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.pojo;
+package test;
 
 public class image {
     String url;

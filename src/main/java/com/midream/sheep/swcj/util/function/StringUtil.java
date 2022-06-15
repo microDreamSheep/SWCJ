@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.util.function;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,5 +45,19 @@ public class StringUtil {
     }
     public static String add(String in){
         return in.replaceAll("\"","\\\"");
+    }
+
+    public static String getString(List<String> args){
+        StringBuilder sb = new StringBuilder();
+        if(args.size()!=0) {
+            sb.append(",");
+        }
+        for(int i = 0;i<args.size();i++){
+            sb.append(args.get(i));
+            if(i != args.size()-1){
+                sb.append(",");
+            }
+        }
+        return sb.toString();
     }
 }

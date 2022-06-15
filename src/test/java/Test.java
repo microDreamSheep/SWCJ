@@ -4,7 +4,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import org.xml.sax.SAXException;
-import com.midream.sheep.swcj.pojo.image;
+import test.image;
 import test.pojo;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,7 +23,7 @@ public class Test {
         pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
         long end = System.currentTimeMillis();
         System.out.println("获取类消耗了"+(end-start)+"ms");
-        image[] it = html.getIt(5);
+        image[] it = html.getIt(5,"5");
         for (image image : it) {
             System.out.println(image.toString());
         }
