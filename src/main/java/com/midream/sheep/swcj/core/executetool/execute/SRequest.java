@@ -20,4 +20,14 @@ public enum SRequest {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public static SRequest get(String type){
+        switch (type){
+            case "GET":
+                return GET;
+            case "POST":
+                return POST;
+        }
+        return null;
+    }
 }

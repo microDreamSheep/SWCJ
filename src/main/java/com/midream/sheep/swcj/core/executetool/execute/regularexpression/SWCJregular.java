@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class SWCJregular<T> implements SWCJExecute<T> {
     int max = 0;
     @Override
-    public T[] execute(ExecuteValue executeValue,T[] in, String... args) throws Exception {
+    public List<T> execute(ExecuteValue executeValue, String... args) throws Exception {
         String text = getText(executeValue);
         Map<String,List<String>> values = new LinkedHashMap<>();
         //获取节点对象
@@ -53,7 +53,7 @@ public class SWCJregular<T> implements SWCJExecute<T> {
             }
         }
         if(values.size()==1){
-            return  values.get(RegConstants.strName).toArray(in);
+            return (List<T>) values.get(RegConstants.strName);
         }
         Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",Constant.nullString));
         List<T> listw = new LinkedList<>();
@@ -68,7 +68,7 @@ public class SWCJregular<T> implements SWCJExecute<T> {
                 repay1.invoke(o,entry.getValue().get(i));
             }
         }
-        return listw.toArray(in);
+        return listw;
     }
     /**
      * 获取字符串

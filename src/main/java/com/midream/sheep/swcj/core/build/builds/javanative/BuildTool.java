@@ -34,7 +34,7 @@ public class BuildTool {
             "executeValue.setCookies(\"#[cookies]\");\n" +
             "executeValue.setValues(StringUtil.changeString(\"#[values]\"));\n" +
             "executeValue.setTimeout(\"#[timeout]\");\n" +
-            "return swcjExecute.execute(executeValue,new #[fx][0],corn);\n" +
+            "return swcjExecute.execute(executeValue,corn).toArray(new #[fx][0]);\n" +
             "} catch (Exception e) {\n" +
             "e.printStackTrace();\n" +
             "}\n" +

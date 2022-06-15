@@ -4,7 +4,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import org.xml.sax.SAXException;
-import test.image;
+import com.midream.sheep.swcj.pojo.image;
 import test.pojo;
 
 import javax.xml.parsers.ParserConfigurationException;

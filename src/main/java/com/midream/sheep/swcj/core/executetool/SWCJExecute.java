@@ -12,5 +12,5 @@ public interface SWCJExecute<T> {
      *             0 xml execute text
      * @return the returned instantiated object
      * */
-    T[] execute(ExecuteValue executeValue,T[] type, String ...args) throws Exception;
+    List<T> execute(ExecuteValue executeValue, String ...args) throws Exception;
 }
