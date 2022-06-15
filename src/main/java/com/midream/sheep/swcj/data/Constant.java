@@ -19,7 +19,7 @@ public class Constant {
 
     private static final Map<String,String> CLASS_KEY_VALUE=new HashMap<>();
     //实现的执行策略名
-    public static final Map<String,String> EXECUTE_CLASS_NAME = new HashMap<>();
+    private static final Map<String,String> EXECUTE_CLASS_NAME = new HashMap<>();
 
     static {
         CLASS_KEY_VALUE.put("java.lang.String","String");
@@ -35,6 +35,13 @@ public class Constant {
             return s;
         }
         return key;
+    }
+
+    public static String getExecute(String key){
+        return EXECUTE_CLASS_NAME.get(key);
+    }
+    public static void putExecute(String key,String value){
+        EXECUTE_CLASS_NAME.put(key,value);
     }
     public static void addTactics(String key,String className){
         EXECUTE_CLASS_NAME.put(key,className);

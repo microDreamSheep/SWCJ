@@ -167,7 +167,7 @@ public class CoreParseTool implements SWCJParseI {
                                         value = it.getTextContent().trim();
                                     }
                                 }
-                                Constant.EXECUTE_CLASS_NAME.put(key,value);
+                                Constant.putExecute(key,value);
                             }
                         }
                         break;
@@ -192,7 +192,7 @@ public class CoreParseTool implements SWCJParseI {
                         break;
                     case "parseProgram":
                         ru.setHtml(Boolean.parseBoolean(n.getAttributes().getNamedItem("isHtml").getNodeValue().trim()));
-                        ru.setExecutClassName(Constant.EXECUTE_CLASS_NAME.get(n.getAttributes().getNamedItem("type").getNodeValue().trim()));
+                        ru.setExecutClassName(Constant.getExecute(n.getAttributes().getNamedItem("type").getNodeValue().trim()));
                         ru.setParseProgram(getProgram(n.getChildNodes().item(1)));
                         break;
                 }
