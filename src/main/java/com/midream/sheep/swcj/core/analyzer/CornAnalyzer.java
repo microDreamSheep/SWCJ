@@ -12,7 +12,7 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
     @Override
     public List<T> execute(String in, Object... args) {
         ExecuteValue executeValue = new ExecuteValue();
-        String[] split = in.split("\\[swcj;\\]");
+        String[] split = in.split("\\[swcj;]");
         //数据注入
         if(!("".contains(split[0]))) {
             String[] injections = split[0].split(";");
@@ -29,7 +29,7 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
         executeValue.setUrl(split[4]);
         executeValue.setUserAge(split[5]);
         executeValue.setCookies(split[6]);
-        executeValue.setValues(StringUtil.changeString(split[7]));
+        executeValue.setValues(StringUtil.changeStringToMaps(split[7]));
         executeValue.setTimeout(split[8]);
         try {
             SWCJExecute<T> swcjExecute = (SWCJExecute) Class.forName(split[9]).newInstance();

@@ -19,10 +19,9 @@ public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
-        long start = System.currentTimeMillis();
         pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
-        long end = System.currentTimeMillis();
-        System.out.println("获取类消耗了"+(end-start)+"ms");
+
+
         image[] it = html.getIt(5,"5");
         for (image image : it) {
             System.out.println(image.toString());

@@ -26,8 +26,6 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
 public class BuildTool {
     private static final String Template =
             "return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<#[fx]>().execute(\"#[execute]\",#[args]).toArray(new #[fx][0]);";
-    private static final String Template2 = "#[in][swcj;]#[fx][swcj;]#[isHtml][swcj;]#[type][swcj;]#[url][swcj;]#[userage][swcj;]#[cookies][swcj;]#[values][swcj;]#[timeout][swcj;]#[class][swcj;]#[method]";
-    ;
 
     public static Object getObjectFromTool(String className) {
         return CacheCorn.getObject(className);
@@ -145,35 +143,11 @@ public class BuildTool {
         add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ",""), "){");
         //开始拼接方法
         {
-            StringBuilder inj = new StringBuilder();
-            String in = ru.getParseProgram().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "");
-            String templet = Template2.replace("#[method]", in)
-                    .replace("#[isHtml]", String.valueOf(ru.isHtml()))
-                    .replace("#[type]", ru.getRequestType())
-                    .replace("#[url]", ru.getUrl())
-                    .replace("#[userage]", rc.getUserAgents().get(new Random().nextInt(rc.getUserAgents().size())))
-                    .replace("#[cookies]", rr.getCookies())
-                    .replace("#[values]", ru.getValues())
-                    .replace("#[timeout]", rc.getTimeout() + "")
-                    .replace("#[class]", ru.getExecutClassName())
-                    .replace("#[fx]", method.getReturnType().replace("[]", ""));
-            String[] split = templet.split("\\[swcj;\\]");
-            for (int i = 0; i < split.length; i++) {
-                for (int a = 0; a < injection.size(); a++) {
-                    if (split[i].contains("#{" + injection.get(a) + "}")) {
-                        inj.append(a + 1).append(":").append(i + 1).append(":").append(injection.get(a)).append(",");
-                    }
-                }
-            }
-            String injectCharacter = "";
-            if (!("".contentEquals(inj))) {
-                injectCharacter = inj.substring(0, inj.length() - 1);
-            }
-            String s = Template.replace("#[execute]", templet).replace("#[fx]", method.getReturnType()
+            String executeCharacter = StringUtil.getExecuteCharacter(ru, injection, rc, rr, method);
+            String s = Template.replace("#[execute]", executeCharacter).replace("#[fx]", method.getReturnType()
                             .replace("[]", ""))
                     .replace("\n", "")
-                    .replace("#[in]", injectCharacter)
-                    .replace(",#[args]", StringUtil.getString(injection));
+                    .replace(",#[args]", StringUtil.getStringByList(injection));
             add(sbmethod, s);
         }
         add(sbmethod, "}");
