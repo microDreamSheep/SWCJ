@@ -31,10 +31,6 @@ public class DynamicCompiler implements SWCJCompiler {
         StringBuilder sb = new StringBuilder();
         //增加包名
         add(sb, "package ", Constant.DEFAULT_PACKAGE_NAME, ";\n");
-        //增加导包
-        for (String s : sclass.getImports()) {
-            add(sb,s);
-        }
         //拼接类名
         add(sb, "public class ", sclass.getClassName(), " implements ",sclass.getItIterface(), " {");
         //拼接方法

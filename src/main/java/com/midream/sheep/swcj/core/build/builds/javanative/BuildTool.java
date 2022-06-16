@@ -151,17 +151,6 @@ public class BuildTool {
             add(sbmethod, s);
         }
         add(sbmethod, "}");
-        //注入
-        if (len != 0) {
-            for (int i = 0; i < len; i++) {
-                //判断，使未使用的name不被注入
-                if (sbmethod.indexOf("#{" + split2[i] + "}") != -1) {
-                    sbmethod.insert(sbmethod.indexOf("#{" + split2[i] + "}") + 3 + split2[i].length(), "\".replace(\"#{" + split2[i] + "}\"," + split2[i] + "+\"\")+\"");
-                } else {
-                    System.err.println("SWCJ:你的" + split2[i] + "参数并未使用，请检查是否需要");
-                }
-            }
-        }
         sb.append(sbmethod);
         return sb.toString();
     }

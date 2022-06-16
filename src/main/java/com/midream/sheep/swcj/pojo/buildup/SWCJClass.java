@@ -9,19 +9,6 @@ public final class SWCJClass {
     private String className;
     private String itIterface;
     private Map<String,SWCJMethod> methods;
-    private String[] imports = new String[]{
-            "import com.midream.sheep.swcj.core.executetool.SWCJExecute;",
-            "import com.midream.sheep.swcj.pojo.ExecuteValue;",
-            "import com.midream.sheep.swcj.util.function.StringUtil;"
-    };
-
-    public String[] getImports() {
-        return imports;
-    }
-
-    public void setImports(String[] imports) {
-        this.imports = imports;
-    }
 
     public String getItIterface() {
         return itIterface;
