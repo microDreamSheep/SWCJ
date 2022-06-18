@@ -3,7 +3,6 @@ package com.midream.sheep.swcj.core.factory.xmlfactory;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
-import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
@@ -14,57 +13,61 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 工厂类，读取配置文件，获取具体实现类
  */
-public class CoreXmlFactory extends SWCJAbstractFactory {
+public class ThreadXmlFactory extends SWCJAbstractFactory {
+    private static final ExecutorService execute = Executors.newFixedThreadPool(1);
+
     //xml工厂提供的构造器
-    public CoreXmlFactory(String value) {
+    public ThreadXmlFactory(String value) {
         parse(value);
     }
-
     //xml工厂提供的默认构造器
-    public CoreXmlFactory() {
+    public ThreadXmlFactory() {
     }
-
     //xml工厂提供的构造器
-    public CoreXmlFactory(File xmlFile) {
+    public ThreadXmlFactory(File xmlFile) {
         parse(xmlFile);
     }
-
     //解析文档
     @Override
     public SWCJXmlFactory parse(File xmlFile) {
         if (this.swcjParseI == null) {
             this.swcjParseI = new CoreParseTool();
         }
-        try {
-            parse(swcjParseI.parseXmlFile(xmlFile, rc));
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-        }
+        Thread thread = new Thread(() -> {
+            try {
+                parse(swcjParseI.parseXmlFile(xmlFile, rc));
+            } catch (ParserConfigurationException | IOException | SAXException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setDaemon(true);
+        execute.execute(thread);
         return this;
     }
-
     @Override
     public SWCJXmlFactory parse(String File) {
         if (this.swcjParseI == null) {
             this.swcjParseI = new CoreParseTool();
         }
-        try {
-            parse(swcjParseI.parseStringXml(File, rc));
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-        }
+        Thread thread = new Thread(() -> {
+            try {
+                parse(swcjParseI.parseStringXml(File, rc));
+            } catch (ParserConfigurationException | IOException | SAXException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.setDaemon(true);
+        execute.execute(thread);
         return this;
     }
-
-    private void parse(List<RootReptile> list) {
+    private void parse(List<RootReptile> list){
         for (RootReptile reptile : list) {
             rootReptiles.put(reptile.getId(), reptile);
         }
@@ -82,16 +85,5 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public Object getWebSpider(String id) {
-        Object object = null;
-        try {
-            object = BuildTool.getObjectFromTool(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return object;
     }
 }

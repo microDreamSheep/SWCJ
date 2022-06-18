@@ -1,7 +1,0 @@
-package com;
-
-public class ada5ca507b9c547029b8ad7b57839970b implements test.pojo {
-    public test.image[] getIt(int count, java.lang.String asd) {
-        return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<test.image>().execute("1:5:count,2:5:asd[swcj;]test.image[swcj;]false[swcj;]GET[swcj;]https://pic.netbian.com/index_#{count}#{asd}.html[swcj;]Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71                Safari/537.36 Edg/97.0.1072.62[swcj;]uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;[swcj;][swcj;]10000[swcj;]com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup[swcj;]<Jsoup>                    <jsoup name=\"name\">                        <pa allStep=\"0\" element=\"\" not=\"下一页\" step=\"0\">                            #main&gt;div.slist&gt;ul&gt;li&gt;a                        </pa>                    </jsoup>                    <jsoup name=\"url\">                        <pa allStep=\"0\" element=\"\" not=\"下一页\" step=\"0\">                            #main&gt;div.slist&gt;ul                        </pa>                        <pa allStep=\"0\" element=\"abs:href\" not=\"下一页\" step=\"0\">                            li&gt;a                        </pa>                    </jsoup>                </Jsoup>", count, asd).toArray(new test.image[0]);
-    }
-}

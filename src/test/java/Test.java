@@ -1,4 +1,4 @@
-import com.ada5ca507b9c547029b8ad7b57839970b;
+
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
@@ -20,10 +20,11 @@ public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
+        long start = System.currentTimeMillis();
         pojo html = (pojo) swcjXmlFactory.getWebSpider("getHtml");
-        Class.forName(String.valueOf(ada5ca507b9c547029b8ad7b57839970b.class));
-
-        image[] it = html.getIt(5,"5");
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+        image[] it = html.getIt("5","5");
         for (image image : it) {
             System.out.println(image.toString());
         }

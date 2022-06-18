@@ -24,6 +24,7 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
  * @author midreamsheep
  */
 public class BuildTool {
+    private static final Random r  = new Random();
     private static final String Template =
             "return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<#[fx]>().execute(\"#[execute]\",#[args]).toArray(new #[fx][0]);";
 
@@ -37,7 +38,7 @@ public class BuildTool {
         List<ReptileUrl> rus = rr.getRu();
         throwsException(rus);
         //获取类名
-        String name = "a" + UUID.randomUUID().toString().replace("-", "");
+        String name = "a" + r.nextInt(1000000);
         sclass.setClassName(name);
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并返回方法名
