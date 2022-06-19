@@ -40,9 +40,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     //解析文档
     @Override
     public SWCJXmlFactory parse(File xmlFile) {
-        if (this.swcjParseI == null) {
-            this.swcjParseI = new CoreParseTool();
-        }
+        notNull();
         try {
             parse(swcjParseI.parseXmlFile(xmlFile, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -53,9 +51,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
 
     @Override
     public SWCJXmlFactory parse(String File) {
-        if (this.swcjParseI == null) {
-            this.swcjParseI = new CoreParseTool();
-        }
+        notNull();
         try {
             parse(swcjParseI.parseStringXml(File, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -68,30 +64,27 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         for (RootReptile reptile : list) {
             rootReptiles.put(reptile.getId(), reptile);
         }
-        for (RootReptile reptile : list) {
-            if (swcjBuilder == null) {
-                swcjBuilder = new ReptilesBuilder();
-            }
-            if (rootReptiles.get(reptile.getId()).isLoad()) {
-                continue;
-            }
-            try {
-                reptile.setLoad(true);
-                swcjBuilder.Builder(reptile, rc);
-            } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
     public Object getWebSpider(String id) {
-        Object object = null;
-        try {
-            object = BuildTool.getObjectFromTool(id);
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object o = BuildTool.getObjectFromTool(id);
+        if(o!=null){
+            return o;
         }
-        return object;
+        try {
+            swcjBuilder.Builder(rootReptiles.get(id), rc);
+        } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
+            throw new RuntimeException(e);
+        }
+        return BuildTool.getObjectFromTool(id);
+    }
+    public void notNull(){
+        if (swcjBuilder == null) {
+            swcjBuilder = new ReptilesBuilder();
+        }
+        if (this.swcjParseI == null) {
+            this.swcjParseI = new CoreParseTool();
+        }
     }
 }

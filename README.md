@@ -1,10 +1,21 @@
-# SWCJ（中考退网，暑假维护）(完成进度25%)
+# SWCJ(完成进度25%)
 
 ## 什么是SWCJ
 
-**SWCJ**是一个java**爬虫**框架，能够使你的爬虫与代码分离开，**降低解耦性**，同时
+**SWCJ**是一个java**请求**框架，能够使你的网络请求与代码分离开，同时
 
-你的爬虫可以通过配置文件来配置，这意味这当你的某些需求更改时，能直接修改配置文件而不必去修改你的代码
+你的请求通过配置文件来配置，这意味这当你的某些需求更改时，能直接修改配置文件而不必去修改你的代码
+
+当然，这框架的也可以用于爬虫，通过组件增强，你可以使用我提供或自定义增强组件来获得更强大的功能
+
+本文档仅包括爬虫部分
+
+我当前提供的:
+
+1. jsoup增强工具(开源)-->整合了jsoup，可以使用jsoup强大的分析工具
+2. 高性能编译器(**闭源**)-->每一个部分都由我自研，通过直接生成字节码来优化速度，暂在开发中
+3. http请求大杂烩（开源）-->暂不完善
+4. 敬请期待
 
 ## 他能干什么
 
@@ -14,9 +25,9 @@
 
 ## 关于作者与不完善之处，求生欲极强
 
-这只是一个不成熟作品，我完成他仅用了一周，他可能有大量不完美之处，我正在不断的完善，目前基础功能已经完成，所以先发出来， [SWSJ爬虫框架: 一个通过配置文件实现爬虫的框架 (gitee.com)](https://gitee.com/midreamsheep/SWCJ)
+这只是一个不成熟作品，他可能有大量不完美之处，我正在不断的完善，目前基础功能已经完成，所以先发出来，
 
-jar包见仓库附件
+jar包见仓库附件https://github.com/microDreamSheep/SWCJ
 
 ## 使用详解
 
@@ -26,7 +37,7 @@ jar包见仓库附件
 
 就可以通过工厂获取爬虫的实例，强转成接口就可以直接调用方法
 
-### 正则模板
+### 正则模板（组件原生提供）
 ```xml
 <reg>
     <reg name="属性">你的表达式</reg>
@@ -38,7 +49,7 @@ jar包见仓库附件
 
 1.导入jar包（废话），暂不完善，并未上传maven
 
-2.定义一个接口
+2.定义一个接口（**高效编译器仅允许String类型的传递值**）
 
 ```java
 import com.midream.sheep.swsj.Annotation.WebSpider;
@@ -60,6 +71,14 @@ public interface Test {
         <constructionSpace isAbsolute="false" workSpace="E:\临时文件"/>
         <timeout value="10000"/>
         <createTactics isCache="true"/>
+                <executes>
+            <execute>
+                <!--type-->
+                <key>jsoup</key>
+                <!--className-->
+          <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+            </execute>
+        </executes>
     </config>
     <swc id="getHtml">
         <parentInterface class="com.midream.sheep.Test"/>
@@ -229,6 +248,14 @@ public interface TestWeb {
             <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)</value>
         </userAgent>
         <createTactics isCache="true"/>
+                <executes>
+            <execute>
+                <!--type-->
+                <key>jsoup</key>
+                <!--className-->
+           <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+            </execute>
+        </executes>
     </config>
     <swc id="Test">
         <parentInterface class="com.midream.demo.interfaces.TestWeb"/>
@@ -308,9 +335,9 @@ public interface TestWeb {
         <executes>
             <execute>
                 <!--type-->
-                <key>jsoup</key>
+                <key>引用名</key>
                 <!--className-->
-                <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
+                <value>类</value>
             </execute>
         </executes>
     </config>
@@ -322,7 +349,7 @@ public interface TestWeb {
         格式 键:值;···
         -->
         <cookies>
-            uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
+            
         </cookies>
         <!--父类接口，爬虫通过接口调-->
         <parentInterface class="com.midream.sheep.pojo"/>
@@ -358,4 +385,3 @@ public interface TestWeb {
 -------------------------------------------------------------------------------------
 
 全篇完，欢迎大佬提出意见，目前优化思路见链接
-
