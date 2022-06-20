@@ -19,38 +19,29 @@ import java.util.*;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {
     @Override
-    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
-        //开始拼接类信息
-        SWCJClass sclass = null;
-        try {
-            sclass = BuildTool.getSWCJClass(rr);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            getAllMethod(Objects.requireNonNull(sclass), rr,rc);
-            return loadClass(rr, rc, sclass);
-        } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
-            System.err.println("类加载异常");
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private Object loadClass(RootReptile rr, ReptileConfig rc, SWCJClass sclass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, IOException, ClassNotFoundException {
+    public Object loadClass(RootReptile rr, SWCJClass sclass) {
         if(swcjcl==null){
             swcjcl = new SWCJClassLoader();
         }
-        Class<?> aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
-        if (rc.isCache()) {
-            System.err.println("缓存功能暂未实现");
+        Class<?> aClass = null;
+        try {
+            aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
+            Object webc = aClass.getDeclaredConstructor().newInstance();
+            CacheCorn.addObject(rr.getId(), webc);
+            return webc;
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
-        Object webc = aClass.getDeclaredConstructor().newInstance();
-        CacheCorn.addObject(rr.getId(), webc);
-        return webc;
     }
 
-    private void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) throws InterfaceIllegal {
+    @Override
+    public SWCJClass getSWCJClass(RootReptile rr) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
+        return BuildTool.getSWCJClass(rr);
+    }
+
+    @Override
+    public void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) {
         int count = 0;
         final List<ReptileUrl> rus = rr.getRu();
         Map<String, SWCJMethod> function = sclass.getMethods();
@@ -63,7 +54,11 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
             }
         }
         if (function.size() != count) {
-            throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
+            try {
+                throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
+            } catch (InterfaceIllegal e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

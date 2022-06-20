@@ -82,4 +82,10 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         this.swcjParseI = swcjParseI;
         return this;
     }
+
+    @Override
+    public SWCJXmlFactory invokeSpecialMethod(Object... args) {
+        System.err.println("此工厂不存在特殊方法");
+        return this;
+    }
 }

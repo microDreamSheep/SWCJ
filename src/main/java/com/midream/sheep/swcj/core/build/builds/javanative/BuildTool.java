@@ -13,9 +13,11 @@ import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.midream.sheep.swcj.util.function.StringUtil.StringToUpperCase;
 import static com.midream.sheep.swcj.util.function.StringUtil.add;
@@ -25,6 +27,7 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
  */
 public class BuildTool {
     private static final Random r  = new Random();
+    private static final ThreadLocalRandom t = ThreadLocalRandom.current();
     private static final String Template =
             "return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<#[fx]>().execute(\"#[execute]\",#[args]).toArray(new #[fx][0]);";
 
@@ -34,11 +37,8 @@ public class BuildTool {
 
     public static SWCJClass getSWCJClass(RootReptile rr) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
         SWCJClass sclass = new SWCJClass();
-        //获取所有方法
-        List<ReptileUrl> rus = rr.getRu();
-        throwsException(rus);
         //获取类名
-        String name = "a" + r.nextInt(1000000);
+        String name = ("a" + t.nextInt()).replace("-","");
         sclass.setClassName(name);
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并返回方法名
@@ -46,6 +46,8 @@ public class BuildTool {
             getFunction(sclass);
         } catch (ClassNotFoundException e) {
             throw new ConfigException("你的接口不存在：" + rr.getParentInter());
+        } catch (InterfaceIllegal e) {
+            throw new RuntimeException(e);
         }
         if (sclass.getMethods() == null || sclass.getMethods().size() == 0) {
             throw new EmptyMatchMethodException("EmptyMatchMethodException(空匹配方法异常)");
@@ -53,21 +55,11 @@ public class BuildTool {
         return sclass;
     }
 
-    private static void throwsException(List<ReptileUrl> rus) throws ConfigException {
-        for (ReptileUrl url : rus) {
-            if (url.getUrl() == null || url.getUrl().equals("")) {
-                throw new ConfigException("你的path未配置,在" + url.getName());
-            }
-            if (url.getParseProgram() == null || url.getParseProgram().equals("")) {
-                throw new ConfigException("你的策略未配置,在" + url.getName());
-            }
-        }
-    }
-
-    private static void getFunction(SWCJClass swcjClass) throws ClassNotFoundException {
+    private static void getFunction(SWCJClass swcjClass) throws ClassNotFoundException, InterfaceIllegal {
         Class<?> ca = Class.forName(swcjClass.getItIterface());
         Method[] methods = ca.getMethods();
         for (Method method : methods) {
+            method.setAccessible(true);
             //实例化方法类
             SWCJMethod swcjMethod = new SWCJMethod();
             //设置方法名
@@ -79,26 +71,21 @@ public class BuildTool {
                 methodType.add(Constant.getClassName(parameter.getType().toString()));
             }
             swcjMethod.setVars(methodType);
+            WebSpider spider = method.getAnnotation(WebSpider.class);
             //放入所有有注解的方法
-            if (method.getAnnotation(WebSpider.class) != null && !method.getAnnotation(WebSpider.class).value().equals("")) {
-                swcjMethod.setAnnotation(method.getAnnotation(WebSpider.class).value());
-                if (!(Constant.getClassName(method.getReturnType().toString()).equals(""))) {
-                    swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
-                } else {
-                    try {
-                        throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
-                    } catch (InterfaceIllegal returnTypeIllegal) {
-                        returnTypeIllegal.printStackTrace();
-                    }
-                }
-                swcjClass.addMethod(method.getAnnotation(WebSpider.class).value(), swcjMethod);
-            } else {
-                try {
+            if (spider == null || spider.value().equals("")) {
                     throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
-                } catch (InterfaceIllegal interfaceIllegal) {
-                    interfaceIllegal.printStackTrace();
+            }
+            swcjMethod.setAnnotation(Objects.requireNonNull(spider).value());
+            if ((Constant.getClassName(method.getReturnType().toString()).equals(""))) {
+                try {
+                    throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
+                } catch (InterfaceIllegal returnTypeIllegal) {
+                    returnTypeIllegal.printStackTrace();
                 }
             }
+            swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
+            swcjClass.addMethod(spider.value(), swcjMethod);
         }
     }
 

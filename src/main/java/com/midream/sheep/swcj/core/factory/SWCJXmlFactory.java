@@ -46,4 +46,9 @@ public interface SWCJXmlFactory {
      * @param swcjParseI 解析器
      * */
     SWCJXmlFactory setParseTool(SWCJParseI swcjParseI);
+    /**
+     * 调用专属特殊方法
+     * @param args 传递值
+     * */
+    SWCJXmlFactory invokeSpecialMethod(Object... args);
 }

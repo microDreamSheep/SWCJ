@@ -24,6 +24,7 @@ public class DynamicCompiler implements SWCJCompiler {
     @Override
     @SuppressWarnings("all")
     public DataInComplier compileAndLoad(String fullName, SWCJClass sclass) throws ClassNotFoundException {
+
         DataInComplier dataInComplier = new DataInComplier();
         dataInComplier.setIsload(true);
         DiagnosticCollector diagnosticCollector = new DiagnosticCollector();
@@ -46,7 +47,7 @@ public class DynamicCompiler implements SWCJCompiler {
         add(sb, "\n}");
         List<JavaFileObject> javaFileObjectList = new ArrayList<JavaFileObject>();
         javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sb.toString()));
-        boolean result = javaCompiler.getTask(new Writer() {@Override public void write(char[] cbuf, int off, int len) throws IOException { }@Override public void flush() throws IOException { }@Override public void close() throws IOException { }}, fileManager, null, null, null, javaFileObjectList).call();
+        boolean result = javaCompiler.getTask(null, fileManager, null, null, null, javaFileObjectList).call();
         if (result) {
             try {
                 Thread.sleep(100);

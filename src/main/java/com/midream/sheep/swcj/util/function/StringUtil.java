@@ -14,6 +14,7 @@ import java.util.Random;
  * @author midreamsheep
  */
 public class StringUtil {
+    private static final String Template2 = "#[in][swcj;]#[fx][swcj;]#[isHtml][swcj;]#[type][swcj;]#[url][swcj;]#[userage][swcj;]#[cookies][swcj;]#[values][swcj;]#[timeout][swcj;]#[class][swcj;]#[method]";
     public static String StringToUpperCase(String value){
         return value.substring(0,1).toUpperCase()+value.substring(1);
     }
@@ -53,7 +54,6 @@ public class StringUtil {
         return sb.toString();
     }
     public static String getExecuteCharacter(ReptileUrl ru, List<String> injection, ReptileConfig rc, RootReptile rr, SWCJMethod method){
-        String Template2 = "#[in][swcj;]#[fx][swcj;]#[isHtml][swcj;]#[type][swcj;]#[url][swcj;]#[userage][swcj;]#[cookies][swcj;]#[values][swcj;]#[timeout][swcj;]#[class][swcj;]#[method]";
         StringBuilder inj = new StringBuilder();
         String in = ru.getParseProgram().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "");
         String templet = Template2.replace("#[method]", in)

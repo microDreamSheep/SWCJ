@@ -73,11 +73,10 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
             return o;
         }
         try {
-            swcjBuilder.Builder(rootReptiles.get(id), rc);
+            return swcjBuilder.Builder(rootReptiles.get(id), rc);
         } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
             throw new RuntimeException(e);
         }
-        return BuildTool.getObjectFromTool(id);
     }
     public void notNull(){
         if (swcjBuilder == null) {

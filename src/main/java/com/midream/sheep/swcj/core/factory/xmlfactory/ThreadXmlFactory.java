@@ -47,7 +47,6 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 e.printStackTrace();
             }
         });
-        thread.setDaemon(true);
         execute.execute(thread);
         return this;
     }
@@ -63,7 +62,6 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 e.printStackTrace();
             }
         });
-        thread.setDaemon(true);
         execute.execute(thread);
         return this;
     }
@@ -85,5 +83,11 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public SWCJXmlFactory invokeSpecialMethod(Object... args) {
+        execute.shutdown();
+        return this;
     }
 }

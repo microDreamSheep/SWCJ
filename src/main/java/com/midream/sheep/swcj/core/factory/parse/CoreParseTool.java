@@ -165,7 +165,9 @@ public class CoreParseTool implements SWCJParseI {
                                 Node it = nodes1.item(b);
                                 if(it.getNodeName().equals("key")){
                                     key = it.getTextContent().trim();
-                                }else if(it.getNodeName().equals("value")){
+                                    continue;
+                                }
+                                if(it.getNodeName().equals("value")){
                                     value = it.getTextContent().trim();
                                 }
                             }
