@@ -343,6 +343,11 @@ public interface TestWeb {
                 <value>类</value>
             </execute>
         </executes>
+        <!--方法定位策略：
+    METHOD_NAME：方法名
+    ANNOTATION: 注解
+-->
+        <chooseStrategy type="METHOD_NAME"/>
     </config>
     <!--具体的某个爬虫类
          id 获取的标识
