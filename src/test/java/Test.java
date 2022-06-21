@@ -1,4 +1,5 @@
 
+import com.a1667209487;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
@@ -19,6 +20,7 @@ import java.util.Objects;
  */
 public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal, ClassNotFoundException {
+        a1667209487 s = new a1667209487();
         SWCJXmlFactory swcjXmlFactory = new ThreadXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
         long start = System.currentTimeMillis();
