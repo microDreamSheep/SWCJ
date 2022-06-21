@@ -6,7 +6,7 @@ import java.util.List;
  * @author midreamsheep
  */
 public class SWCJMethod {
-    private String annotation;
+    private String name;
     private String methodName;
     private List<String> vars;
     private String returnType;
@@ -20,12 +20,12 @@ public class SWCJMethod {
         this.body = body;
     }
 
-    public String getAnnotation() {
-        return annotation;
+    public String getName() {
+        return name;
     }
 
-    public void setAnnotation(String annotation) {
-        this.annotation = annotation;
+    public void setName(String annotation) {
+        this.name = annotation;
     }
 
     public void setMethodName(String methodName) {

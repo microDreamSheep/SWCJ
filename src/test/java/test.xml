@@ -37,6 +37,7 @@
                 <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
             </execute>
         </executes>
+        <chooseStrategy type="METHOD_NAME"/>
     </config>
     <!--具体的某个爬虫类
          id 获取的标识

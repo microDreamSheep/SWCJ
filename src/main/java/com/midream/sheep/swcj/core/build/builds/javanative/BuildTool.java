@@ -7,6 +7,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
@@ -35,7 +36,7 @@ public class BuildTool {
         return CacheCorn.getObject(className);
     }
 
-    public static SWCJClass getSWCJClass(RootReptile rr) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
+    public static SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
         SWCJClass sclass = new SWCJClass();
         //获取类名
         String name = ("a" + t.nextInt()).replace("-","");
@@ -43,7 +44,7 @@ public class BuildTool {
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并返回方法名
         try {
-            getFunction(sclass);
+            getFunction(sclass,rr,rc);
         } catch (ClassNotFoundException e) {
             throw new ConfigException("你的接口不存在：" + rr.getParentInter());
         } catch (InterfaceIllegal e) {
@@ -55,40 +56,52 @@ public class BuildTool {
         return sclass;
     }
 
-    private static void getFunction(SWCJClass swcjClass) throws ClassNotFoundException, InterfaceIllegal {
+    private static void getFunction(SWCJClass swcjClass,RootReptile rr,ReptileConfig rc) throws ClassNotFoundException, InterfaceIllegal {
         Class<?> ca = Class.forName(swcjClass.getItIterface());
         Method[] methods = ca.getMethods();
-        for (Method method : methods) {
-            method.setAccessible(true);
-            //实例化方法类
-            SWCJMethod swcjMethod = new SWCJMethod();
-            //设置方法名
-            swcjMethod.setMethodName(method.getName());
-            //设置方法属性
-            List<String> methodType = new LinkedList<>();
-            Parameter[] parameters = method.getParameters();
-            for (Parameter parameter : parameters) {
-                methodType.add(Constant.getClassName(parameter.getType().toString()));
-            }
-            swcjMethod.setVars(methodType);
-            WebSpider spider = method.getAnnotation(WebSpider.class);
-            //放入所有有注解的方法
-            if (spider == null || spider.value().equals("")) {
-                    throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
-            }
-            swcjMethod.setAnnotation(Objects.requireNonNull(spider).value());
-            if ((Constant.getClassName(method.getReturnType().toString()).equals(""))) {
-                try {
-                    throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
-                } catch (InterfaceIllegal returnTypeIllegal) {
-                    returnTypeIllegal.printStackTrace();
+            for (Method method : methods) {
+                method.setAccessible(true);
+                //实例化方法类
+                SWCJMethod swcjMethod = new SWCJMethod();
+                //设置方法名
+                swcjMethod.setMethodName(method.getName());
+                //设置方法属性
+                List<String> methodType = new LinkedList<>();
+                Parameter[] parameters = method.getParameters();
+                for (Parameter parameter : parameters) {
+                    methodType.add(Constant.getClassName(parameter.getType().toString()));
                 }
-            }
-            swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
-            swcjClass.addMethod(spider.value(), swcjMethod);
-        }
-    }
+                swcjMethod.setVars(methodType);
+                if(rc.getChoice()== ChooseStrategy.ANNOTATION) {
+                    WebSpider spider = method.getAnnotation(WebSpider.class);
+                    //放入所有有注解的方法
+                    if (spider == null || spider.value().equals("")) {
+                        throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
+                    }
+                    swcjMethod.setName(Objects.requireNonNull(spider).value());
+                    swcjClass.addMethod(spider.value(), swcjMethod);
 
+                }else if(rc.getChoice()== ChooseStrategy.METHOD_NAME){
+                    for (ReptileUrl url : rr.getRu()) {
+                        if(url.getName().equals(method.getName())){
+                            swcjMethod.setName(url.getName());
+                        }
+                    }
+                    swcjClass.addMethod(method.getName(), swcjMethod);
+                }
+                if ((Constant.getClassName(method.getReturnType().toString()).equals(""))) {
+                    try {
+                        throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
+                    } catch (InterfaceIllegal returnTypeIllegal) {
+                        returnTypeIllegal.printStackTrace();
+                    }
+                }
+                swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
+            }
+    }
+    private static void getByName(){
+
+    }
     public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method, ReptileConfig rc) {
         StringBuilder sb = new StringBuilder();
         //方法体

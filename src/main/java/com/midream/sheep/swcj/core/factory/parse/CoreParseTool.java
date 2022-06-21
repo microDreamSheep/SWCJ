@@ -5,6 +5,7 @@ import com.midream.sheep.swcj.core.factory.SWCJParseI;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import org.w3c.dom.Document;
@@ -173,6 +174,10 @@ public class CoreParseTool implements SWCJParseI {
                             }
                             Constant.putExecute(key,value);
                         }
+                        break;
+                    case "chooseStrategy":
+                        ChooseStrategy type = ChooseStrategy.getChooseStrategy(child.getAttributes().getNamedItem("type").getTextContent().trim());
+                        rc.setChoice(type);
                         break;
                     default:
                         break;

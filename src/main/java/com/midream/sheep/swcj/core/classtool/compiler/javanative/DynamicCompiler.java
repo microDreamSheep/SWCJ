@@ -45,7 +45,6 @@ public class DynamicCompiler implements SWCJCompiler {
         }
         //类封口
         add(sb, "\n}");
-        System.out.println(sb);
         List<JavaFileObject> javaFileObjectList = new ArrayList<JavaFileObject>();
         javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sb.toString()));
         boolean result = javaCompiler.getTask(null, fileManager, null, null, null, javaFileObjectList).call();

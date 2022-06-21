@@ -36,8 +36,8 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
     }
 
     @Override
-    public SWCJClass getSWCJClass(RootReptile rr) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
-        return BuildTool.getSWCJClass(rr);
+    public SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
+        return BuildTool.getSWCJClass(rr,rc);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
         Map<String, SWCJMethod> function = sclass.getMethods();
         for (ReptileUrl reptileUrl : rus) {
             SWCJMethod s = function.get(reptileUrl.getName());
-            if (s != null && s.getAnnotation() != null && !s.getAnnotation().equals("")) {
+            if (s != null && s.getName() != null && !s.getName().equals("")) {
                 String s1 = BuildTool.spliceMethod(reptileUrl, rr, s,rc);
                 s.setBody(s1);
                 count++;

@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.data;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
+import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ public class ReptileConfig {
     private String workplace = ReptileConfig.class.getClassLoader().getResource("")+ "com/midream/sheep/swcj/wordkplace";
     //超时时间
     private int timeout = 10000;
+    //方法分析策略
+    private ChooseStrategy choice;
     //浏览器模拟
     private List<String> userAgents = new ArrayList<>();
 
@@ -72,6 +75,14 @@ public class ReptileConfig {
 
     public int getTimeout() {
         return timeout;
+    }
+
+    public ChooseStrategy getChoice() {
+        return choice;
+    }
+
+    public void setChoice(ChooseStrategy choice) {
+        this.choice = choice;
     }
 
     public void setTimeout(int timeout) {

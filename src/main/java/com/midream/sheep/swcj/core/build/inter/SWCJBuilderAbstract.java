@@ -26,7 +26,7 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     {
         try{
             //开始拼接类信息
-            SWCJClass sclass = getSWCJClass(rr);
+            SWCJClass sclass = getSWCJClass(rr,rc);
             getAllMethod(Objects.requireNonNull(sclass), rr,rc);
             return loadClass(rr, sclass);
         } catch (ClassNotFoundException e) {
@@ -34,7 +34,7 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
         }
         return null;
     }
-    public abstract SWCJClass getSWCJClass(RootReptile rr) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException;
+    public abstract SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException;
     public abstract void getAllMethod(SWCJClass sclass, RootReptile rr, ReptileConfig rc);
     public abstract Object loadClass(RootReptile rr, SWCJClass sclass);
 }
