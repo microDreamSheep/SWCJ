@@ -59,7 +59,7 @@
         name——>注解名
         inPutName 下文中使用的参数名
         -->
-        <url name="getHtml" inPutName="">
+        <url name="getit" inPutName="">
             <!--请求类型
             当前仅支持POST和GET请求
             type="POST||GET"

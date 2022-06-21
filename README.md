@@ -16,6 +16,9 @@
 2. 高性能编译器(**闭源**)-->每一个部分都由我自研，通过直接生成字节码来优化速度，暂在开发中
 3. http请求大杂烩（开源）-->暂不完善
 4. 敬请期待
+## 安全检查
+
+[![OSCS Status](https://www.oscs1024.com/platform/badge/microDreamSheep/SWCJ.svg?size=large)](https://www.oscs1024.com/project/microDreamSheep/SWCJ?ref=badge_large)
 
 ## 他能干什么
 
