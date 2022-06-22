@@ -28,7 +28,7 @@ import static com.midream.sheep.swcj.util.function.StringUtil.add;
  */
 public class BuildTool {
     private static final Random r  = new Random();
-    private static final ThreadLocalRandom t = ThreadLocalRandom.current();
+    private static int t = 0;
     private static final String Template =
             "return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<#[fx]>().execute(\"#[execute]\",#[args]).toArray(new #[fx][0]);";
 
@@ -37,9 +37,9 @@ public class BuildTool {
     }
 
     public static SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
-        SWCJClass sclass = new SWCJClass();
+        SWCJClass sclass = SWCJClass.buildClass();
         //获取类名
-        String name = ("a" + t.nextInt()).replace("-","");
+        String name = "a" + (t++);
         sclass.setClassName(name);
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并返回方法名
@@ -57,8 +57,7 @@ public class BuildTool {
     }
 
     private static void getFunction(SWCJClass swcjClass,RootReptile rr,ReptileConfig rc) throws ClassNotFoundException, InterfaceIllegal {
-        Class<?> ca = Class.forName(swcjClass.getItIterface());
-        Method[] methods = ca.getMethods();
+        Method[] methods = Class.forName(swcjClass.getItIterface()).getMethods();
             for (Method method : methods) {
                 method.setAccessible(true);
                 //实例化方法类
@@ -85,6 +84,7 @@ public class BuildTool {
                     for (ReptileUrl url : rr.getRu()) {
                         if(url.getName().equals(method.getName())){
                             swcjMethod.setName(url.getName());
+                            break;
                         }
                     }
                     swcjClass.addMethod(method.getName(), swcjMethod);
@@ -99,18 +99,31 @@ public class BuildTool {
                 swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
             }
     }
-    private static void getByName(){
-
-    }
+    //
     public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method, ReptileConfig rc) {
-        StringBuilder sb = new StringBuilder();
         //方法体
         StringBuilder sbmethod = new StringBuilder();
         //获取参数传入列表
+        List<String> injection = new LinkedList<>();
+        String varString = getMethodParametric(ru,method,injection);
+        //方法头 定义被重写
+        add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ",""), "){");
+        //开始拼接方法
+        {
+            String executeCharacter = StringUtil.getExecuteCharacter(ru, injection, rc, rr, method);
+            String s = Template.replace("#[execute]", executeCharacter).replace("#[fx]", method.getReturnType()
+                            .replace("[]", ""))
+                    .replace("\n", "")
+                    .replace(",#[args]", StringUtil.getStringByList(injection));
+            add(sbmethod, s);
+        }
+        add(sbmethod, "}");
+        return sbmethod.toString();
+    }
+    private static String getMethodParametric(ReptileUrl ru,SWCJMethod method,List<String> injection){
         StringBuilder vars = new StringBuilder();
         List<String> vars1 = method.getVars();
         String[] split2 = ru.getInPutName().split(",");
-        List<String> injection = new LinkedList<>();
         int len = split2.length;
         if (ru.getInPutName().trim().equals("")) {
             len = 0;
@@ -126,7 +139,8 @@ public class BuildTool {
                 add(vars, vars1.get(i), " ", split2[i], ",");
                 injection.add(split2[i]);
             }
-        } else {
+        } else if(len==0){
+        }else{
             System.err.println("SWCJ:警告：你的接口有部分参数没有用到,方法:" + ru.getName());
             for (int i = 0; i < len; i++) {
                 add(vars, vars1.get(i), " ", split2[i], ",");
@@ -140,19 +154,6 @@ public class BuildTool {
         if (vars.length() != 0) {
             varString = vars.substring(0, vars.lastIndexOf(","));
         }
-        //方法头 定义被重写
-        add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ",""), "){");
-        //开始拼接方法
-        {
-            String executeCharacter = StringUtil.getExecuteCharacter(ru, injection, rc, rr, method);
-            String s = Template.replace("#[execute]", executeCharacter).replace("#[fx]", method.getReturnType()
-                            .replace("[]", ""))
-                    .replace("\n", "")
-                    .replace(",#[args]", StringUtil.getStringByList(injection));
-            add(sbmethod, s);
-        }
-        add(sbmethod, "}");
-        sb.append(sbmethod);
-        return sb.toString();
+        return varString;
     }
 }

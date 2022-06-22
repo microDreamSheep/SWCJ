@@ -30,18 +30,6 @@ public class RootReptile {
     private String parentInter;
     //方法名
     private String id;
-
-    @Override
-    public String toString() {
-        return "RootReptile{" +
-                "ru=" + ru +
-                ", cookies='" + cookies + '\'' +
-                ", parentInter='" + parentInter + '\'' +
-                ", id='" + id + '\'' +
-                '}';
-    }
-
-
     public String getId() {
         return id;
     }
@@ -79,5 +67,16 @@ public class RootReptile {
 
     public void addUrl(ReptileUrl ru){
         this.ru.add(ru);
+    }
+
+    @Override
+    public String toString() {
+        return "RootReptile{" +
+                "isLoad=" + isLoad +
+                ", ru=" + ru +
+                ", cookies='" + cookies + '\'' +
+                ", parentInter='" + parentInter + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
 }

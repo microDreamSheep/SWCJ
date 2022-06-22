@@ -26,7 +26,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
     //解析器
     protected SWCJParseI swcjParseI = null;
     @Override
-    public Object getWebSpider(String id) throws ConfigException, EmptyMatchMethodException, InterfaceIllegal {
+    public Object getWebSpiderById(String id) throws ConfigException, EmptyMatchMethodException, InterfaceIllegal {
         //效验池中是否存在,如果存在直接返回
         Object object = null;
         int i = 0;

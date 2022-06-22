@@ -29,8 +29,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     }
 
     //xml工厂提供的默认构造器
-    public CoreXmlFactory() {
-    }
+    public CoreXmlFactory() {}
 
     //xml工厂提供的构造器
     public CoreXmlFactory(File xmlFile) {
@@ -42,7 +41,10 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     public SWCJXmlFactory parse(File xmlFile) {
         notNull();
         try {
-            parse(swcjParseI.parseXmlFile(xmlFile, rc));
+                long start = System.currentTimeMillis();
+                parse(swcjParseI.parseXmlFile(xmlFile, rc));
+                long end = System.currentTimeMillis();
+                System.out.println("解析文档耗时：" + (end - start) + "ms");
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
@@ -60,14 +62,14 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         return this;
     }
 
-    private void parse(List<RootReptile> list) {
-        for (RootReptile reptile : list) {
-            rootReptiles.put(reptile.getId(), reptile);
+    private void parse(List<RootReptile> rootReptiles) {
+        for (RootReptile reptile : rootReptiles) {
+            this.rootReptiles.put(reptile.getId(), reptile);
         }
     }
 
     @Override
-    public Object getWebSpider(String id) {
+    public Object getWebSpiderById(String id) {
         Object o = BuildTool.getObjectFromTool(id);
         if(o!=null){
             return o;
@@ -78,7 +80,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
             throw new RuntimeException(e);
         }
     }
-    public void notNull(){
+    private void notNull(){
         if (swcjBuilder == null) {
             swcjBuilder = new ReptilesBuilder();
         }

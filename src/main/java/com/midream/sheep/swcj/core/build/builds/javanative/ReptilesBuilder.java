@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {
-    @Override
+
     public Object loadClass(RootReptile rr, SWCJClass sclass) {
         if(swcjcl==null){
             swcjcl = new SWCJClassLoader();
@@ -26,21 +26,17 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
         Class<?> aClass = null;
         try {
             aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
-            Object webc = aClass.getDeclaredConstructor().newInstance();
-            CacheCorn.addObject(rr.getId(), webc);
-            return webc;
+            return aClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Override
     public SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
         return BuildTool.getSWCJClass(rr,rc);
     }
 
-    @Override
     public void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) {
         int count = 0;
         final List<ReptileUrl> rus = rr.getRu();
@@ -59,6 +55,17 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
             } catch (InterfaceIllegal e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    @Override
+    protected Object buildObject(RootReptile rr, ReptileConfig rc) {
+        try {
+            SWCJClass swcjClass = getSWCJClass(rr, rc);
+            getAllMethod(swcjClass,rr, rc);
+            return loadClass(rr,swcjClass);
+        } catch (ClassNotFoundException | EmptyMatchMethodException | ConfigException e) {
+            throw new RuntimeException(e);
         }
     }
 }

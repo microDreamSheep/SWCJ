@@ -44,15 +44,6 @@ public class ReptileConfig {
         userAgents.add("Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0");
     }
 
-    @Override
-    public String toString() {
-        return "ReptileConfig{" +
-                "workplace='" + workplace + '\'' +
-                ", timeout=" + timeout +
-                ", userAgents=" + userAgents +
-                '}';
-    }
-
     public List<String> getUserAgents() {
         return userAgents;
     }
@@ -66,10 +57,7 @@ public class ReptileConfig {
         File place = new File(workplace);
         //生成文件夹
         if(!place.exists()){
-            boolean b = place.mkdirs();
-            if(!b){
-                throw new ConfigException("命名空间异常");
-            }
+            place.mkdirs();
         }
     }
 
@@ -87,5 +75,16 @@ public class ReptileConfig {
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    @Override
+    public String toString() {
+        return "ReptileConfig{" +
+                "workplace='" + workplace + '\'' +
+                ", timeout=" + timeout +
+                ", choice=" + choice +
+                ", userAgents=" + userAgents +
+                ", isCache=" + isCache +
+                '}';
     }
 }

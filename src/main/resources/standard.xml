@@ -33,6 +33,7 @@
                 <!--className-->
                 <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
             </execute>
+            <executes>类</executes>
         </executes>
         <createTactics isCache="false"/>
         <!--方法定位策略：

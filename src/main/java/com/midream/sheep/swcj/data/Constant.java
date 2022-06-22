@@ -41,7 +41,14 @@ public class Constant {
         return EXECUTE_CLASS_NAME.get(key);
     }
     public static void putExecute(String key,String value){
-        EXECUTE_CLASS_NAME.put(key,value);
+        EXECUTE_CLASS_NAME.put(key.trim(),value.trim());
+    }
+    /**
+     * 存放executesmap
+     * */
+    public static void PutExecutesMap(Map<String,String> maps){
+        //put the maps to the EXECUTE_CLASS_NAME
+        EXECUTE_CLASS_NAME.putAll(maps);
     }
     public static void addTactics(String key,String className){
         EXECUTE_CLASS_NAME.put(key,className);

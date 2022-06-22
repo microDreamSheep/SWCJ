@@ -30,7 +30,7 @@ public interface SWCJXmlFactory {
      * @param id 配置文件的具体id
      * @return 具体的实现对象
      * */
-    Object getWebSpider(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal;
+    Object getWebSpiderById(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal;
     /**
      * 设置编译器
      * @param swcjCompiler 编译器

@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * @author midreamsheep
  */
-public final class SWCJClass {
+public class SWCJClass {
     private String className;
     private String itIterface;
     private Map<String,SWCJMethod> methods;
@@ -47,5 +47,9 @@ public final class SWCJClass {
 
     public void setMethods(Map<String, SWCJMethod> methods) {
         this.methods = methods;
+    }
+
+    public static SWCJClass buildClass(){
+        return new SWCJClass();
     }
 }
