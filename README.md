@@ -13,9 +13,10 @@
 我当前提供的:
 
 1. jsoup增强工具(开源)-->整合了jsoup，可以使用jsoup强大的分析工具：https://github.com/microDreamSheep/jsoup-for-swcj
-2. 高性能编译器(**闭源**)-->每一个部分都由我自研，通过直接生成字节码来优化速度，暂在开发中
-3. http请求大杂烩（开源）-->暂不完善
-4. 敬请期待
+2. 高性能编译器(**闭源**)-->每一个部分都由我自研，通过直接生成字节码来优化速度，暂在bug微调中
+3. http请求大杂烩（开源）-->暂在开发中
+4. 自定义xml高效分析器，暂在开发中
+5. 敬请期待
 ## 安全检查
 
 [![OSCS Status](https://www.oscs1024.com/platform/badge/microDreamSheep/SWCJ.svg?size=large)](https://www.oscs1024.com/project/microDreamSheep/SWCJ?ref=badge_large)
