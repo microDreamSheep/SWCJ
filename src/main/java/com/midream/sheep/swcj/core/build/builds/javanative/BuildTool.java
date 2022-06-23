@@ -120,7 +120,7 @@ public class BuildTool {
         add(sbmethod, "}");
         return sbmethod.toString();
     }
-    private static String getMethodParametric(ReptileUrl ru,SWCJMethod method,List<String> injection){
+    public static String getMethodParametric(ReptileUrl ru,SWCJMethod method,List<String> injection){
         StringBuilder vars = new StringBuilder();
         List<String> vars1 = method.getVars();
         String[] split2 = ru.getInPutName().split(",");
