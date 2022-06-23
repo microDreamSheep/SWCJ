@@ -65,7 +65,8 @@ public class StringUtil {
                 .replace("#[values]", ru.getValues())
                 .replace("#[timeout]", rc.getTimeout() + "")
                 .replace("#[class]", ru.getExecutClassName())
-                .replace("#[fx]", method.getReturnType().replace("[]", ""));
+                .replace("#[fx]", method.getReturnType().replace("[]", ""))
+                .replaceAll("\\R","");
         String[] split = templet.split("\\[swcj;]");
         for (int i = 0; i < split.length; i++) {
             for (int a = 0; a < injection.size(); a++) {

@@ -45,7 +45,7 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
             SWCJMethod s = function.get(reptileUrl.getName());
             if (s != null && s.getName() != null && !s.getName().equals("")) {
                 String s1 = BuildTool.spliceMethod(reptileUrl, rr, s,rc);
-                s.setBody(s1);
+                s.setBody(s1.replace("\n", ""));
                 count++;
             }
         }

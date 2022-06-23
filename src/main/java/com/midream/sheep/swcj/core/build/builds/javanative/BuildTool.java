@@ -139,7 +139,7 @@ public class BuildTool {
                 add(vars, vars1.get(i), " ", split2[i], ",");
                 injection.add(split2[i]);
             }
-        } else if(len==0){
+        } else if(len==0&&vars1.size()==0){
         }else{
             System.err.println("SWCJ:警告：你的接口有部分参数没有用到,方法:" + ru.getName());
             for (int i = 0; i < len; i++) {

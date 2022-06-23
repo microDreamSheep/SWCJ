@@ -38,7 +38,7 @@ public class BetterXmlParseTool implements SWCJParseI {
     }
 
     @Override
-    public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc) throws ParserConfigurationException {
+    public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc){
         parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         return parseClass(xmlString);
     }
@@ -135,7 +135,7 @@ public class BetterXmlParseTool implements SWCJParseI {
                 ru.setRequestType(properties[2].split("=")[1].trim().substring(1));
                 ru.setValues(properties[3].split("=")[1].trim().substring(1));
                 ru.setUrl(properties[4].split("=")[1].trim().substring(1));
-                String[] split = properties[5].split("-->")[1].split(",");
+                String[] split = properties[5].split("-!>")[1].split(",");
                 ru.setHtml(Boolean.parseBoolean(split[0].trim().substring(1)));
                 ru.setParseProgram(split[2].trim().substring(split[2].trim().indexOf("->{")+3,split[2].trim().indexOf("}")-1));
                 ru.setExecutClassName(Constant.getExecute(split[1].trim()));

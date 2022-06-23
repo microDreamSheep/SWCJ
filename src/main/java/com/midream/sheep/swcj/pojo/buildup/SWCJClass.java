@@ -52,4 +52,13 @@ public class SWCJClass {
     public static SWCJClass buildClass(){
         return new SWCJClass();
     }
+
+    @Override
+    public String toString() {
+        return "SWCJClass{" +
+                "className='" + className + '\'' +
+                ", itIterface='" + itIterface + '\'' +
+                ", methods=" + methods +
+                '}';
+    }
 }

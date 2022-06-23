@@ -27,15 +27,15 @@
         </cookies>
         <parentInterface>com.midream.sheep.pojo</parentInterface>
         <url>
-            name=getit;
-            inPutName=;
-            type=GET;
+            name={getit};
+            inPutName={};
+            type={GET};
             value={};
-            path=https://pic.netbian.com/index_5.html;
-            parseProgram={
+            path={https://pic.netbian.com/index_5.html};
+            parseProgram-!>{
                 isHtml=true;
                 type=jsoup;
-                xml={
+                xml->{
                     <Jsoup>
                         <jsoup name="">
                             <pa not="下一页" allStep="0" step="0" element="">

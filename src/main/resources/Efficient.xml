@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <SWCJ>
     <config>
-        constructionSpace={isAbsolute=false, workSpace=E:\临时文件};
+        constructionSpace={false,E:\临时文件};
         timeout={value=10000};
         userAgent={
             Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62,
@@ -27,15 +27,15 @@
         </cookies>
         <parentInterface>com.midream.sheep.pojo</parentInterface>
         <url>
-            name=getit;
-            inPutName=;
-            type=GET;
+            name={getit};
+            inPutName={};
+            type={GET};
             value={};
-            path=https://pic.netbian.com/index_5.html;
-            parseProgram->{
+            path={https://pic.netbian.com/index_5.html};
+            parseProgram-!>{
                 true,
                 jsoup,
-                xml:{
+                xml->{
                     <Jsoup>
                         <jsoup name="">
                             <pa not="下一页" allStep="0" step="0" element="">

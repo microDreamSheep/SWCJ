@@ -54,4 +54,15 @@ public class SWCJMethod {
         }
         return returnType;
     }
+
+    @Override
+    public String toString() {
+        return "SWCJMethod{" +
+                "name='" + name + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", vars=" + vars +
+                ", returnType='" + returnType + '\'' +
+                ", body='" + body + '\'' +
+                '}';
+    }
 }

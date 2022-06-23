@@ -41,10 +41,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     public SWCJXmlFactory parse(File xmlFile) {
         notNull();
         try {
-                long start = System.currentTimeMillis();
                 parse(swcjParseI.parseXmlFile(xmlFile, rc));
-                long end = System.currentTimeMillis();
-                System.out.println("解析文档耗时：" + (end - start) + "ms");
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }

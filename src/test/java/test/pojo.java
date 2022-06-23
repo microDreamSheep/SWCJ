@@ -3,6 +3,7 @@ package test;
 import com.midream.sheep.swcj.annotation.WebSpider;
 
 public interface pojo {
-    String[] getIt(String i,String in);
+    @WebSpider("getit")
+    String[] getit(String i,String in);
 
 }
