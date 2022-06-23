@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.core.factory.parse;
+package com.midream.sheep.swcj.core.factory.parse.bystr;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
@@ -55,15 +55,7 @@ public class BetterXmlParseTool implements SWCJParseI {
         String[] workplaceConfig = strings[pointer].split("=");
         if (workplaceConfig[0].trim().equals("constructionSpace")) {
             String[] propertySet = workplaceConfig[1].substring(1).split(",");
-            try {
-                if (Boolean.parseBoolean(propertySet[0].trim())) {
-                    config.setWorkplace(propertySet[1].trim());
-                } else {
-                    config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + propertySet[1].trim()).replace("file:/", ""));
-                }
-            } catch (ConfigException e) {
-                throw new RuntimeException(e);
-            }
+            parseWorkPlace(Boolean.parseBoolean(propertySet[0].trim()),propertySet[1], config);
             pointer++;
         }
         //设置超时时间
@@ -84,26 +76,7 @@ public class BetterXmlParseTool implements SWCJParseI {
         //设置注入配置
         String[] injectConfig = strings[pointer].split("=");
         if (injectConfig[0].trim().equals("executes")) {
-            for (String s : injectConfig[1].substring(1).split(",")) {
-                String[] split = s.split(":");
-                if (split[0].trim().equals("execute")) {
-                    String[] split1 = split[1].split("->");
-                    Constant.putExecute(split1[0].substring(split1[0].indexOf("{")+1).trim(), split1[1].substring(0,split1[1].indexOf("}")-1).trim());
-                } else if (split[0].trim().equals("executes")) {
-                    try {
-                        Constant.PutExecutesMap(((ExecuteConfigurationClass) Class.forName(split[1].trim().substring(1, split[1].trim().length() - 1)).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                             NoSuchMethodException | ClassNotFoundException e) {
-                        try {
-                            throw new ConfigException("你的配置文件有误，请检查配置文件");
-                        } catch (ConfigException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-
-                }
-
-            }
+            parseExecutes(injectConfig[1].trim());
             pointer++;
         }
         //注入分析策略
@@ -113,6 +86,45 @@ public class BetterXmlParseTool implements SWCJParseI {
         }
     }
 
+    /*
+    * 分析工作空间
+    **/
+    private void parseWorkPlace(boolean isRelatively,String workConfig,ReptileConfig config){
+        try {
+            if (isRelatively) {
+                config.setWorkplace(workConfig.trim());
+            } else {
+                config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + workConfig.trim()).replace("file:/", ""));
+            }
+        } catch (ConfigException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * 注入配置
+     * */
+    private void parseExecutes(String xmlString){
+        for (String s : xmlString.substring(1).split(",")) {
+            String[] split = s.split(":");
+            if (split[0].trim().equals("execute")) {
+                String[] split1 = split[1].split("->");
+                Constant.putExecute(split1[0].substring(split1[0].indexOf("{")+1).trim(), split1[1].substring(0,split1[1].indexOf("}")-1).trim());
+            } else if (split[0].trim().equals("executes")) {
+                try {
+                    Constant.PutExecutesMap(((ExecuteConfigurationClass) Class.forName(split[1].trim().substring(1, split[1].trim().length() - 1)).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException | ClassNotFoundException e) {
+                    try {
+                        throw new ConfigException("你的配置文件有误，请检查配置文件");
+                    } catch (ConfigException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
+            }
+
+        }
+    }
     /**
      * 分析swcj
      * */

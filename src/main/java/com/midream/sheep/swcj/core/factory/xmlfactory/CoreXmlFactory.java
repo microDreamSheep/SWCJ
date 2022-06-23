@@ -7,7 +7,7 @@ import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
-import com.midream.sheep.swcj.core.factory.parse.CoreParseTool;
+import com.midream.sheep.swcj.core.factory.parse.bydom.CoreParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import org.xml.sax.SAXException;
 
@@ -15,9 +15,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 工厂类，读取配置文件，获取具体实现类

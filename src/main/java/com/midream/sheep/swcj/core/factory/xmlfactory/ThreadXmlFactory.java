@@ -6,7 +6,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
-import com.midream.sheep.swcj.core.factory.parse.CoreParseTool;
+import com.midream.sheep.swcj.core.factory.parse.bydom.CoreParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import org.xml.sax.SAXException;
 

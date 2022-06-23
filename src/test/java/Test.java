@@ -3,7 +3,7 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
-import com.midream.sheep.swcj.core.factory.parse.BetterXmlParseTool;
+import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import org.xml.sax.SAXException;
 import test.pojo;
@@ -20,6 +20,7 @@ public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.setParseTool(new BetterXmlParseTool());
+        long start = System.currentTimeMillis();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/Efficient.xml"));
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("getHtml");
         String[] it = html.getit("5","5");

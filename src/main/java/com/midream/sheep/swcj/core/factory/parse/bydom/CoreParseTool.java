@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.core.factory.parse;
+package com.midream.sheep.swcj.core.factory.parse.bydom;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
