@@ -50,7 +50,7 @@
             uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
         </cookies>
         <!--父类接口，爬虫通过接口调-->
-        <parentInterface class="test.pojo"/>
+        <parentInterface class="qwesd.pojo"/>
         <!--请求配置
         一个配置对应一个方法
         name——>注解名
