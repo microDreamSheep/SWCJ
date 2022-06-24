@@ -40,61 +40,52 @@ public class BetterXmlParseTool implements SWCJParseI {
     @Override
     public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc){
         parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
-        return parseClass(xmlString);
+        return parseAllClass(xmlString);
     }
 
     /**
      * 分析配置文件
      */
     private void parseConfigFile(String configString, ReptileConfig config) {
-        //解析配置文件
-        String[] strings = configString.split("};");
-        //指针，指向元素
-        int pointer = 0;
         //设置工作空间
-        String[] workplaceConfig = strings[pointer].split("=");
-        if (workplaceConfig[0].trim().equals("constructionSpace")) {
-            String[] propertySet = workplaceConfig[1].substring(1).split(",");
-            parseWorkPlace(Boolean.parseBoolean(propertySet[0].trim()),propertySet[1], config);
-            pointer++;
-        }
+        parseWorkPlace(configString.substring(configString.indexOf("<constructionSpace>") + "<constructionSpace>".length(), configString.indexOf("</constructionSpace>")), config);
         //设置超时时间
-        String[] timeoutConfig = strings[pointer].split("=");
-        if (timeoutConfig[0].trim().equals("timeout")) {
-            config.setTimeout(Integer.parseInt(timeoutConfig[1].substring(1).trim()));
-            pointer++;
-        }
+        parseTimeOut(configString.substring(configString.indexOf("<timeout>") + "<timeout>".length(), configString.indexOf("</timeout>")), config);
         //设置userAgent
-        String[] userAgentConfig = strings[pointer].split("=");
-        if (userAgentConfig[0].trim().equals("userAgent")) {
-            String[] split = userAgentConfig[1].substring(1).trim().split(",");
-            for (String s : split) {
-                config.addUserAgent(s.trim());
-            }
-            pointer++;
-        }
+        parseUserAgent(configString.substring(configString.indexOf("<userAgent>") + "<userAgent>".length(), configString.indexOf("</userAgent>")), config);
         //设置注入配置
-        String[] injectConfig = strings[pointer].split("=");
-        if (injectConfig[0].trim().equals("executes")) {
-            parseExecutes(injectConfig[1].trim());
-            pointer++;
-        }
+        parseExecutes(configString.substring(configString.indexOf("<executes>") + "<executes>".length(), configString.indexOf("</executes>")));
         //注入分析策略
-        String[] methodChoose = strings[pointer].split("=");
-        if (methodChoose[0].trim().equals("chooseStrategy")) {
-            config.setChoice(ChooseStrategy.getChooseStrategy(methodChoose[1].substring(1).trim()));
+        parseChooseStrategy(configString.substring(configString.indexOf("<chooseStrategy>") + "<chooseStrategy>".length(), configString.indexOf("</chooseStrategy>")), config);
+    }
+
+    private void parseChooseStrategy(String substring, ReptileConfig config) {
+        config.setChoice(ChooseStrategy.getChooseStrategy(substring));
+    }
+
+    private void parseUserAgent(String substring, ReptileConfig config) {
+        String[] strings = parseTag(substring, "<value>", "</value>");
+        for (String s : strings) {
+            config.addUserAgent(s.trim());
         }
+    }
+
+    /**
+     * 分析超时时间
+     * */
+    private void parseTimeOut(String substring, ReptileConfig config) {
+        config.setTimeout(Integer.parseInt(substring));
     }
 
     /*
     * 分析工作空间
     **/
-    private void parseWorkPlace(boolean isRelatively,String workConfig,ReptileConfig config){
+    private void parseWorkPlace(String workConfig,ReptileConfig config){
         try {
-            if (isRelatively) {
-                config.setWorkplace(workConfig.trim());
+            if (Boolean.parseBoolean(workConfig.substring(workConfig.indexOf("<isAbsolute>") + "<isAbsolute>".length(), workConfig.indexOf("</isAbsolute>")).trim())) {
+                config.setWorkplace(workConfig.substring(workConfig.indexOf("<workSpace>")+"<workSpace>".length(),workConfig.indexOf("</workSpace>")).trim());
             } else {
-                config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + workConfig.trim()).replace("file:/", ""));
+                config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + workConfig.substring(workConfig.indexOf("<workSpace>")+"<workSpace>".length(),workConfig.indexOf("</workSpace>")).trim().trim()).replace("file:/", ""));
             }
         } catch (ConfigException e) {
             throw new RuntimeException(e);
@@ -103,60 +94,63 @@ public class BetterXmlParseTool implements SWCJParseI {
     /**
      * 注入配置
      * */
-    private void parseExecutes(String xmlString){
-        for (String s : xmlString.substring(1).split(",")) {
-            String[] split = s.split(":");
-            if (split[0].trim().equals("execute")) {
-                String[] split1 = split[1].split("->");
-                Constant.putExecute(split1[0].substring(split1[0].indexOf("{")+1).trim(), split1[1].substring(0,split1[1].indexOf("}")-1).trim());
-            } else if (split[0].trim().equals("executes")) {
+    private void parseExecutes(String executes){
+        String[] strings = parseTag(executes, "<execute>", "</execute>");
+        for (String s : strings) {
+            if(s.contains("<executeConfig>")){
+                String classes = s.substring(s.indexOf("<executeConfig>") + "<executeConfig>".length(), s.indexOf("</executeConfig>"));
                 try {
-                    Constant.PutExecutesMap(((ExecuteConfigurationClass) Class.forName(split[1].trim().substring(1, split[1].trim().length() - 1)).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
+                    Constant.PutExecutesMap(((ExecuteConfigurationClass)Class.forName(classes).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                          NoSuchMethodException | ClassNotFoundException e) {
-                    try {
-                        throw new ConfigException("你的配置文件有误，请检查配置文件");
-                    } catch (ConfigException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    throw new RuntimeException(e);
                 }
-
             }
-
+            if(s.contains("<key>")){
+                Constant.putExecute(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(),s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
+            }
         }
     }
     /**
      * 分析swcj
      * */
-    private List<RootReptile> parseClass(String xmlString){
+    private List<RootReptile> parseAllClass(String xmlString){
         List<RootReptile> rootReptiles = new LinkedList<>();
         String[] swcStrings = parseTag(xmlString,"<swc>","</swc>");
         for (String s : swcStrings) {
             RootReptile rootReptile = new RootReptile();
-            rootReptile.setLoad(false);
-            rootReptile.setId(s.substring(s.indexOf("<id>")+4,s.indexOf("</id>")));
-            rootReptile.setCookies(s.substring(s.indexOf("<cookies>")+9,s.indexOf("</cookies>")));
-            rootReptile.setParentInter(s.substring(s.indexOf("<parentInterface>")+"<parentInterface>".length(),s.indexOf("</parentInterface>")));
-            String[] urls = parseTag(s, "<url>", "</url>");
-            for (String url : urls) {
-                ReptileUrl ru = new ReptileUrl();
-                //分析urk标签的内容
-                String[] properties = url.split("};");
-                ru.setName(properties[0].split("=")[1].trim().substring(1));
-                ru.setInPutName(properties[1].split("=")[1].trim().substring(1));
-                ru.setRequestType(properties[2].split("=")[1].trim().substring(1));
-                ru.setValues(properties[3].split("=")[1].trim().substring(1));
-                ru.setUrl(properties[4].split("=")[1].trim().substring(1));
-                String[] split = properties[5].split("-!>")[1].split(",");
-                ru.setHtml(Boolean.parseBoolean(split[0].trim().substring(1)));
-                ru.setParseProgram(split[2].trim().substring(split[2].trim().indexOf("->{")+3,split[2].trim().indexOf("}")-1));
-                ru.setExecutClassName(Constant.getExecute(split[1].trim()));
-                rootReptile.addUrl(ru);
-            }
+            parseClass(s,rootReptile);
             rootReptiles.add(rootReptile);
         }
         return rootReptiles;
     }
+
+    private void parseClass(String s, RootReptile rootReptile) {
+        rootReptile.setLoad(false);
+        rootReptile.setId(s.substring(s.indexOf("<id>") + "<id>".length(), s.indexOf("</id>")).trim());
+        rootReptile.setCookies(s.substring(s.indexOf("<cookies>") + "<cookies>".length(), s.indexOf("</cookies>")).trim());
+        rootReptile.setParentInter(s.substring(s.indexOf("<parentInterface>") + "<parentInterface>".length(), s.indexOf("</parentInterface>")).trim());
+        rootReptile.setRu(parseRu(parseTag(s, "<url>", "</url>")));
+    }
+
+    private List<ReptileUrl> parseRu(String[] RuStrings) {
+        List<ReptileUrl> reptileUrls = new LinkedList<>();
+        for (String ru : RuStrings) {
+            ReptileUrl reptileUrl = new ReptileUrl();
+            reptileUrl.setName(ru.substring(ru.indexOf("<name>") + "<name>".length(), ru.indexOf("</name>")).trim());
+            reptileUrl.setInPutName(ru.substring(ru.indexOf("<inPutName>") + "<inPutName>".length(), ru.indexOf("</inPutName>")).trim());
+            reptileUrl.setValues(ru.substring(ru.indexOf("<value>") + "<value>".length(), ru.indexOf("</value>")).trim());
+            reptileUrl.setRequestType(ru.substring(ru.indexOf("<type>") + "<type>".length(), ru.indexOf("</type>")).trim());
+            reptileUrl.setUrl(ru.substring(ru.indexOf("<path>") + "<path>".length(), ru.indexOf("</path>")).trim());
+            String parseProgram = ru.substring(ru.indexOf("<parseProgram>") + "<parseProgram>".length(), ru.indexOf("</parseProgram>")).trim();
+            reptileUrl.setExecutClassName(Constant.getExecute(parseProgram.substring(parseProgram.indexOf("<type>") + "<type>".length(), parseProgram.indexOf("</type>")).trim()));
+            reptileUrl.setHtml(Boolean.parseBoolean(parseProgram.substring(parseProgram.indexOf("<isHtml>") + "<isHtml>".length(), parseProgram.indexOf("</isHtml>")).trim()));
+            reptileUrl.setParseProgram(parseProgram.substring(parseProgram.indexOf("<xml>") + "<xml>".length(), parseProgram.indexOf("</xml>")).trim());
+            reptileUrls.add(reptileUrl);
+        }
+        return reptileUrls;
+    }
+
     /**
      * 将字符串中的每个swc标签解析出来并返回数组
      * */

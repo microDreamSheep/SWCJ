@@ -22,6 +22,8 @@ public class Test {
         swcjXmlFactory.setParseTool(new BetterXmlParseTool());
         long start = System.currentTimeMillis();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/Efficient.xml"));
+        long end = System.currentTimeMillis();
+        System.out.println((end-start)+"ms");
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("getHtml");
         String[] it = html.getit("5","5");
         for (String image : it) {
