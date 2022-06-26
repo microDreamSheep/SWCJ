@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.core.factory.parse.bystr;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
+import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
 import com.midream.sheep.swcj.core.factory.SWCJParseI;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
@@ -18,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class BetterXmlParseTool implements SWCJParseI {
@@ -71,6 +73,18 @@ public class BetterXmlParseTool implements SWCJParseI {
         try {
             parseChooseStrategy(configString.substring(configString.indexOf("<chooseStrategy>") + "<chooseStrategy>".length(), configString.indexOf("</chooseStrategy>")), config);
         }catch (Exception ignored) {
+        }
+        //注入重用策略
+        try{
+            parseInjections(configString.substring(configString.indexOf("<injections>") + "<injections>".length(), configString.indexOf("</injections>")), config);
+        }catch (Exception ignored) {
+        }
+    }
+
+    private void parseInjections(String substring, ReptileConfig config) {
+        String[] strings = parseTag(substring, "<injection>", "</injection>");
+        for (String s : strings) {
+            CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")));
         }
     }
 
@@ -132,6 +146,9 @@ public class BetterXmlParseTool implements SWCJParseI {
      * 分析swcj
      */
     private List<RootReptile> parseAllClass(String xmlString) {
+        for (Map.Entry<String, String> entry : CacheCorn.getINJECTION_MAP().entrySet()) {
+            xmlString = xmlString.replace(entry.getKey(), entry.getValue());
+        }
         List<RootReptile> rootReptiles = new LinkedList<>();
         String[] swcStrings = parseTag(xmlString, "<swc>", "</swc>");
         for (String s : swcStrings) {

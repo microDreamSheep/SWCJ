@@ -19,6 +19,25 @@
             </execute>
         </executes>
         <chooseStrategy>METHOD_NAME</chooseStrategy>
+        <injections>
+            <injection>
+                <key><jsoup/></key>
+                <value>
+                    <Jsoup>
+                        <jsoup name="name">
+                            <pa not="下一页" allStep="0" step="0" element="">
+                                #main>div.slist>ul>li>a
+                            </pa>
+                        </jsoup>
+                        <jsoup name="url">
+                            <pa not="下一页" allStep="0" step="0" element="abs:href">
+                                #main>div.slist>ul>li>a
+                            </pa>
+                        </jsoup>
+                    </Jsoup>
+                </value>
+            </injection>
+        </injections>
     </config>
     <swc>
         <id>getHtml</id>
