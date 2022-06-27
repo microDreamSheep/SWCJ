@@ -20,14 +20,10 @@ import java.util.Objects;
  */
 public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
-        SWCJXmlFactory swcjXmlFactory = new ThreadXmlFactory();
-        swcjXmlFactory.setParseTool(new BetterXmlParseTool());
-        long start = System.currentTimeMillis();
+        SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/Efficient.xml"));
-        long end = System.currentTimeMillis();
-        System.out.println((end-start)+"ms");
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("getHtml");
-        image[] it = html.getit("5","5");
+        image[] it = html.getit("5");
         for (image image : it) {
             System.out.println(image);
         }

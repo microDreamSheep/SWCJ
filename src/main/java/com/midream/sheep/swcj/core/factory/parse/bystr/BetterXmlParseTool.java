@@ -41,7 +41,9 @@ public class BetterXmlParseTool implements SWCJParseI {
 
     @Override
     public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc) {
-        parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
+        if(xmlString.contains("<config>")) {
+            parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
+        }
         return parseAllClass(xmlString);
     }
 
@@ -162,7 +164,9 @@ public class BetterXmlParseTool implements SWCJParseI {
     private void parseClass(String s, RootReptile rootReptile) {
         rootReptile.setLoad(false);
         rootReptile.setId(s.substring(s.indexOf("<id>") + "<id>".length(), s.indexOf("</id>")).trim());
-        rootReptile.setCookies(s.substring(s.indexOf("<cookies>") + "<cookies>".length(), s.indexOf("</cookies>")).trim());
+        if(s.contains("<cookies>")) {
+            rootReptile.setCookies(s.substring(s.indexOf("<cookies>") + "<cookies>".length(), s.indexOf("</cookies>")).trim());
+        }
         rootReptile.setParentInter(s.substring(s.indexOf("<parentInterface>") + "<parentInterface>".length(), s.indexOf("</parentInterface>")).trim());
         rootReptile.setRu(parseRu(parseTag(s, "<url>", "</url>")));
     }
@@ -173,7 +177,9 @@ public class BetterXmlParseTool implements SWCJParseI {
             ReptileUrl reptileUrl = new ReptileUrl();
             reptileUrl.setName(ru.substring(ru.indexOf("<name>") + "<name>".length(), ru.indexOf("</name>")).trim());
             reptileUrl.setInPutName(ru.substring(ru.indexOf("<inPutName>") + "<inPutName>".length(), ru.indexOf("</inPutName>")).trim());
-            reptileUrl.setValues(ru.substring(ru.indexOf("<value>") + "<value>".length(), ru.indexOf("</value>")).trim());
+            if(ru.contains("<value>")) {
+                reptileUrl.setValues(ru.substring(ru.indexOf("<value>") + "<value>".length(), ru.indexOf("</value>")).trim());
+            }
             reptileUrl.setRequestType(ru.substring(ru.indexOf("<type>") + "<type>".length(), ru.indexOf("</type>")).trim());
             reptileUrl.setUrl(ru.substring(ru.indexOf("<path>") + "<path>".length(), ru.indexOf("</path>")).trim());
             String parseProgram = ru.substring(ru.indexOf("<parseProgram>") + "<parseProgram>".length(), ru.indexOf("</parseProgram>")).trim();

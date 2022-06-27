@@ -19,13 +19,12 @@ import java.util.*;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {
 
-    public Object loadClass(RootReptile rr, SWCJClass sclass) {
+    public Object loadClass(SWCJClass sclass) {
         if(swcjcl==null){
             swcjcl = new SWCJClassLoader();
         }
-        Class<?> aClass = null;
         try {
-            aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
+            Class<?> aClass = swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
             return aClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
@@ -63,7 +62,7 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
         try {
             SWCJClass swcjClass = getSWCJClass(rr, rc);
             getAllMethod(swcjClass,rr, rc);
-            return loadClass(rr,swcjClass);
+            return loadClass(swcjClass);
         } catch (ClassNotFoundException | EmptyMatchMethodException | ConfigException e) {
             throw new RuntimeException(e);
         }

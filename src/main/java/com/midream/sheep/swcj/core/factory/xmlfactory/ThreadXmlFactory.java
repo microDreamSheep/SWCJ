@@ -6,7 +6,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
-import com.midream.sheep.swcj.core.factory.parse.bydom.CoreParseTool;
+import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import org.xml.sax.SAXException;
 
@@ -38,7 +38,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
     @Override
     public SWCJXmlFactory parse(File xmlFile) {
         if (this.swcjParseI == null) {
-            this.swcjParseI = new CoreParseTool();
+            this.swcjParseI = new BetterXmlParseTool();
         }
         Thread thread = new Thread(() -> {
             try {
@@ -53,7 +53,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
     @Override
     public SWCJXmlFactory parse(String File) {
         if (this.swcjParseI == null) {
-            this.swcjParseI = new CoreParseTool();
+            this.swcjParseI = new BetterXmlParseTool();
         }
         Thread thread = new Thread(() -> {
             try {

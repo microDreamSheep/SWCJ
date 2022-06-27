@@ -37,9 +37,11 @@ public class BuildTool {
     }
 
     public static SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
+        //实例化类
         SWCJClass sclass = SWCJClass.buildClass();
         //获取类名
         String name = "a" + (t++);
+        //设置必要信息
         sclass.setClassName(name);
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并返回方法名
@@ -71,15 +73,19 @@ public class BuildTool {
                     methodType.add(Constant.getClassName(parameter.getType().toString()));
                 }
                 swcjMethod.setVars(methodType);
-                if(rc.getChoice()== ChooseStrategy.ANNOTATION) {
+                    if(rc.getChoice()== ChooseStrategy.ANNOTATION) {
                     WebSpider spider = method.getAnnotation(WebSpider.class);
                     //放入所有有注解的方法
                     if (spider == null || spider.value().equals("")) {
                         throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
                     }
-                    swcjMethod.setName(Objects.requireNonNull(spider).value());
-                    swcjClass.addMethod(spider.value(), swcjMethod);
-
+                    for (ReptileUrl url : rr.getRu()) {
+                        if(url.getName().equals(spider.value())){
+                            swcjMethod.setName(url.getName());
+                            swcjClass.addMethod(spider.value(), swcjMethod);
+                            break;
+                        }
+                    }
                 }else if(rc.getChoice()== ChooseStrategy.METHOD_NAME){
                     for (ReptileUrl url : rr.getRu()) {
                         if(url.getName().equals(method.getName())){

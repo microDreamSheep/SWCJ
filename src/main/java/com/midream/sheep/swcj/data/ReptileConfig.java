@@ -66,6 +66,9 @@ public class ReptileConfig {
     }
 
     public ChooseStrategy getChoice() {
+        if(choice==null){
+            return ChooseStrategy.ANNOTATION;
+        }
         return choice;
     }
 

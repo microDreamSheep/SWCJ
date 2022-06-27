@@ -1,67 +1,89 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <SWCJ>
+    <!--全局配置
+    配置更据不同的实现不一定生效
+    -->
     <config>
+        <!--工作空间，生成的字节码会存储到里面
+        isAbsolute->是否是相对路径
+        workplace->文件夹路径
+        -->
         <constructionSpace>
             <isAbsolute>true</isAbsolute>
-            <workSpace>E:\临时文件</workSpace>
+            <workSpace><!--你的路径--></workSpace>
         </constructionSpace>
+        <!--超时时间，请求超过这个时间报异常-->
         <timeout>10000</timeout>
+        <!--userAgrnt数据
+        value->userAgent数据
+        -->
         <userAgent>
-            <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62
-            </value>
-            <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; TencentTraveler 4.0)</value>
-            <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)</value>
+            <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62</value>
         </userAgent>
+        <!--executes
+        配置解析策略
+        -->
         <executes>
             <execute>
+                <!--引用字符-->
                 <key>jsoup</key>
+                <!--className-->
                 <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
             </execute>
+            <execute>
+                <!--配置类-->
+                <executeConfig></executeConfig>>
+            </execute>
         </executes>
+        <!--方法定位策略：
+           METHOD_NAME：方法名
+           ANNOTATION: 注解
+        -->
         <chooseStrategy>METHOD_NAME</chooseStrategy>
+        <!--xml注入-->
         <injections>
             <injection>
-                <key><jsoup/></key>
+                <key>
+                    <!--<你的标签/>-->
+                </key>
                 <value>
-                    <Jsoup>
-                        <jsoup name="name">
-                            <pa not="下一页" allStep="0" step="0" element="">
-                                #main>div.slist>ul>li>a
-                            </pa>
-                        </jsoup>
-                        <jsoup name="url">
-                            <pa not="下一页" allStep="0" step="0" element="abs:href">
-                                #main>div.slist>ul>li>a
-                            </pa>
-                        </jsoup>
-                    </Jsoup>
+                    <!--xml-->
                 </value>
             </injection>
         </injections>
     </config>
+    <!--具体的某个爬虫类
+         id 获取的标识
+    -->
     <swc>
         <id>getHtml</id>
         <cookies>
-            uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
+            <!--cookies-->
         </cookies>
-        <parentInterface>qwesd.pojo</parentInterface>
+        <parentInterface><!--全限类名--></parentInterface>
+        <!--请求配置
+        一个配置对应一个方法
+        name——>名字
+        inPutName 下文中使用的参数名用","分割，使用为#{inputName}
+        -->
         <url>
             <name>getit</name>
             <inPutName></inPutName>
+            <!--请求方式-->
             <type>GET</type>
+            <!--请求参数 格式 key=value;key=value......-->
             <value></value>
-            <path>https://pic.netbian.com/index_5.html</path>
+            <!--请求url-->
+            <path><!--url--></path>
+            <!--解析html方案
+            语法见具体实现-->
             <parseProgram>
-                <isHtml>false</isHtml>
-                <type>jsoup</type>>
+                <isHtml><!--boolean--></isHtml>
+                <!--执行器标识-->
+                <type><!--上面定义的标识--></type>>
+                <!--执行xml-->
                 <xml>
-                    <Jsoup>
-                        <jsoup name="">
-                            <pa not="下一页" allStep="0" step="0" element="">
-                                #main>div.slist>ul>li>a
-                            </pa>
-                        </jsoup>
-                    </Jsoup>
+                    <!--你的xml-->
                 </xml>
             </parseProgram>
         </url>
