@@ -84,6 +84,12 @@
                 <!--执行xml-->
                 <xml>
                     <!--你的xml-->
+                    <!--原生正则-->
+                    <reg>
+                        <reg name=""></reg>
+                        <reg name=""></reg>
+                        <reg name=""></reg>
+                    </reg>
                 </xml>
             </parseProgram>
         </url>

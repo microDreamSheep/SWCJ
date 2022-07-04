@@ -7,12 +7,22 @@ import sun.misc.Unsafe;
 import test.image;
 import test.pojo;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class test2 {
-    private static final String in = "#[in][swcj;]#[fx][swcj;]#[isHtml][swcj;]#[type][swcj;]#[url][swcj;]#[userage][swcj;]#[cookies][swcj;]#[values][swcj;]#[timeout][swcj;]#[class][swcj;]#[method]";
-    public static void main(String[] args) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException {
+    public static void main(String[] args) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, ClassNotFoundException, IOException {
+        long start = System.currentTimeMillis();
         Class<pojo> aClass = pojo.class;
+        InputStream is = aClass.getResourceAsStream("pojo.class");
+        byte[] datas = new byte[is.available()];
+        is.read(datas);
+        is.close();
+        long end = System.currentTimeMillis();
+        System.out.println("读取pojo.class耗时：" + (end - start));
     }
 }
