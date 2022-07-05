@@ -10,7 +10,7 @@ import java.net.URI;
 public class CharSequenceJavaFileObject extends SimpleJavaFileObject {
  
     //表示java源代码
-    private CharSequence content;
+    private final CharSequence content;
  
     protected CharSequenceJavaFileObject(String className, String content) {
         super(URI.create("string:///" + className.replaceAll("\\.", "/") + Kind.SOURCE.extension), Kind.SOURCE);
@@ -19,11 +19,10 @@ public class CharSequenceJavaFileObject extends SimpleJavaFileObject {
  
     /**
      * 获取需要编译的源代码
-     * @param ignoreEncodingErrors d
-     * @throws IOException io
+     * @param ignoreEncodingErrors 是否忽略编码错误
      */
     @Override
-    public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+    public CharSequence getCharContent(boolean ignoreEncodingErrors) {
         return content;
     }
 }

@@ -8,7 +8,6 @@ import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 
 import javax.tools.*;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,25 +28,10 @@ public class DynamicCompiler implements SWCJCompiler {
         dataInComplier.setIsload(true);
         DiagnosticCollector diagnosticCollector = new DiagnosticCollector();
         JavaFileManager fileManager = new ClassFileManager(javaCompiler.getStandardFileManager(diagnosticCollector, null, null));
-        StringBuilder sb = new StringBuilder();
-        //增加包名
-        add(sb, "package ", Constant.DEFAULT_PACKAGE_NAME, ";\n");
-        //拼接类名
-        add(sb, "public class ", sclass.getClassName(), " implements ",sclass.getItIterface(), " {");
-        //拼接方法
-        {
-            {
-                Map<String, SWCJMethod> methods = sclass.getMethods();
-                for (Map.Entry<String, SWCJMethod> entry : methods.entrySet()) {
-                    sb.append(entry.getValue().getBody());
-                }
-            }
-        }
-        //类封口
-        add(sb, "\n}");
+
         //加载
         List<JavaFileObject> javaFileObjectList = new ArrayList<JavaFileObject>();
-        javaFileObjectList.add(new CharSequenceJavaFileObject(fullName, sb.toString()));
+        javaFileObjectList.add(new CharSequenceJavaFileObject(fullName,getWholeClassString(sclass)));
         boolean result = javaCompiler.getTask(null, fileManager, null, null, null, javaFileObjectList).call();
         if (result) {
             try {
@@ -73,5 +57,19 @@ public class DynamicCompiler implements SWCJCompiler {
             return dataInComplier;
         }
     }
-
+    private String getWholeClassString(SWCJClass swcjClass){
+        StringBuilder sb = new StringBuilder();
+        //增加包名
+        add(sb, "package ", Constant.DEFAULT_PACKAGE_NAME, ";\n");
+        //拼接类名
+        add(sb, "public class ", swcjClass.getClassName(), " implements ",swcjClass.getItIterface(), " {");
+        //拼接方法
+        Map<String, SWCJMethod> methods = swcjClass.getMethods();
+        for (Map.Entry<String, SWCJMethod> entry : methods.entrySet()) {
+            sb.append(entry.getValue().getBody());
+        }
+        //类封口
+        add(sb, "\n}");
+        return sb.toString();
+    }
 }

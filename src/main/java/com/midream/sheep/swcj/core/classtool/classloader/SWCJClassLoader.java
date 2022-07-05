@@ -5,10 +5,6 @@ import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.core.classtool.compiler.javanative.DynamicCompiler;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 /**
  * @author midreamSheep
  * 自定义加载器，暂不支持拓展

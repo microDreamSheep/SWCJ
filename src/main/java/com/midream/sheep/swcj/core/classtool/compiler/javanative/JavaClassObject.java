@@ -2,7 +2,6 @@ package com.midream.sheep.swcj.core.classtool.compiler.javanative;
 
 import javax.tools.SimpleJavaFileObject;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
  
@@ -28,11 +27,9 @@ public class JavaClassObject extends SimpleJavaFileObject {
      * 
      * 编译器完成编译后，会将编译结果输出到该 OutputStream 中，我们随后需要使用它获取编译结果
      *
-     * @return
-     * @throws IOException
      */
     @Override
-    public OutputStream openOutputStream() throws IOException {
+    public OutputStream openOutputStream() {
         return this.byteArrayOutputStream;
     }
  
