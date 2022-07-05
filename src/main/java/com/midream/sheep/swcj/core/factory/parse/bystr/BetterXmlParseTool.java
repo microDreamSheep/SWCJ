@@ -11,7 +11,6 @@ import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,19 +23,8 @@ import java.util.Objects;
 
 public class BetterXmlParseTool implements SWCJParseI {
     @Override
-    public List<RootReptile> parseXmlFile(File xmlFile, ReptileConfig rc) throws ParserConfigurationException {
-        //根据File获取xml文件文本
-        StringBuilder sb = new StringBuilder();
-        try (InputStream is = Files.newInputStream(xmlFile.toPath())) {
-            byte[] bytes = new byte[1024];
-            int len = 0;
-            while ((len = is.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return parseStringXml(sb.toString(), rc);
+    public List<RootReptile> parseXmlFile(File xmlFile, ReptileConfig rc) {
+        return parseStringXml(getStringByStream(xmlFile), rc);
     }
 
     @Override
@@ -78,12 +66,12 @@ public class BetterXmlParseTool implements SWCJParseI {
         }
         //注入重用策略
         try{
-            parseInjections(configString.substring(configString.indexOf("<injections>") + "<injections>".length(), configString.indexOf("</injections>")), config);
+            parseInjections(configString.substring(configString.indexOf("<injections>") + "<injections>".length(), configString.indexOf("</injections>")));
         }catch (Exception ignored) {
         }
     }
 
-    private void parseInjections(String substring, ReptileConfig config) {
+    private void parseInjections(String substring) {
         String[] strings = parseTag(substring, "<injection>", "</injection>");
         for (String s : strings) {
             CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")));
@@ -113,10 +101,11 @@ public class BetterXmlParseTool implements SWCJParseI {
      **/
     private void parseWorkPlace(String workConfig, ReptileConfig config) {
         try {
+            String trim = workConfig.substring(workConfig.indexOf("<workSpace>") + "<workSpace>".length(), workConfig.indexOf("</workSpace>")).trim();
             if (Boolean.parseBoolean(workConfig.substring(workConfig.indexOf("<isAbsolute>") + "<isAbsolute>".length(), workConfig.indexOf("</isAbsolute>")).trim())) {
-                config.setWorkplace(workConfig.substring(workConfig.indexOf("<workSpace>") + "<workSpace>".length(), workConfig.indexOf("</workSpace>")).trim());
+                config.setWorkplace(trim);
             } else {
-                config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + workConfig.substring(workConfig.indexOf("<workSpace>") + "<workSpace>".length(), workConfig.indexOf("</workSpace>")).trim().trim()).replace("file:/", ""));
+                config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + trim.trim()).replace("file:/", ""));
             }
         } catch (ConfigException e) {
             throw new RuntimeException(e);
@@ -176,7 +165,9 @@ public class BetterXmlParseTool implements SWCJParseI {
         for (String ru : RuStrings) {
             ReptileUrl reptileUrl = new ReptileUrl();
             reptileUrl.setName(ru.substring(ru.indexOf("<name>") + "<name>".length(), ru.indexOf("</name>")).trim());
-            reptileUrl.setInPutName(ru.substring(ru.indexOf("<inPutName>") + "<inPutName>".length(), ru.indexOf("</inPutName>")).trim());
+            if(ru.contains("<inPutName>")) {
+                reptileUrl.setInPutName(ru.substring(ru.indexOf("<inPutName>") + "<inPutName>".length(), ru.indexOf("</inPutName>")).trim());
+            }
             if(ru.contains("<value>")) {
                 reptileUrl.setValues(ru.substring(ru.indexOf("<value>") + "<value>".length(), ru.indexOf("</value>")).trim());
             }
@@ -202,5 +193,23 @@ public class BetterXmlParseTool implements SWCJParseI {
             pointer = xmlString.indexOf(endTag, pointer) + 6;
         }
         return swcs.toArray(new String[0]);
+    }
+
+    /**
+     * 读取文件
+     * */
+    private String getStringByStream(File xmlFile) {
+        //根据File获取xml文件文本
+        StringBuilder sb = new StringBuilder();
+        try (InputStream is = Files.newInputStream(xmlFile.toPath())) {
+            byte[] bytes = new byte[1024];
+            int len;
+            while ((len = is.read(bytes)) != -1) {
+                sb.append(new String(bytes, 0, len));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }

@@ -35,8 +35,7 @@ public class BuildTool {
     public static SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ConfigException, EmptyMatchMethodException {
         //实例化类
         SWCJClass sclass = SWCJClass.buildClass();
-        //获取类名
-        //设置必要信息
+        //设置接口，类名
         sclass.setClassName("swcj" + (t++));
         sclass.setItIterface(rr.getParentInter());
         //效验接口是否有方法,并注入方法
@@ -105,10 +104,10 @@ public class BuildTool {
         for (ReptileUrl url : rr.getRu()) {
             if(url.getName().equals(method.getName())){
                 swcjMethod.setName(url.getName());
+                swcjClass.addMethod(method.getName(), swcjMethod);
                 break;
             }
         }
-        swcjClass.addMethod(method.getName(), swcjMethod);
     }
 
     //

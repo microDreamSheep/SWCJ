@@ -3,9 +3,7 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
-import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
-import com.midream.sheep.swcj.core.factory.xmlfactory.ThreadXmlFactory;
 import org.xml.sax.SAXException;
 import test.image;
 import test.pojo;
@@ -23,7 +21,7 @@ public class Test {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/Efficient.xml"));
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("getHtml");
-        image[] it = html.getit("5");
+        image[] it = html.gethtml("5");
         for (image image : it) {
             System.out.println(image);
         }
