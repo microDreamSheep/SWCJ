@@ -15,14 +15,31 @@ import java.util.Random;
  */
 public class StringUtil {
     private static final String Template2 = "#[in][swcj;]#[fx][swcj;]#[isHtml][swcj;]#[type][swcj;]#[url][swcj;]#[userage][swcj;]#[cookies][swcj;]#[values][swcj;]#[timeout][swcj;]#[class][swcj;]#[method]";
+
+
+    /**
+     * @author midreamsheep
+     * @param value 首字母转大写字符串
+     * @return 返回首字母大写字符串
+     * */
     public static String StringToUpperCase(String value){
+        if(value==null||value.equals("")){
+            return "";
+        }
         return value.substring(0,1).toUpperCase()+value.substring(1);
     }
+
+    /**
+     * @author midreamsheep
+     * */
     public static void add(StringBuilder sb,Object...vars){
         for (Object o : vars) {
             sb.append(o);
         }
     }
+    /**
+     * 将字符串转map
+     * */
     public static Map<String,String> changeStringToMaps(String values){
         if("".equals(values)){
             return null;
@@ -34,10 +51,6 @@ public class StringUtil {
             map.put(split1[0],split1[1]);
         }
         return map;
-    }
-
-    public static String add(String in){
-        return in.replaceAll("\"","\\\"");
     }
 
     public static String getStringByList(List<String> args){
@@ -55,8 +68,7 @@ public class StringUtil {
     }
     public static String getExecuteCharacter(ReptileUrl ru, List<String> injection, ReptileConfig rc, RootReptile rr, SWCJMethod method){
         StringBuilder inj = new StringBuilder();
-        String in = ru.getParseProgram().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "");
-        String templet = Template2.replace("#[method]", in)
+        String templet = Template2.replace("#[method]", ru.getParseProgram().replace("\\", "\\\\").replace("\"", "\\\""))
                 .replace("#[isHtml]", String.valueOf(ru.isHtml()))
                 .replace("#[type]", ru.getRequestType())
                 .replace("#[url]", ru.getUrl())

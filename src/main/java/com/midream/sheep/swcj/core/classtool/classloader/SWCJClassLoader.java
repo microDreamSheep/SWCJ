@@ -16,13 +16,6 @@ import java.nio.file.Paths;
 public class SWCJClassLoader extends ClassLoader {
     private SWCJCompiler swcjCompiler = null;
     //通过文件加载一个class
-    public Class<?> loadData(String className, String file) {
-        byte[] data = loderClassData(file);
-        if (data != null) {
-            return super.defineClass(className, data, 0, data.length);
-        }
-        return null;
-    }
     public void setSwcjCompiler(SWCJCompiler swcjCompiler){
         this.swcjCompiler = swcjCompiler;
     }
@@ -33,23 +26,12 @@ public class SWCJClassLoader extends ClassLoader {
         return null;
     }
 
-    @Override
-    public Class<?> findClass(String name) {
-        return super.findLoadedClass(name);
-    }
-
-    //通过字节加载一个class
-    private byte[] loderClassData(String file) {
-        byte[] datas = null;
-        try {
-            datas = Files.readAllBytes(Paths.get(file));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return datas;
-    }
     //字符串加载
     public Class<?> compileJavaFile(String className, SWCJClass sclass) throws ClassNotFoundException {
+        //看传递的是字节码还是具体的类
+        if(sclass.getCodes()!=null&&sclass.getCodes().length!=0){
+            loadData(className,sclass.getCodes());
+        }
         if (swcjCompiler==null){
             swcjCompiler = new DynamicCompiler();
         }

@@ -14,20 +14,16 @@ import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
-import static com.midream.sheep.swcj.util.function.StringUtil.StringToUpperCase;
 import static com.midream.sheep.swcj.util.function.StringUtil.add;
 
 /**
  * @author midreamsheep
  */
 public class BuildTool {
-    private static final Random r  = new Random();
     private static int t = 0;
     private static final String Template =
             "return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<#[fx]>().execute(\"#[execute]\",#[args]).toArray(new #[fx][0]);";
@@ -36,15 +32,14 @@ public class BuildTool {
         return CacheCorn.getObject(className);
     }
 
-    public static SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ConfigException, EmptyMatchMethodException, ClassNotFoundException {
+    public static SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ConfigException, EmptyMatchMethodException {
         //实例化类
         SWCJClass sclass = SWCJClass.buildClass();
         //获取类名
-        String name = "a" + (t++);
         //设置必要信息
-        sclass.setClassName(name);
+        sclass.setClassName("swcj" + (t++));
         sclass.setItIterface(rr.getParentInter());
-        //效验接口是否有方法,并返回方法名
+        //效验接口是否有方法,并注入方法
         try {
             getFunction(sclass,rr,rc);
         } catch (ClassNotFoundException e) {
@@ -73,28 +68,13 @@ public class BuildTool {
                     methodType.add(Constant.getClassName(parameter.getType().toString()));
                 }
                 swcjMethod.setVars(methodType);
-                    if(rc.getChoice()== ChooseStrategy.ANNOTATION) {
-                    WebSpider spider = method.getAnnotation(WebSpider.class);
-                    //放入所有有注解的方法
-                    if (spider == null || spider.value().equals("")) {
-                        throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
-                    }
-                    for (ReptileUrl url : rr.getRu()) {
-                        if(url.getName().equals(spider.value())){
-                            swcjMethod.setName(url.getName());
-                            swcjClass.addMethod(spider.value(), swcjMethod);
-                            break;
-                        }
-                    }
+
+                if(rc.getChoice()== ChooseStrategy.ANNOTATION) {
+                    analysisMethodByAnnotation(swcjMethod,method,rr,swcjClass);
                 }else if(rc.getChoice()== ChooseStrategy.METHOD_NAME){
-                    for (ReptileUrl url : rr.getRu()) {
-                        if(url.getName().equals(method.getName())){
-                            swcjMethod.setName(url.getName());
-                            break;
-                        }
-                    }
-                    swcjClass.addMethod(method.getName(), swcjMethod);
+                    analysisMethodByMethodName(swcjMethod,method,rr,swcjClass);
                 }
+
                 if ((Constant.getClassName(method.getReturnType().toString()).equals(""))) {
                     try {
                         throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
@@ -105,6 +85,32 @@ public class BuildTool {
                 swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
             }
     }
+    private static void analysisMethodByAnnotation(SWCJMethod swcjMethod,Method method,RootReptile rr,SWCJClass swcjClass) throws InterfaceIllegal {
+        //获取方法上的注解
+        WebSpider spider = method.getAnnotation(WebSpider.class);
+        //放入所有有注解的方法
+        if (spider == null || spider.value().equals("")) {
+            throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
+        }
+        for (ReptileUrl url : rr.getRu()) {
+            if(url.getName().equals(spider.value())){
+                swcjMethod.setName(url.getName());
+                swcjClass.addMethod(spider.value(), swcjMethod);
+                break;
+            }
+        }
+    }
+
+    private static void analysisMethodByMethodName(SWCJMethod swcjMethod,Method method,RootReptile rr,SWCJClass swcjClass){
+        for (ReptileUrl url : rr.getRu()) {
+            if(url.getName().equals(method.getName())){
+                swcjMethod.setName(url.getName());
+                break;
+            }
+        }
+        swcjClass.addMethod(method.getName(), swcjMethod);
+    }
+
     //
     public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method, ReptileConfig rc) {
         //方法体
@@ -115,51 +121,53 @@ public class BuildTool {
         //方法头 定义被重写
         add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ",""), "){");
         //开始拼接方法
-        {
-            String executeCharacter = StringUtil.getExecuteCharacter(ru, injection, rc, rr, method);
-            String s = Template.replace("#[execute]", executeCharacter).replace("#[fx]", method.getReturnType()
-                            .replace("[]", ""))
-                    .replace("\n", "")
-                    .replace(",#[args]", StringUtil.getStringByList(injection));
-            add(sbmethod, s);
+        {add(sbmethod, Template
+                    .replace("#[execute]", StringUtil.getExecuteCharacter(ru, injection, rc, rr, method))
+                    .replace("#[fx]", method.getReturnType().replace("[]", ""))
+                    .replace(",#[args]", StringUtil.getStringByList(injection)));
         }
         add(sbmethod, "}");
         return sbmethod.toString();
     }
+
     public static String getMethodParametric(ReptileUrl ru,SWCJMethod method,List<String> injection){
-        StringBuilder vars = new StringBuilder();
-        List<String> vars1 = method.getVars();
-        String[] split2 = ru.getInPutName().split(",");
-        int len = split2.length;
+        //获取拼接对象
+        StringBuilder sb = new StringBuilder();
+        //获取方法参数和输入参数
+        List<String> methodVars = method.getVars();
+        String[] inPutVars = ru.getInPutName().split(",");
+
+        //如果方法参数为空直接返回
+        if(methodVars.size()==0){
+            return "";
+        }
+
+        int len = inPutVars.length;
         if (ru.getInPutName().trim().equals("")) {
             len = 0;
         }
-        if (len > vars1.size()) {
+
+        if (len > methodVars.size()) {
             try {
                 throw new InterfaceIllegal("方法参数不统一");
             } catch (InterfaceIllegal interfaceIllegal) {
                 interfaceIllegal.printStackTrace();
             }
-        } else if (len == vars1.size() && len != 0) {
-            for (int i = 0; i < split2.length; i++) {
-                add(vars, vars1.get(i), " ", split2[i], ",");
-                injection.add(split2[i]);
+        } else if (len == methodVars.size()) {
+            for (int i = 0; i < inPutVars.length; i++) {
+                add(sb, methodVars.get(i), " ", inPutVars[i], ",");
+                injection.add(inPutVars[i]);
             }
-        } else if(len==0&&vars1.size()==0){
-        }else{
+        } else{
             System.err.println("SWCJ:警告：你的接口有部分参数没有用到,方法:" + ru.getName());
             for (int i = 0; i < len; i++) {
-                add(vars, vars1.get(i), " ", split2[i], ",");
-                injection.add(split2[i]);
+                add(sb, methodVars.get(i), " ", inPutVars[i], ",");
+                injection.add(inPutVars[i]);
             }
-            for (int i = len; i < vars1.size(); i++) {
-                add(vars, vars1.get(i), " args", i, ",");
+            for (int i = len; i < methodVars.size(); i++) {
+                add(sb, methodVars.get(i), " args", i, ",");
             }
         }
-        String varString = "";
-        if (vars.length() != 0) {
-            varString = vars.substring(0, vars.lastIndexOf(","));
-        }
-        return varString;
+        return sb.substring(0, sb.lastIndexOf(","));
     }
 }

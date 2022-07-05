@@ -10,6 +10,8 @@ public class SWCJClass {
     private String itIterface;
     private Map<String,SWCJMethod> methods;
 
+    private byte[] codes;
+
     public String getItIterface() {
         return itIterface;
     }
@@ -53,12 +55,11 @@ public class SWCJClass {
         return new SWCJClass();
     }
 
-    @Override
-    public String toString() {
-        return "SWCJClass{" +
-                "className='" + className + '\'' +
-                ", itIterface='" + itIterface + '\'' +
-                ", methods=" + methods +
-                '}';
+    public byte[] getCodes() {
+        return codes;
+    }
+
+    public void setCodes(byte[] codes) {
+        this.codes = codes;
     }
 }

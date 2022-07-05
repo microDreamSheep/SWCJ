@@ -37,23 +37,13 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
     }
 
     public void getAllMethod(SWCJClass sclass, RootReptile rr,ReptileConfig rc) {
-        int count = 0;
-        final List<ReptileUrl> rus = rr.getRu();
         Map<String, SWCJMethod> function = sclass.getMethods();
-        for (ReptileUrl reptileUrl : rus) {
-            SWCJMethod s = function.get(reptileUrl.getName());
-            if (s != null && s.getName() != null && !s.getName().equals("")) {
-                String s1 = BuildTool.spliceMethod(reptileUrl, rr, s,rc);
-                s.setBody(s1.replace("\n", ""));
-                count++;
+        for (ReptileUrl reptileUrl : rr.getRu()) {
+            SWCJMethod method = function.get(reptileUrl.getName());
+            if (method == null) {
+                continue;
             }
-        }
-        if (function.size() != count) {
-            try {
-                throw new InterfaceIllegal("IllMethod(可能你的方法没有与配置文件对应)");
-            } catch (InterfaceIllegal e) {
-                throw new RuntimeException(e);
-            }
+            method.setBody(BuildTool.spliceMethod(reptileUrl, rr, method,rc));
         }
     }
 
