@@ -4,11 +4,9 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
-import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 
 import java.util.Objects;
@@ -23,7 +21,7 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
         this.swcjcl.setSwcjCompiler(swcjCompiler);
     }
     @Override
-    public Object Builder(RootReptile rr, ReptileConfig rc) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal
+    public Object Builder(RootReptile rr, ReptileConfig rc)
     {
             //开始拼接类信息
             Object o =  buildObject(rr,rc);
