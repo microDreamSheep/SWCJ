@@ -8,8 +8,9 @@ import java.util.Map;
  * 全局缓存管理
  */
 public class CacheCorn {
-    //存放缓存中对象
+    //缓存生成的爬虫对像
     private static final Map<String,Object> OBJECTS_MAP;
+    //缓存xml注入的xml
     private static final Map<String,String> INJECTION_MAP;
     static{
         OBJECTS_MAP = new HashMap<>();

@@ -6,7 +6,12 @@ import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.util.List;
-
+/**
+ * 分析中间层
+ * @author Midream
+ * @date 2022-03-01
+ * @version 1.0
+ * */
 public class CornAnalyzer<T> implements IAnalyzer<T>{
 
     @Override
