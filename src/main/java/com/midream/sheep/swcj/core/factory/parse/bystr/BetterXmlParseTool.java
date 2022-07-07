@@ -213,6 +213,7 @@ public class BetterXmlParseTool implements SWCJParseI {
         } catch (IOException e) {
             Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
         }
+
         return sb.toString();
     }
 }
