@@ -83,7 +83,6 @@ public class BuildTool {
                     throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
                 } catch (InterfaceIllegal returnTypeIllegal) {
                     Logger.getLogger(BuildTool.class.getName()).severe(returnTypeIllegal.getMessage());
-                    returnTypeIllegal.printStackTrace();
                 }
             }
             swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
@@ -158,7 +157,6 @@ public class BuildTool {
                 throw new InterfaceIllegal("方法参数不统一");
             } catch (InterfaceIllegal interfaceIllegal) {
                 Logger.getLogger(BuildTool.class.getName()).severe(interfaceIllegal.getMessage());
-                interfaceIllegal.printStackTrace();
             }
         } else if (len == methodVars.size()) {
             for (int i = 0; i < inPutVars.length; i++) {

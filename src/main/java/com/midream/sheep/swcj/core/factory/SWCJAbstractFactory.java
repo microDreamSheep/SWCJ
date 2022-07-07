@@ -47,7 +47,6 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                     i++;
                 } catch (InterruptedException e) {
                     Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
-                    e.printStackTrace();
                 }
                 if(i==10){
                     throw new ConfigException("你的配置文件找不到id="+id);
@@ -59,7 +58,6 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
                     Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
-                    e.printStackTrace();
                 }
             }else {
                 rootReptiles.get(id).setLoad(true);

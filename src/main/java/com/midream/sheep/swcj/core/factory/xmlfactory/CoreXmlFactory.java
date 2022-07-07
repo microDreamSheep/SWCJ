@@ -42,7 +42,6 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
                 parse(swcjParseI.parseXmlFile(xmlFile, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
-            e.printStackTrace();
         }
         return this;
     }
@@ -54,7 +53,6 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
             parse(swcjParseI.parseStringXml(File, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
-            e.printStackTrace();
         }
         return this;
     }

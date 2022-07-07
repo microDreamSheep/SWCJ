@@ -46,7 +46,6 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 parse(swcjParseI.parseXmlFile(xmlFile, rc));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
-                e.printStackTrace();
             }
         });
         execute.execute(thread);
@@ -62,7 +61,6 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 parse(swcjParseI.parseStringXml(File, rc));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
-                e.printStackTrace();
             }
         });
         execute.execute(thread);
@@ -84,7 +82,6 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 swcjBuilder.Builder(reptile, rc);
             } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
-                e.printStackTrace();
             }
         }
     }
