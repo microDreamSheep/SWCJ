@@ -30,6 +30,8 @@ public class BetterXmlParseTool implements SWCJParseI {
 
     @Override
     public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc) {
+        //正则删除注释
+        xmlString = xmlString.replaceAll("<!--[\\s\\S]+?-->","");
         if(xmlString.contains("<config>")) {
             parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         }
@@ -213,7 +215,6 @@ public class BetterXmlParseTool implements SWCJParseI {
         } catch (IOException e) {
             Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
         }
-
         return sb.toString();
     }
 }
