@@ -13,6 +13,7 @@ import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {
 
@@ -24,6 +25,7 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
             return swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
+            Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -50,6 +52,7 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
             getAllMethod(swcjClass,rr, rc);
             return loadClass(swcjClass);
         } catch (ClassNotFoundException | EmptyMatchMethodException | ConfigException e) {
+            Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
             throw new RuntimeException(e);
         }
     }

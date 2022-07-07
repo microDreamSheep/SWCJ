@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -112,6 +113,7 @@ public class SWCJregular<T> implements SWCJExecute<T> {
                 return resultBuffer.toString();
             }
         }catch(Exception e) {
+            Logger.getLogger(SWCJregular.class.getName()).warning(e.getMessage());
             e.printStackTrace();
         }finally {
             if(inputStream!=null){

@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * 工厂类，读取配置文件，获取具体实现类
@@ -40,6 +41,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         try {
                 parse(swcjParseI.parseXmlFile(xmlFile, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
+            Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             e.printStackTrace();
         }
         return this;
@@ -51,6 +53,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         try {
             parse(swcjParseI.parseStringXml(File, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
+            Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             e.printStackTrace();
         }
         return this;

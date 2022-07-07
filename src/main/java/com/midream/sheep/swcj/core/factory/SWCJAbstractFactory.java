@@ -12,6 +12,7 @@ import com.midream.sheep.swcj.pojo.swc.RootReptile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
  * @author midreamsheep
@@ -45,6 +46,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                     TimeUnit.MILLISECONDS.sleep(200);
                     i++;
                 } catch (InterruptedException e) {
+                    Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
                     e.printStackTrace();
                 }
                 if(i==10){
@@ -56,6 +58,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 try {
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
+                    Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
                     e.printStackTrace();
                 }
             }else {

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  * 工厂类，读取配置文件，获取具体实现类
@@ -44,6 +45,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
             try {
                 parse(swcjParseI.parseXmlFile(xmlFile, rc));
             } catch (ParserConfigurationException | IOException | SAXException e) {
+                Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -59,6 +61,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
             try {
                 parse(swcjParseI.parseStringXml(File, rc));
             } catch (ParserConfigurationException | IOException | SAXException e) {
+                Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -80,6 +83,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 reptile.setLoad(true);
                 swcjBuilder.Builder(reptile, rc);
             } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
+                Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
                 e.printStackTrace();
             }
         }

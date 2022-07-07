@@ -6,6 +6,8 @@ import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * 分析中间层
  * @author Midream
@@ -40,6 +42,7 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
             SWCJExecute<T> swcjExecute = (SWCJExecute) Class.forName(split[9]).newInstance();
             return swcjExecute.execute(executeValue, split[10]);
         } catch (Exception e) {
+            Logger.getLogger(CornAnalyzer.class.getName()).severe(e.getMessage());
             throw new RuntimeException(e);
         }
     }

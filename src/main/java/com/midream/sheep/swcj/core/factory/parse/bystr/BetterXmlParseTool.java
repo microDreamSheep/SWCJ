@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class BetterXmlParseTool implements SWCJParseI {
     @Override
@@ -108,6 +109,7 @@ public class BetterXmlParseTool implements SWCJParseI {
                 config.setWorkplace((Objects.requireNonNull(CoreXmlFactory.class.getClassLoader().getResource("")).getPath() + trim.trim()).replace("file:/", ""));
             }
         } catch (ConfigException e) {
+            Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -124,6 +126,7 @@ public class BetterXmlParseTool implements SWCJParseI {
                     Constant.PutExecutesMap(((ExecuteConfigurationClass) Class.forName(classes).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                          NoSuchMethodException | ClassNotFoundException e) {
+                    Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
@@ -208,6 +211,7 @@ public class BetterXmlParseTool implements SWCJParseI {
                 sb.append(new String(bytes, 0, len));
             }
         } catch (IOException e) {
+            Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
             e.printStackTrace();
         }
         return sb.toString();

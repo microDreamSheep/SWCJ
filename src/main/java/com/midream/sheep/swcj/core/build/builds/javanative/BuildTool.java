@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 import static com.midream.sheep.swcj.util.function.StringUtil.add;
 
@@ -43,8 +44,10 @@ public class BuildTool {
         try {
             getFunction(swcjClass, rootReptile, config);
         } catch (ClassNotFoundException e) {
+            Logger.getLogger(BuildTool.class.getName()).severe(e.getMessage());
             throw new ConfigException("你的接口不存在：" + rootReptile.getParentInter());
         } catch (InterfaceIllegal e) {
+            Logger.getLogger(BuildTool.class.getName()).severe(e.getMessage());
             throw new RuntimeException(e);
         }
         if (swcjClass.getMethods() == null || swcjClass.getMethods().size() == 0) {
@@ -79,6 +82,7 @@ public class BuildTool {
                 try {
                     throw new InterfaceIllegal("InterfaceReturnTypeIllegal(接口返回值不合法)");
                 } catch (InterfaceIllegal returnTypeIllegal) {
+                    Logger.getLogger(BuildTool.class.getName()).severe(returnTypeIllegal.getMessage());
                     returnTypeIllegal.printStackTrace();
                 }
             }
@@ -153,6 +157,7 @@ public class BuildTool {
             try {
                 throw new InterfaceIllegal("方法参数不统一");
             } catch (InterfaceIllegal interfaceIllegal) {
+                Logger.getLogger(BuildTool.class.getName()).severe(interfaceIllegal.getMessage());
                 interfaceIllegal.printStackTrace();
             }
         } else if (len == methodVars.size()) {
