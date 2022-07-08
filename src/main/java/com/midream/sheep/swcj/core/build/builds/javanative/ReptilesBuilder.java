@@ -3,6 +3,7 @@ package com.midream.sheep.swcj.core.build.builds.javanative;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilderAbstract;
+import com.midream.sheep.swcj.core.classtool.DataInComplier;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
@@ -22,9 +23,12 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
             swcjcl = new SWCJClassLoader();
         }
         try {
-            return swcjcl.compileJavaFile(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass).getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
+            DataInComplier data = swcjCompiler.compileAndLoad(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
+            if(data.isIsload()){
+                return data.getaClass();
+            }
+            return swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), data.getDatas());
+        } catch (ClassNotFoundException e) {
             Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
             throw new RuntimeException(e);
         }

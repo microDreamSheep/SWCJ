@@ -6,6 +6,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
+import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
@@ -88,5 +89,14 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
     public SWCJXmlFactory invokeSpecialMethod(Object... args) {
         System.err.println("此工厂不存在特殊方法");
         return this;
+    }
+
+    @Override
+    public SWCJXmlFactory setClassLoader(SWCJClassLoaderInter classLoader) {
+        if(this.swcjBuilder==null){
+            this.swcjBuilder = new ReptilesBuilder();
+        }
+        swcjBuilder.setClassLoader(classLoader);
+        return null;
     }
 }

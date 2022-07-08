@@ -59,7 +59,6 @@ public class BuildTool {
     private static void getFunction(SWCJClass swcjClass, RootReptile rootReptile, ReptileConfig config) throws ClassNotFoundException, InterfaceIllegal {
         Method[] methods = Class.forName(swcjClass.getItIterface()).getMethods();
         for (Method method : methods) {
-            method.setAccessible(true);
             //实例化方法类
             SWCJMethod swcjMethod = new SWCJMethod();
             //设置方法名
