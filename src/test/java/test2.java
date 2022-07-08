@@ -1,11 +1,4 @@
 
-import com.midream.sheep.swcj.annotation.WebSpider;
-import com.midream.sheep.swcj.core.analyzer.CornAnalyzer;
-import com.midream.sheep.swcj.core.analyzer.IAnalyzer;
-import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
-import sun.misc.Unsafe;
-import test.image;
-import test.pojo;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

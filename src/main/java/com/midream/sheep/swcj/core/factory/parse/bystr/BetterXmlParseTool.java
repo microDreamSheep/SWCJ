@@ -35,7 +35,10 @@ public class BetterXmlParseTool implements SWCJParseI {
         if(xmlString.contains("<config>")) {
             parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         }
-        return parseAllClass(xmlString);
+        if(xmlString.contains("<swc>")){
+            return parseAllClass(xmlString);
+        }
+        return new LinkedList<>();
     }
 
     /**
