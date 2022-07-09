@@ -65,8 +65,7 @@ public class BuildTool {
             swcjMethod.setMethodName(method.getName());
             //设置方法属性
             List<String> methodType = new LinkedList<>();
-            Parameter[] parameters = method.getParameters();
-            for (Parameter parameter : parameters) {
+            for (Parameter parameter : method.getParameters()) {
                 methodType.add(Constant.getClassName(parameter.getType().toString()));
             }
             swcjMethod.setVars(methodType);
