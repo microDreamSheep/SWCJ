@@ -23,17 +23,29 @@ import java.util.logging.Logger;
 import static com.midream.sheep.swcj.util.function.StringUtil.add;
 
 /**
+ * 构建工具类
  * @author midreamsheep
  */
 public class BuildTool {
+    /**原子性自增数*/
     private static final AtomicInteger t = new AtomicInteger(0);
+    /**方法体模板*/
     private static final String Template =
             "return new com.midream.sheep.swcj.core.analyzer.CornAnalyzer<#[fx]>().execute(\"#[execute]\",#[args]).toArray(new #[fx][0]);";
-
+    /**
+     * 获取爬虫的具体类
+     * @param className 类名
+     * @return 爬虫对像
+     * */
     public static Object getObjectFromTool(String className) {
         return CacheCorn.getObject(className);
     }
-
+    /**
+     * 获取爬虫实体类
+     * @param rootReptile 爬虫实体数据
+     * @param config 爬虫配置数据
+     * @return 爬虫实体类
+     * */
     public static SWCJClass getSWCJClass(RootReptile rootReptile, ReptileConfig config) throws ConfigException, EmptyMatchMethodException {
         //实例化类
         SWCJClass swcjClass = SWCJClass.buildClass();
@@ -55,7 +67,12 @@ public class BuildTool {
         }
         return swcjClass;
     }
-
+    /**
+     * 为爬虫实体类注入方法数据
+     * @param swcjClass 爬虫实体类
+     * @param rootReptile 爬虫实体数据
+     * @param config 爬虫配置数据
+     * */
     private static void getFunction(SWCJClass swcjClass, RootReptile rootReptile, ReptileConfig config) throws ClassNotFoundException, InterfaceIllegal {
         Method[] methods = Class.forName(swcjClass.getItIterface()).getMethods();
         for (Method method : methods) {
@@ -86,15 +103,21 @@ public class BuildTool {
             swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
         }
     }
-
-    private static void analysisMethodByAnnotation(SWCJMethod swcjMethod, Method method, RootReptile rr, SWCJClass swcjClass) throws InterfaceIllegal {
+    /**
+     * 通过注解解析方法
+     * @param swcjMethod SWCJ方法实体类
+     * @param method java反射方法对象
+     * @param rootReptile 爬虫实体数据
+     * @param swcjClass 爬虫实体类
+     * */
+    private static void analysisMethodByAnnotation(SWCJMethod swcjMethod, Method method, RootReptile rootReptile, SWCJClass swcjClass) throws InterfaceIllegal {
         //获取方法上的注解
         WebSpider spider = method.getAnnotation(WebSpider.class);
         //放入所有有注解的方法
         if (spider == null || spider.value().equals("")) {
             throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
         }
-        for (ReptileUrl url : rr.getRu()) {
+        for (ReptileUrl url : rootReptile.getRu()) {
             if (url.getName().equals(spider.value())) {
                 swcjMethod.setName(url.getName());
                 swcjClass.addMethod(spider.value(), swcjMethod);
@@ -102,9 +125,15 @@ public class BuildTool {
             }
         }
     }
-
-    private static void analysisMethodByMethodName(SWCJMethod swcjMethod, Method method, RootReptile rr, SWCJClass swcjClass) {
-        for (ReptileUrl url : rr.getRu()) {
+    /**
+     * 通过方法名解析方法
+     * @param swcjMethod SWCJ方法实体类
+     * @param method java反射方法对象
+     * @param rootReptile 爬虫实体数据
+     * @param swcjClass 爬虫实体类
+     * */
+    private static void analysisMethodByMethodName(SWCJMethod swcjMethod, Method method, RootReptile rootReptile, SWCJClass swcjClass) {
+        for (ReptileUrl url : rootReptile.getRu()) {
             if (url.getName().equals(method.getName())) {
                 swcjMethod.setName(url.getName());
                 swcjClass.addMethod(method.getName(), swcjMethod);
@@ -113,8 +142,15 @@ public class BuildTool {
         }
     }
 
-    //
-    public static String spliceMethod(ReptileUrl ru, RootReptile rr, SWCJMethod method, ReptileConfig rc) {
+    /**
+     * 构建方法主体
+     * @param method SWCJ方法实体类
+     * @param config 爬虫配置数据
+     * @param rootReptile 爬虫实体数据
+     * @param ru 爬虫实体数据
+     * @return 方法主体
+     * */
+    public static String spliceMethod(ReptileUrl ru, RootReptile rootReptile, SWCJMethod method, ReptileConfig config) {
         //方法体
         StringBuilder sbmethod = new StringBuilder();
         //获取参数传入列表
@@ -125,14 +161,20 @@ public class BuildTool {
         //开始拼接方法
         {
             add(sbmethod, Template
-                    .replace("#[execute]", StringUtil.getExecuteCharacter(ru, injection, rc, rr, method))
+                    .replace("#[execute]", StringUtil.getExecuteCharacter(ru, injection, config, rootReptile, method))
                     .replace("#[fx]", method.getReturnType().replace("[]", ""))
                     .replace(",#[args]", StringUtil.getStringByList(injection)));
         }
         add(sbmethod, "}");
         return sbmethod.toString();
     }
-
+    /**
+     * 获取方法参数列表
+     * @param ru 爬虫方法实体数据
+     * @param method 方法实体类
+     * @param injection 参数列表
+     * @return 参数列表字符串
+     * */
     public static String getMethodParametric(ReptileUrl ru, SWCJMethod method, List<String> injection) {
         //获取拼接对象
         StringBuilder sb = new StringBuilder();

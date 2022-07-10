@@ -15,7 +15,6 @@ import java.util.logging.Logger;
  * @version 1.0
  * */
 public class CornAnalyzer<T> implements IAnalyzer<T>{
-
     @Override
     public List<T> execute(String in, Object... args) {
         ExecuteValue executeValue = new ExecuteValue();
