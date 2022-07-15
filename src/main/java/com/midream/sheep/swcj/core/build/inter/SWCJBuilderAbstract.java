@@ -23,6 +23,7 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
 
     @Override
     public Object Builder(RootReptile rr, ReptileConfig rc) {
+        //非空判断
         notNull();
         //开始拼接类信息
         return CacheCorn.addObject(rr.getId(),buildObject(rr,rc));

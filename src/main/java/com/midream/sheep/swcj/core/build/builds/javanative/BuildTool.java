@@ -159,12 +159,11 @@ public class BuildTool {
         //方法头 定义被重写
         add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ", ""), "){");
         //开始拼接方法
-        {
-            add(sbmethod, Template
-                    .replace("#[execute]", StringUtil.getExecuteCharacter(ru, injection, config, rootReptile, method))
+        add(sbmethod,
+            Template.replace("#[execute]", StringUtil.getExecuteCharacter(ru, injection, config, rootReptile, method))
                     .replace("#[fx]", method.getReturnType().replace("[]", ""))
-                    .replace(",#[args]", StringUtil.getStringByList(injection)));
-        }
+                    .replace(",#[args]", StringUtil.getStringByList(injection))
+        );
         add(sbmethod, "}");
         return sbmethod.toString();
     }

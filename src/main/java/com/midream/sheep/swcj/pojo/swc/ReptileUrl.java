@@ -1,8 +1,5 @@
 package com.midream.sheep.swcj.pojo.swc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author midreamSheep
  * 爬虫的url配置类
