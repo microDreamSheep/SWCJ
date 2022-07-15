@@ -25,9 +25,7 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     public Object Builder(RootReptile rr, ReptileConfig rc) {
         notNull();
         //开始拼接类信息
-        Object o =  buildObject(rr,rc);
-        CacheCorn.addObject(rr.getId(), o);
-        return o;
+        return CacheCorn.addObject(rr.getId(),buildObject(rr,rc));
     }
     private void notNull(){
         if(swcjcl==null){
