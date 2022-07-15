@@ -22,19 +22,20 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     }
 
     @Override
-    public Object Builder(RootReptile rr, ReptileConfig rc)
-    {
+    public Object Builder(RootReptile rr, ReptileConfig rc) {
+        notNull();
+        //开始拼接类信息
+        Object o =  buildObject(rr,rc);
+        CacheCorn.addObject(rr.getId(), o);
+        return o;
+    }
+    private void notNull(){
         if(swcjcl==null){
             swcjcl = new SWCJClassLoader();
         }
         if(swcjCompiler == null){
             swcjCompiler = new DynamicCompiler();
         }
-        //开始拼接类信息
-        Object o =  buildObject(rr,rc);
-        CacheCorn.addObject(rr.getId(), o);
-        return o;
     }
-
     protected abstract Object buildObject(RootReptile rr, ReptileConfig rc);
 }
