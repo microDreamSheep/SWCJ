@@ -114,7 +114,7 @@ public class BuildTool {
         //获取方法上的注解
         WebSpider spider = method.getAnnotation(WebSpider.class);
         //放入所有有注解的方法
-        if (spider == null || spider.value().equals("")) {
+        if (spider == null || spider.value().equals(Constant.nullString)) {
             throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
         }
         for (ReptileUrl url : rootReptile.getRu()) {
@@ -157,11 +157,11 @@ public class BuildTool {
         List<String> injection = new LinkedList<>();
         String varString = getMethodParametric(ru, method, injection);
         //方法头 定义被重写
-        add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ", ""), "){");
+        add(sbmethod, "\npublic ", method.getReturnType(), (" "), method.getMethodName(), "(", varString.replace("class ", Constant.nullString), "){");
         //开始拼接方法
         add(sbmethod,
             Template.replace("#[execute]", StringUtil.getExecuteCharacter(ru, injection, config, rootReptile, method))
-                    .replace("#[fx]", method.getReturnType().replace("[]", ""))
+                    .replace("#[fx]", method.getReturnType().replace("[]", Constant.nullString))
                     .replace(",#[args]", StringUtil.getStringByList(injection))
         );
         add(sbmethod, "}");
@@ -183,7 +183,7 @@ public class BuildTool {
 
         //如果方法参数为空直接返回
         if (methodVars.size() == 0) {
-            return "";
+            return Constant.nullString;
         }
 
         int len = inPutVars.length;

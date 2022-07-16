@@ -31,26 +31,26 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
         }
     }
 
-    public SWCJClass getSWCJClass(RootReptile rr,ReptileConfig rc) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
-        return BuildTool.getSWCJClass(rr,rc);
+    public SWCJClass getSWCJClass(RootReptile rootReptile,ReptileConfig config) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
+        return BuildTool.getSWCJClass(rootReptile,config);
     }
 
-    public SWCJClass getAllMethod(SWCJClass swcjClass, RootReptile rr,ReptileConfig rc) {
+    public SWCJClass getAllMethod(SWCJClass swcjClass, RootReptile rootReptile,ReptileConfig config) {
         Map<String, SWCJMethod> function = swcjClass.getMethods();
-        for (ReptileUrl reptileUrl : rr.getRu()) {
+        for (ReptileUrl reptileUrl : rootReptile.getRu()) {
             SWCJMethod method = function.get(reptileUrl.getName());
             if (method == null) {
                 continue;
             }
-            method.setBody(BuildTool.spliceMethod(reptileUrl, rr, method,rc));
+            method.setBody(BuildTool.spliceMethod(reptileUrl, rootReptile, method,config));
         }
         return swcjClass;
     }
 
     @Override
-    protected Object buildObject(RootReptile rr, ReptileConfig rc) {
+    protected Object buildObject(RootReptile rootReptile, ReptileConfig config) {
         try {
-            return loadClass(getAllMethod(getSWCJClass(rr, rc),rr, rc));
+            return loadClass(getAllMethod(getSWCJClass(rootReptile, config),rootReptile, config));
         } catch (ClassNotFoundException | EmptyMatchMethodException | ConfigException e) {
             Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
             throw new RuntimeException(e);

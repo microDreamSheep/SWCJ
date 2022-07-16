@@ -21,7 +21,7 @@ public class Test {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/Efficient.xml"));
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("getHtml");
-        String[] it = html.gethtml("5");
+        String[] it = html.gethtml("9");
         for (String image : it) {
             System.out.println(image);
         }

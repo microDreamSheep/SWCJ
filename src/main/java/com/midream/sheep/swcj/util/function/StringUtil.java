@@ -1,5 +1,6 @@
 package com.midream.sheep.swcj.util.function;
 
+import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
@@ -23,10 +24,7 @@ public class StringUtil {
      * @return 返回首字母大写字符串
      * */
     public static String StringToUpperCase(String value){
-        if(value==null||value.equals("")){
-            return "";
-        }
-        return value.substring(0,1).toUpperCase()+value.substring(1);
+        return value==null||value.equals(Constant.nullString)? Constant.nullString :value.substring(0,1).toUpperCase()+value.substring(1);
     }
 
     /**
@@ -45,10 +43,9 @@ public class StringUtil {
             return null;
         }
         Map<String,String> map = new HashMap<>();
-        String[] split = values.split(";");
-        for (String s : split) {
-            String[] split1 = s.split("=");
-            map.put(split1[0],split1[1]);
+        for (String s : values.split(";")) {
+            String[] split = s.split("=");
+            map.put(split[0],split[1]);
         }
         return map;
     }
@@ -87,10 +84,6 @@ public class StringUtil {
                 }
             }
         }
-        String injectCharacter = "";
-        if (!("".contentEquals(inj))) {
-            injectCharacter = inj.substring(0, inj.length() - 1);
-        }
-        return templet.replace("#[in]",injectCharacter);
+        return templet.replace("#[in]",(Constant.nullString.contentEquals(inj))?Constant.nullString:inj.substring(0, inj.length() - 1));
     }
 }
