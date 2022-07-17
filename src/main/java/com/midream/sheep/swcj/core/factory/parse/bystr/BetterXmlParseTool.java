@@ -7,6 +7,7 @@ import com.midream.sheep.swcj.core.factory.SWCJParseI;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.data.XmlSpecialStrings;
 import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
@@ -31,7 +32,7 @@ public class BetterXmlParseTool implements SWCJParseI {
     @Override
     public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc) {
         //正则删除注释
-        xmlString = xmlString.replaceAll("<!--[\\s\\S]+?-->","");
+        xmlString = dealWithSpecial(xmlString.replaceAll("<!--[\\s\\S]+?-->",""));
         if(xmlString.contains("<config>")) {
             parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         }
@@ -40,7 +41,15 @@ public class BetterXmlParseTool implements SWCJParseI {
         }
         return new LinkedList<>();
     }
-
+    /**
+     * 处理xml特殊字符
+     * */
+    private String dealWithSpecial(String xmlString){
+        for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
+            xmlString = xmlString.replace(entry.getKey(), entry.getValue());
+        }
+        return xmlString;
+    }
     /**
      * 分析配置文件
      */
