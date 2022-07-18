@@ -2,6 +2,7 @@ package com.midream.sheep.swcj.core.executetool.execute.regularexpression;
 
 import com.midream.sheep.swcj.core.executetool.SWCJExecute;
 import com.midream.sheep.swcj.data.Constant;
+import com.midream.sheep.swcj.data.XmlSpecialStrings;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
 import org.w3c.dom.Node;
@@ -26,6 +27,9 @@ public class SWCJregular<T> implements SWCJExecute<T> {
     int max = 0;
     @Override
     public List<T> execute(ExecuteValue executeValue, String... args) throws Exception {
+        for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
+            executeValue.setUrl(executeValue.getUrl().replace(entry.getKey(), entry.getValue()));
+        }
         String text = getText(executeValue);
         Map<String,List<String>> values = new LinkedHashMap<>();
         //获取节点对象
@@ -42,7 +46,10 @@ public class SWCJregular<T> implements SWCJExecute<T> {
                 }else {
                     values.put(RegConstants.strName,list);
                 }
-                String trim = item.getTextContent().replace(Constant.gtTag,">").replace(Constant.ltTag,"<").trim();
+                String trim = item.getTextContent().trim();
+                for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
+                    trim = trim.replace(entry.getKey(), entry.getValue());
+                }
                 Pattern r = Pattern.compile(trim);
                 Matcher matcher = r.matcher(text);
                 while (matcher.find()){
@@ -87,10 +94,17 @@ public class SWCJregular<T> implements SWCJExecute<T> {
             //设置请求类型
             con.setRequestMethod(executeValue.getType().getValue());
             //设置请求需要返回的数据类型和字符集类型
-            con.setRequestProperty("Content-Type", "text/html;charset=GBK");
+            con.setRequestProperty("Content-Type", "application/json;charset=GBK");
             con.setRequestProperty("cookie",executeValue.getCookies());
             con.setRequestProperty("user-agent",executeValue.getUserAge());
-
+            //set the request cookie
+            con.setRequestProperty("cookie",executeValue.getCookies());
+            //set the request timeout
+            con.setConnectTimeout(Integer.parseInt(executeValue.getTimeout()));
+            //set the request method
+            con.setRequestProperty("method", executeValue.getType().getValue());
+            //set the values
+            con.setRequestProperty("connection", "Keep-Alive");
             //允许写出
             con.setDoOutput(true);
             //允许读入
