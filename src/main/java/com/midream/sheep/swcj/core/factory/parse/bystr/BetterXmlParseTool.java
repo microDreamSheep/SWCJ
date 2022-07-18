@@ -32,7 +32,7 @@ public class BetterXmlParseTool implements SWCJParseI {
     @Override
     public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc) {
         //正则删除注释
-        xmlString = dealWithSpecial(xmlString.replaceAll("<!--[\\s\\S]+?-->",""));
+        xmlString = xmlString.replaceAll("<!--[\\s\\S]+?-->","");
         if(xmlString.contains("<config>")) {
             parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         }
@@ -40,15 +40,6 @@ public class BetterXmlParseTool implements SWCJParseI {
             return parseAllClass(xmlString);
         }
         return new LinkedList<>();
-    }
-    /**
-     * 处理xml特殊字符
-     * */
-    private String dealWithSpecial(String xmlString){
-        for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
-            xmlString = xmlString.replace(entry.getKey(), entry.getValue());
-        }
-        return xmlString;
     }
     /**
      * 分析配置文件
@@ -89,7 +80,7 @@ public class BetterXmlParseTool implements SWCJParseI {
     private void parseInjections(String substring) {
         String[] strings = parseTag(substring, "<injection>", "</injection>");
         for (String s : strings) {
-            CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")));
+            CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
         }
     }
 
