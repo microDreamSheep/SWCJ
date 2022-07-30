@@ -1,5 +1,6 @@
 package com.midream.sheep.swcj.pojo.buildup;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -10,14 +11,34 @@ public class SWCJMethod {
     private String methodName;
     private List<String> vars;
     private String returnType;
-    private String body;
+    private String executeStr;
 
-    public String getBody() {
-        return body;
+    private String paramIn;
+
+    public String getParamIn() {
+        return paramIn;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setParamIn(String paramIn) {
+        this.paramIn = paramIn;
+    }
+
+    private List<String> executeVars = new LinkedList<>();
+
+    public List<String> getExecuteVars() {
+        return executeVars;
+    }
+
+    public void setExecuteVars(List<String> executeVars) {
+        this.executeVars = executeVars;
+    }
+
+    public String getExecuteStr() {
+        return executeStr;
+    }
+
+    public void setExecuteStr(String executeStr) {
+        this.executeStr = executeStr;
     }
 
     public String getName() {
@@ -62,7 +83,7 @@ public class SWCJMethod {
                 ", methodName='" + methodName + '\'' +
                 ", vars=" + vars +
                 ", returnType='" + returnType + '\'' +
-                ", body='" + body + '\'' +
+                ", body='" + executeStr + '\'' +
                 '}';
     }
 }

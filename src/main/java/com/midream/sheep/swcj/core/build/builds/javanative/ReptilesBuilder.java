@@ -10,6 +10,8 @@ import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
+import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -17,9 +19,9 @@ import java.util.logging.Logger;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {
 
-    public Object loadClass(SWCJClass sclass) {
+    public Object loadClass(SWCJClass sclass,ReptlileMiddle middle) {
         try {
-            DataInComplier data = swcjCompiler.compileAndLoad(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), sclass);
+            DataInComplier data = swcjCompiler.compileAndLoad(sclass,middle);
             if(data.isIsload()){
                 return data.getaClass().getDeclaredConstructor().newInstance();
             }
@@ -31,26 +33,14 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
         }
     }
 
-    public SWCJClass getSWCJClass(RootReptile rootReptile,ReptileConfig config) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
-        return BuildTool.getSWCJClass(rootReptile,config);
-    }
-
-    public SWCJClass getAllMethod(SWCJClass swcjClass, RootReptile rootReptile,ReptileConfig config) {
-        Map<String, SWCJMethod> function = swcjClass.getMethods();
-        for (ReptileUrl reptileUrl : rootReptile.getRu()) {
-            SWCJMethod method = function.get(reptileUrl.getName());
-            if (method == null) {
-                continue;
-            }
-            method.setBody(BuildTool.spliceMethod(reptileUrl, rootReptile, method,config));
-        }
-        return swcjClass;
+    public SWCJClass getSWCJClass(ReptlileMiddle middle) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
+        return BuildTool.getSWCJClass(middle);
     }
 
     @Override
-    protected Object buildObject(RootReptile rootReptile, ReptileConfig config) {
+    protected Object buildObject(ReptlileMiddle middle) {
         try {
-            return loadClass(getAllMethod(getSWCJClass(rootReptile, config),rootReptile, config));
+            return loadClass(getSWCJClass(middle),middle);
         } catch (ClassNotFoundException | EmptyMatchMethodException | ConfigException e) {
             Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
             throw new RuntimeException(e);

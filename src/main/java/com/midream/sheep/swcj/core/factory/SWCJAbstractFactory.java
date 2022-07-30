@@ -10,6 +10,7 @@ import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +63,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 }
             }else {
                 rootReptiles.get(id).setLoad(true);
-                return swcjBuilder.Builder(rootReptiles.get(id),rc);
+                return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id),rc));
             }
         }
     }
