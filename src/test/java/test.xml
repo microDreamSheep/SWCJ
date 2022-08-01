@@ -2,18 +2,8 @@
 <SWCJ>
     <!--全局配置-->
     <config>
-        <!--工作空间，生成的字节码会存储到里面
-        isAbsolute->是否是相对路径
-        workplace->文件夹路径
-        -->
         <constructionSpace isAbsolute="true" workSpace="E:\临时文件"/>
-        <!--超时时间，请求超过这个时间报异常
-        value->超时具体时间
-        -->
         <timeout value="10000"/>
-        <!--userAgrnt数据
-        value->具体的userAgent文本
-        -->
         <userAgent>
             <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71
                 Safari/537.36 Edg/97.0.1072.62
@@ -21,71 +11,32 @@
             <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; TencentTraveler 4.0)</value>
             <value>User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)</value>
         </userAgent>
-        <!--爬虫策略
-        cache缓存，将生成的类直接转为字节码加载
-        非缓存，不会保存具体的对象
-        -->
         <createTactics isCache="false"/>
-        <!--execute
-    配置解析策略
-    -->
-        <executes>
-            <execute>
-                <!--type-->
-                <key>jsoup</key>
-                <!--className-->
-                <value>com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup</value>
-            </execute>
-        </executes>
         <chooseStrategy type="METHOD_NAME"/>
     </config>
     <!--具体的某个爬虫类
          id 获取的标识
         -->
-    <swc id="getHtml">
-        <!--局部爬虫使用的cookies文本
-        格式 键:值;···
-        -->
+    <swc>
+        <id>downloader</id>
         <cookies>
-            uuid_tt_dd=4646545646-1642571061362-956268; UserName=xmdymcsheepsir;
         </cookies>
-        <!--父类接口，爬虫通过接口调-->
-        <parentInterface class="qwesd.pojo"/>
-        <!--请求配置
-        一个配置对应一个方法
-        name——>注解名
-        inPutName 下文中使用的参数名
-        -->
-        <url name="getHtml" inPutName="count">
-            <!--请求类型
-            当前仅支持POST和GET请求
-            type="POST||GET"
-            -->
-            <type type="GET"/>
-            <!--url链接-->
-            <path path="https://pic.netbian.com/index_5.html"/>
-            <!--解析html方案
-            并不支持同时使用
-            <regular>正则表达式 正则特殊值 ALL 即为返回所有文本（经过迭代不知道是否正常）
-            <jsoup>jsoup配置
-            type 执行策略
-            -->
-            <parseProgram isHtml="false" type="jsoup">
-                <Jsoup>
-                    <jsoup name="name">
-                        <pa not="下一页" allStep="0" step="0" element="">
-                            #main>div.slist>ul>li>a
-                        </pa>
-                    </jsoup>
-                    <jsoup name="url">
-                        <pa not="下一页" allStep="0" step="0" element="">
-                            #main>div.slist>ul
-                        </pa>
-                        <pa not="下一页" allStep="0" step="0" element="abs:href">
-                            li>a
-                        </pa>
-                    </jsoup>
-                </Jsoup>
+        <parentInterface>test.pojo</parentInterface>
+        <url>
+            <name>gethtml</name>
+            <type>GET</type>
+            <inPutName>key</inPutName>
+            <path>https://s.pcmgr.qq.com/tapi/web/searchcgi.php?type=search&amp;callback=searchCallback&amp;keyword=#{key}&amp;page=1&amp;pernum=30&amp;more=0</path>
+            <parseProgram>
+                <isHtml>false</isHtml>
+                <type>reg</type>
+                <xml>
+                    <reg>
+                        <reg name="name" del="'&quot;SoftName&quot;:&quot;';'&quot;';">
+                            "SoftName":".+?"
+                        </reg>
+                    </reg>
+                </xml>
             </parseProgram>
         </url>
     </swc>

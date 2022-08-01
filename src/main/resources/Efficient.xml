@@ -85,8 +85,12 @@
                 <xml>
                     <!--你的xml-->
                     <!--原生正则-->
+                    <!--name:实体类属性名-->
+                    <!--del删除的字符
+                        格式: '';'';
+                    -->
                     <reg>
-                        <reg name=""></reg>
+                        <reg name="" del=""></reg>
                         <reg name=""></reg>
                         <reg name=""></reg>
                     </reg>

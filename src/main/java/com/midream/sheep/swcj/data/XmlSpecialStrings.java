@@ -10,5 +10,6 @@ public class XmlSpecialStrings {
         map.put("&amp;","&");
         map.put("&lt;","<");
         map.put("&gt;",">");
+        map.put("&quot;","\"");
     }
 }

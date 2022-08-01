@@ -50,10 +50,26 @@ public class SWCJregular<T> implements SWCJExecute<T> {
                 for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
                     trim = trim.replace(entry.getKey(), entry.getValue());
                 }
+                String del = item.getAttributes().getNamedItem("del").getTextContent();
+                String[] not;
+                if(del!=null&&!del.equals("")){
+                    String[] split = del.trim().split("';");
+                    not = new String[split.length];
+                    for(int a = 0;a<split.length;a++){
+                        not[a] = split[a].substring(1);
+                    }
+                }else {
+                    not = new String[0];
+                }
                 Pattern r = Pattern.compile(trim);
                 Matcher matcher = r.matcher(text);
-                while (matcher.find()){
-                    list.add(matcher.group());
+                while (matcher.find())
+                {
+                    String s = matcher.group();
+                    for (String s1 : not) {
+                        s = s.replace(s1,"");
+                    }
+                    list.add(s);
                 }
                 if(list.size()>max){
                     max = list.size();
