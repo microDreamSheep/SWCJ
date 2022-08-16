@@ -5,9 +5,7 @@ import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.core.classtool.compiler.javanative.DynamicCompiler;
-import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 
 public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     protected SWCJClassLoaderInter swcjcl;

@@ -25,79 +25,85 @@ import java.util.regex.Pattern;
  */
 public class SWCJregular<T> implements SWCJExecute<T> {
     int max = 0;
+
     @Override
     public List<T> execute(ExecuteValue executeValue, String... args) throws Exception {
         for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
             executeValue.setUrl(executeValue.getUrl().replace(entry.getKey(), entry.getValue()));
         }
         String text = getText(executeValue);
-        Map<String,List<String>> values = new LinkedHashMap<>();
+        Map<String, List<String>> values = new LinkedHashMap<>();
         //获取节点对象
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         NodeList d = builder.parse(new InputSource(new StringReader(args[0].trim()))).getElementsByTagName(RegConstants.regTag).item(0).getChildNodes();
-        for(int i = 0;i<d.getLength();i++){
+        for (int i = 0; i < d.getLength(); i++) {
             Node item = d.item(i);
-            if(item.getNodeName().equals(RegConstants.regTag)){
-                List<String> list = new LinkedList<>();
-                Node name = item.getAttributes().getNamedItem(RegConstants.nameAttribute);
-                if(name!=null&&!name.getNodeValue().trim().equals(Constant.nullString)){
-                    values.put(name.getNodeValue(),list);
-                }else {
-                    values.put(RegConstants.strName,list);
+            if (!item.getNodeName().equals(RegConstants.regTag)) {
+                continue;
+            }
+            //放入属性map
+            List<String> list = new LinkedList<>();
+            putMap(item.getAttributes().getNamedItem(RegConstants.nameAttribute),values,list);
+            //放入正则表达式
+            String trim = item.getTextContent().trim();
+            for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
+                trim = trim.replace(entry.getKey(), entry.getValue());
+            }
+            String del = item.getAttributes().getNamedItem("del").getTextContent();
+            String[] not;
+            if (del != null && !del.equals("")) {
+                String[] split = del.trim().split("';");
+                not = new String[split.length];
+                for (int a = 0; a < split.length; a++) {
+                    not[a] = split[a].substring(1);
                 }
-                String trim = item.getTextContent().trim();
-                for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
-                    trim = trim.replace(entry.getKey(), entry.getValue());
+            } else {
+                not = new String[0];
+            }
+            Pattern r = Pattern.compile(trim);
+            Matcher matcher = r.matcher(text);
+            while (matcher.find()) {
+                String s = matcher.group();
+                for (String s1 : not) {
+                    s = s.replace(s1, "");
                 }
-                String del = item.getAttributes().getNamedItem("del").getTextContent();
-                String[] not;
-                if(del!=null&&!del.equals("")){
-                    String[] split = del.trim().split("';");
-                    not = new String[split.length];
-                    for(int a = 0;a<split.length;a++){
-                        not[a] = split[a].substring(1);
-                    }
-                }else {
-                    not = new String[0];
-                }
-                Pattern r = Pattern.compile(trim);
-                Matcher matcher = r.matcher(text);
-                while (matcher.find())
-                {
-                    String s = matcher.group();
-                    for (String s1 : not) {
-                        s = s.replace(s1,"");
-                    }
-                    list.add(s);
-                }
-                if(list.size()>max){
-                    max = list.size();
-                }
+                list.add(s);
+            }
+            if (list.size() > max) {
+                max = list.size();
             }
         }
-        if(values.size()==1){
+        if (values.size() == 1) {
             return (List<T>) values.get(RegConstants.strName);
         }
-        Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]",Constant.nullString));
+        Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
         List<T> listw = new LinkedList<>();
-        for(int i = 0;i<max;i++){
-            T t = (T)aClass.getDeclaredConstructor().newInstance();
+        for (int i = 0; i < max; i++) {
+            @SuppressWarnings("unchecked") T t = (T) aClass.getDeclaredConstructor().newInstance();
             listw.add(t);
         }
         for (Map.Entry<String, List<String>> entry : values.entrySet()) {
-            for(int i = 0;i<entry.getValue().size();i++){
+            for (int i = 0; i < entry.getValue().size(); i++) {
                 Object o = listw.get(i);
                 Method repay1 = aClass.getMethod("set" + StringUtil.StringToUpperCase(entry.getKey()), String.class);
-                repay1.invoke(o,entry.getValue().get(i));
+                repay1.invoke(o, entry.getValue().get(i));
             }
         }
         return listw;
     }
+    private void putMap(Node name,Map<String,List<String>> values,List<String> list){
+        if (name != null && !name.getNodeValue().trim().equals(Constant.nullString)) {
+            values.put(name.getNodeValue(), list);
+        } else {
+            values.put(RegConstants.strName, list);
+        }
+    }
+
     /**
      * 获取字符串
-     * */
-    private String getText(ExecuteValue executeValue){
+     */
+    private String getText(ExecuteValue executeValue) {
         HttpURLConnection con;
 
         BufferedReader buffer;
@@ -111,10 +117,10 @@ public class SWCJregular<T> implements SWCJExecute<T> {
             con.setRequestMethod(executeValue.getType().getValue());
             //设置请求需要返回的数据类型和字符集类型
             con.setRequestProperty("Content-Type", "application/json;charset=GBK");
-            con.setRequestProperty("cookie",executeValue.getCookies());
-            con.setRequestProperty("user-agent",executeValue.getUserAge());
+            con.setRequestProperty("cookie", executeValue.getCookies());
+            con.setRequestProperty("user-agent", executeValue.getUserAge());
             //set the request cookie
-            con.setRequestProperty("cookie",executeValue.getCookies());
+            con.setRequestProperty("cookie", executeValue.getCookies());
             //set the request timeout
             con.setConnectTimeout(Integer.parseInt(executeValue.getTimeout()));
             //set the request method
@@ -130,23 +136,23 @@ public class SWCJregular<T> implements SWCJExecute<T> {
             //得到响应码
             int responseCode = con.getResponseCode();
 
-            if(responseCode == HttpURLConnection.HTTP_OK){
+            if (responseCode == HttpURLConnection.HTTP_OK) {
                 //得到响应流
                 inputStream = con.getInputStream();
                 //将响应流转换成字符串
                 resultBuffer = new StringBuilder();
                 String line;
-                buffer = new BufferedReader(new InputStreamReader(inputStream,"GBK"));
+                buffer = new BufferedReader(new InputStreamReader(inputStream, "GBK"));
                 while ((line = buffer.readLine()) != null) {
                     resultBuffer.append(line);
                 }
                 return resultBuffer.toString();
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(SWCJregular.class.getName()).warning(e.getMessage());
             e.printStackTrace();
-        }finally {
-            if(inputStream!=null){
+        } finally {
+            if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {

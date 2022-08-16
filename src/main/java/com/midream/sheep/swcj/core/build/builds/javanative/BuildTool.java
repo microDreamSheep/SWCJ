@@ -12,11 +12,10 @@ import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -80,9 +79,7 @@ public class BuildTool {
             swcjMethod.setMethodName(method.getName());
             //设置方法属性
             List<String> methodType = new LinkedList<>();
-            for (Parameter parameter : method.getParameters()) {
-                methodType.add(Constant.getClassName(parameter.getType().toString()));
-            }
+            Arrays.stream(method.getParameters()).forEach(parameter->methodType.add(Constant.getClassName(parameter.getType().toString())));
             swcjMethod.setVars(methodType);
             if ((Constant.getClassName(method.getReturnType().toString()).equals(""))) {
                 try {
@@ -115,13 +112,10 @@ public class BuildTool {
         if (spider == null || spider.value().equals(Constant.nullString)) {
             throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
         }
-        for (ReptileUrl url : rootReptile.getRu()) {
-            if (url.getName().equals(spider.value())) {
-                parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
-                swcjClass.addMethod(spider.value(), swcjMethod);
-                break;
-            }
-        }
+        rootReptile.getRu().stream().filter(url -> url.getName().equals(spider.value())).forEach(url -> {
+            parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
+            swcjClass.addMethod(spider.value(), swcjMethod);
+        });
     }
     /**
      * 通过方法名解析方法
@@ -131,13 +125,10 @@ public class BuildTool {
      * @param swcjClass 爬虫实体类
      * */
     private static void analysisMethodByMethodName(SWCJMethod swcjMethod, Method method, RootReptile rootReptile,ReptileConfig reptileConfig ,SWCJClass swcjClass) {
-        for (ReptileUrl url : rootReptile.getRu()) {
-            if (url.getName().equals(method.getName())) {
-                parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
-                swcjClass.addMethod(method.getName(), swcjMethod);
-                break;
-            }
-        }
+        rootReptile.getRu().stream().filter(url->url.getName().equals(method.getName())).forEach(url->{
+            parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
+            swcjClass.addMethod(method.getName(), swcjMethod);
+        });
     }
 
     private static void parsePublicArea(SWCJMethod swcjMethod,ReptileUrl url, RootReptile rootReptile,ReptileConfig reptileConfig) {

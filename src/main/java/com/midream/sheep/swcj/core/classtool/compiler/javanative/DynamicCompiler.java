@@ -6,7 +6,7 @@ import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
 import javax.tools.*;

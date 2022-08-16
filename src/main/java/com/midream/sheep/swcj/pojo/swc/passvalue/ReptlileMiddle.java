@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.pojo.swc.all;
+package com.midream.sheep.swcj.pojo.swc.passvalue;
 
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;

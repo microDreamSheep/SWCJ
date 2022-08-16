@@ -5,16 +5,10 @@ import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilderAbstract;
 import com.midream.sheep.swcj.core.classtool.DataInComplier;
 import com.midream.sheep.swcj.data.Constant;
-import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
-import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
-import com.midream.sheep.swcj.util.function.StringUtil;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
 import java.util.logging.Logger;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {

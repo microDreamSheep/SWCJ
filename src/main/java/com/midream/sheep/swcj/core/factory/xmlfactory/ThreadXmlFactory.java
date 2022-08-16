@@ -8,7 +8,7 @@ import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

@@ -1,10 +1,8 @@
 package com.midream.sheep.swcj.core.classtool.compiler;
 
 import com.midream.sheep.swcj.core.classtool.DataInComplier;
-import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 
 /**
  * 编译器有加载器调用

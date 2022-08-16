@@ -10,7 +10,7 @@ import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
-import com.midream.sheep.swcj.pojo.swc.all.ReptlileMiddle;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

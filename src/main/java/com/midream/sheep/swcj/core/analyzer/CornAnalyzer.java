@@ -24,19 +24,23 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
         //数据封装
         insertData(executeValue,split);
         try {
-            return ((SWCJExecute<T>) Class.forName(split[9]).newInstance()).execute(executeValue, split[10]);
+            //只要传递的执行类一定能够执行且是SWCJExecute类型的，那么就可以执行
+            @SuppressWarnings("unchecked")
+            SWCJExecute<T> execute = (SWCJExecute<T>) Class.forName(split[9]).newInstance();
+            return execute.execute(executeValue, split[10]);
         } catch (Exception e) {
             Logger.getLogger(CornAnalyzer.class.getName()).severe(e.getMessage());
             throw new RuntimeException(e);
         }
     }
     private void replaceString(String[] split,Object[] args){
-        if(!("".contains(split[0]))) {
-            for (String s : split[0].split(",")) {
-                String[] split1 = s.split(":");
-                split[Integer.parseInt(split1[1]) - 1] = split[Integer.parseInt(split1[1]) - 1]
-                        .replace("#{"+split1[2]+"}", args[Integer.parseInt(split1[0]) - 1] + "");
-            }
+        if("".contains(split[0])) {
+            return;
+        }
+        for (String s : split[0].split(",")) {
+            String[] split1 = s.split(":");
+            split[Integer.parseInt(split1[1]) - 1] = split[Integer.parseInt(split1[1]) - 1]
+                    .replace("#{"+split1[2]+"}", args[Integer.parseInt(split1[0]) - 1] + "");
         }
     }
     private void insertData(ExecuteValue executeValue,String[] args){
