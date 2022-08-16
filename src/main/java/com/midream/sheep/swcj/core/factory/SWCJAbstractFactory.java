@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
     //核心配置文件
-    protected ReptileConfig rc = new ReptileConfig();
+    public static ReptileConfig rc = new ReptileConfig();
     //爬虫文件
     protected Map<String, RootReptile> rootReptiles = new HashMap<>();
     //构造器

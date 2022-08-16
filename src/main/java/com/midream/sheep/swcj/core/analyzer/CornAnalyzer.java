@@ -1,7 +1,9 @@
 package com.midream.sheep.swcj.core.analyzer;
 
+import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.core.executetool.SWCJExecute;
 import com.midream.sheep.swcj.core.executetool.execute.SRequest;
+import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
@@ -17,6 +19,13 @@ import java.util.logging.Logger;
 public class CornAnalyzer<T> implements IAnalyzer<T>{
     @Override
     public List<T> execute(String in, Object... args) {
+        if (SWCJAbstractFactory.rc.isCache()){
+            @SuppressWarnings("unchecked")
+            List<T> o = (List<T>) CacheCorn.get(in);
+            if(o!=null){
+                return o;
+            }
+        }
         ExecuteValue executeValue = new ExecuteValue();
         String[] split = in.split("\\[swcj;]");
         //数据注入
@@ -27,7 +36,11 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
             //只要传递的执行类一定能够执行且是SWCJExecute类型的，那么就可以执行
             @SuppressWarnings("unchecked")
             SWCJExecute<T> execute = (SWCJExecute<T>) Class.forName(split[9]).newInstance();
-            return execute.execute(executeValue, split[10]);
+            List<T> result = execute.execute(executeValue, split[10]);
+            if(SWCJAbstractFactory.rc.isCache()){
+                CacheCorn.put(in,result);
+            }
+            return result;
         } catch (Exception e) {
             Logger.getLogger(CornAnalyzer.class.getName()).severe(e.getMessage());
             throw new RuntimeException(e);

@@ -20,12 +20,15 @@ public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
-        swcjXmlFactory.setCompiler(new EffecientCompiler());
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("downloader");
         String[] it = html.gethtml("qq");
+        long start = System.currentTimeMillis();
+        it = html.gethtml("qq");
         for (String image : it) {
             System.out.println(image);
         }
+        long end = System.currentTimeMillis();
+        System.out.println(end-start);
         swcjXmlFactory.invokeSpecialMethod();
     }
 }
