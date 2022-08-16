@@ -59,19 +59,14 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     }
 
     private void parse(List<RootReptile> rootReptiles) {
-        for (RootReptile reptile : rootReptiles) {
-            this.rootReptiles.put(reptile.getId(), reptile);
-        }
+        rootReptiles.forEach(reptile->this.rootReptiles.put(reptile.getId(), reptile));
     }
 
     @Override
     public Object getWebSpiderById(String id) {
         Object o = BuildTool.getObjectFromTool(id);
-        if(o!=null){
-            return o;
-        }
         try {
-            return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), rc));
+            return o!=null?o:swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), rc));
         } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
             throw new RuntimeException(e);
         }
