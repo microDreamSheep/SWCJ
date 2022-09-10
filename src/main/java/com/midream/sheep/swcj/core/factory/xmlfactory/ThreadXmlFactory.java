@@ -22,8 +22,8 @@ import java.util.logging.Logger;
  * 工厂类，读取配置文件，获取具体实现类
  */
 public class ThreadXmlFactory extends SWCJAbstractFactory {
-    private static final ExecutorService execute = new ThreadPoolExecutor(1,1,5, TimeUnit.SECONDS,new LinkedBlockingQueue<>()
-    ,Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
+    private static final ExecutorService execute = new ThreadPoolExecutor(1,20,5, TimeUnit.SECONDS,new LinkedBlockingQueue<>()
+    ,Executors.defaultThreadFactory(),new ThreadPoolExecutor.CallerRunsPolicy());
 
     //xml工厂提供的构造器
     public ThreadXmlFactory(String value) {
