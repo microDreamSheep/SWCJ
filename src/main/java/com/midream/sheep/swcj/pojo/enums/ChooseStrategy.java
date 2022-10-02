@@ -1,7 +1,5 @@
 package com.midream.sheep.swcj.pojo.enums;
 
-import java.lang.reflect.Member;
-
 public enum ChooseStrategy {
     METHOD_NAME,ANNOTATION;
     public static ChooseStrategy getChooseStrategy(String key){

@@ -5,8 +5,7 @@ import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.core.classtool.compiler.javanative.DynamicCompiler;
-import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 
 public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     protected SWCJClassLoaderInter swcjcl;
@@ -22,10 +21,11 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
     }
 
     @Override
-    public Object Builder(RootReptile rr, ReptileConfig rc) {
+    public Object Builder(ReptlileMiddle middle) {
+        //非空判断
         notNull();
         //开始拼接类信息
-        return CacheCorn.addObject(rr.getId(),buildObject(rr,rc));
+        return CacheCorn.addObject(middle.getRootReptile().getId(),buildObject(middle));
     }
     private void notNull(){
         if(swcjcl==null){
@@ -35,5 +35,5 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
             swcjCompiler = new DynamicCompiler();
         }
     }
-    protected abstract Object buildObject(RootReptile rr, ReptileConfig rc);
+    protected abstract Object buildObject(ReptlileMiddle middle);
 }

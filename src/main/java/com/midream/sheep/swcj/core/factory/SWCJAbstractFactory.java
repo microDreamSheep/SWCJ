@@ -10,6 +10,7 @@ import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  */
 public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
     //核心配置文件
-    protected ReptileConfig rc = new ReptileConfig();
+    public static volatile ReptileConfig rc = new ReptileConfig();
     //爬虫文件
     protected Map<String, RootReptile> rootReptiles = new HashMap<>();
     //构造器
@@ -62,7 +63,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 }
             }else {
                 rootReptiles.get(id).setLoad(true);
-                return swcjBuilder.Builder(rootReptiles.get(id),rc);
+                return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id),rc));
             }
         }
     }

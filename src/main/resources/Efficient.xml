@@ -20,6 +20,8 @@
         <userAgent>
             <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62</value>
         </userAgent>
+        <!--是否使用缓存-->
+        <cache/>
         <!--executes
         配置解析策略
         -->
@@ -85,8 +87,12 @@
                 <xml>
                     <!--你的xml-->
                     <!--原生正则-->
+                    <!--name:实体类属性名-->
+                    <!--del删除的字符
+                        格式: '';'';
+                    -->
                     <reg>
-                        <reg name=""></reg>
+                        <reg name="" del=""></reg>
                         <reg name=""></reg>
                         <reg name=""></reg>
                     </reg>

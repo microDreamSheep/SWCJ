@@ -9,6 +9,7 @@ import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,19 +59,14 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     }
 
     private void parse(List<RootReptile> rootReptiles) {
-        for (RootReptile reptile : rootReptiles) {
-            this.rootReptiles.put(reptile.getId(), reptile);
-        }
+        rootReptiles.forEach(reptile->this.rootReptiles.put(reptile.getId(), reptile));
     }
 
     @Override
     public Object getWebSpiderById(String id) {
         Object o = BuildTool.getObjectFromTool(id);
-        if(o!=null){
-            return o;
-        }
         try {
-            return swcjBuilder.Builder(rootReptiles.get(id), rc);
+            return o!=null?o:swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), rc));
         } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
             throw new RuntimeException(e);
         }

@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class BetterXmlParseTool implements SWCJParseI {
@@ -35,12 +32,8 @@ public class BetterXmlParseTool implements SWCJParseI {
         if(xmlString.contains("<config>")) {
             parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         }
-        if(xmlString.contains("<swc>")){
-            return parseAllClass(xmlString);
-        }
-        return new LinkedList<>();
+        return xmlString.contains("<swc>")?parseAllClass(xmlString):new LinkedList<>();
     }
-
     /**
      * 分析配置文件
      */
@@ -75,13 +68,11 @@ public class BetterXmlParseTool implements SWCJParseI {
             parseInjections(configString.substring(configString.indexOf("<injections>") + "<injections>".length(), configString.indexOf("</injections>")));
         }catch (Exception ignored) {
         }
+        config.setCache(configString.contains("<cache/>"));
     }
 
     private void parseInjections(String substring) {
-        String[] strings = parseTag(substring, "<injection>", "</injection>");
-        for (String s : strings) {
-            CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")));
-        }
+        Arrays.stream(parseTag(substring, "<injection>", "</injection>")).forEach(s->CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim()));
     }
 
     private void parseChooseStrategy(String substring, ReptileConfig config) {
@@ -89,10 +80,7 @@ public class BetterXmlParseTool implements SWCJParseI {
     }
 
     private void parseUserAgent(String substring, ReptileConfig config) {
-        String[] strings = parseTag(substring, "<value>", "</value>");
-        for (String s : strings) {
-            config.addUserAgent(s.trim());
-        }
+        Arrays.stream(parseTag(substring, "<value>", "</value>")).forEach(s->config.addUserAgent(s.trim()));
     }
 
     /**
@@ -123,24 +111,23 @@ public class BetterXmlParseTool implements SWCJParseI {
      * 注入配置
      */
     private void parseExecutes(String executes) {
-        String[] strings = parseTag(executes, "<execute>", "</execute>");
-        for (String s : strings) {
-            if (s.contains("<executeConfig>")) {
-                String classes = s.substring(s.indexOf("<executeConfig>") + "<executeConfig>".length(), s.indexOf("</executeConfig>"));
-                try {
-                    Constant.PutExecutesMap(((ExecuteConfigurationClass) Class.forName(classes).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                         NoSuchMethodException | ClassNotFoundException e) {
-                    Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }
-            if (s.contains("<key>")) {
-                Constant.putExecute(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
+        Arrays.stream(parseTag(executes, "<execute>", "</execute>")).forEach(this::putExecute);
+    }
+    private void putExecute(String s){
+        if (s.contains("<executeConfig>")) {
+            String classes = s.substring(s.indexOf("<executeConfig>") + "<executeConfig>".length(), s.indexOf("</executeConfig>"));
+            try {
+                Constant.PutExecutesMap(((ExecuteConfigurationClass) Class.forName(classes).getDeclaredConstructor().newInstance()).getExecuteConfiguration());
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException | ClassNotFoundException e) {
+                Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
+                throw new RuntimeException(e);
             }
         }
+        if (s.contains("<key>")) {
+            Constant.putExecute(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
+        }
     }
-
     /**
      * 分析swcj
      */
@@ -149,12 +136,11 @@ public class BetterXmlParseTool implements SWCJParseI {
             xmlString = xmlString.replace(entry.getKey(), entry.getValue());
         }
         List<RootReptile> rootReptiles = new LinkedList<>();
-        String[] swcStrings = parseTag(xmlString, "<swc>", "</swc>");
-        for (String s : swcStrings) {
+        Arrays.stream(parseTag(xmlString, "<swc>", "</swc>")).forEach(s->{
             RootReptile rootReptile = new RootReptile();
             parseClass(s, rootReptile);
             rootReptiles.add(rootReptile);
-        }
+        });
         return rootReptiles;
     }
 
@@ -173,13 +159,9 @@ public class BetterXmlParseTool implements SWCJParseI {
         for (String ru : RuStrings) {
             ReptileUrl reptileUrl = new ReptileUrl();
             reptileUrl.setName(ru.substring(ru.indexOf("<name>") + "<name>".length(), ru.indexOf("</name>")).trim());
-            if(ru.contains("<inPutName>")) {
-                reptileUrl.setInPutName(ru.substring(ru.indexOf("<inPutName>") + "<inPutName>".length(), ru.indexOf("</inPutName>")).trim());
-            }
             if(ru.contains("<value>")) {
                 reptileUrl.setValues(ru.substring(ru.indexOf("<value>") + "<value>".length(), ru.indexOf("</value>")).trim());
             }
-            reptileUrl.setRequestType(ru.substring(ru.indexOf("<type>") + "<type>".length(), ru.indexOf("</type>")).trim());
             reptileUrl.setUrl(ru.substring(ru.indexOf("<path>") + "<path>".length(), ru.indexOf("</path>")).trim());
             String parseProgram = ru.substring(ru.indexOf("<parseProgram>") + "<parseProgram>".length(), ru.indexOf("</parseProgram>")).trim();
             reptileUrl.setExecutClassName(Constant.getExecute(parseProgram.substring(parseProgram.indexOf("<type>") + "<type>".length(), parseProgram.indexOf("</type>")).trim()));

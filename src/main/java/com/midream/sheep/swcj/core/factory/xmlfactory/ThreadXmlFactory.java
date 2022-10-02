@@ -8,21 +8,24 @@ import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 /**
  * 工厂类，读取配置文件，获取具体实现类
  */
 public class ThreadXmlFactory extends SWCJAbstractFactory {
-    private static final ExecutorService execute = Executors.newFixedThreadPool(1);
+    private static final ExecutorService execute = new ThreadPoolExecutor(1,1,
+            5, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>()
+    ,Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
 
     //xml工厂提供的构造器
     public ThreadXmlFactory(String value) {
@@ -41,14 +44,13 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
         if (this.swcjParseI == null) {
             this.swcjParseI = new BetterXmlParseTool();
         }
-        Thread thread = new Thread(() -> {
+        execute.execute(() -> {
             try {
                 parse(swcjParseI.parseXmlFile(xmlFile, rc));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }
         });
-        execute.execute(thread);
         return this;
     }
     @Override
@@ -56,14 +58,13 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
         if (this.swcjParseI == null) {
             this.swcjParseI = new BetterXmlParseTool();
         }
-        Thread thread = new Thread(() -> {
+        execute.execute(() -> {
             try {
                 parse(swcjParseI.parseStringXml(File, rc));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }
         });
-        execute.execute(thread);
         return this;
     }
     private void parse(List<RootReptile> list){
@@ -79,7 +80,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
             }
             try {
                 reptile.setLoad(true);
-                swcjBuilder.Builder(reptile, rc);
+                swcjBuilder.Builder(new ReptlileMiddle(reptile, rc));
             } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }

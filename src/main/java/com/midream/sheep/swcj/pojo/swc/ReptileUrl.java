@@ -1,22 +1,15 @@
 package com.midream.sheep.swcj.pojo.swc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author midreamSheep
  * 爬虫的url配置类
  */
 public class ReptileUrl {
 
-    //注入名字
-    private String inPutName = "";
     //方法名
     private String name = "";
     //访问链接
     private String url = "";
-    //请求类型
-    private String requestType = "GET";
     //是否是html返回
     private boolean isHtml;
     //执行逻辑
@@ -58,15 +51,6 @@ public class ReptileUrl {
         this.name = name;
     }
 
-    public String getInPutName() {
-        return inPutName;
-    }
-
-    public void setInPutName(String inPutName) {
-        this.inPutName = inPutName;
-    }
-
-
     public boolean isHtml() {
         return isHtml;
     }
@@ -83,24 +67,14 @@ public class ReptileUrl {
         this.url = url;
     }
 
-    public String getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(String requestType) {
-        this.requestType = requestType;
-    }
-
     public ReptileUrl() {
     }
 
     @Override
     public String toString() {
         return "ReptileUrl{" +
-                "inPutName='" + inPutName + '\'' +
                 ", name='" + name + '\'' +
                 ", url='" + url + '\'' +
-                ", requestType='" + requestType + '\'' +
                 ", isHtml=" + isHtml +
                 ", parseProgram='" + parseProgram + '\'' +
                 ", executClassName='" + executClassName + '\'' +
