@@ -7,9 +7,10 @@ import java.util.List;
  * @author midreamsheep
  */
 public class SWCJMethod {
+    private String requestType;
     private String name;
     private String methodName;
-    private List<String> vars;
+    private List<MethodHandler> vars;
     private String returnType;
     private String executeStr;
 
@@ -27,6 +28,14 @@ public class SWCJMethod {
 
     public List<String> getExecuteVars() {
         return executeVars;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 
     public void setExecuteVars(List<String> executeVars) {
@@ -57,11 +66,11 @@ public class SWCJMethod {
         return methodName;
     }
 
-    public void setVars(List<String> vars) {
+    public void setVars(List<MethodHandler> vars) {
         this.vars = vars;
     }
 
-    public List<String> getVars() {
+    public List<MethodHandler> getVars() {
         return vars;
     }
 

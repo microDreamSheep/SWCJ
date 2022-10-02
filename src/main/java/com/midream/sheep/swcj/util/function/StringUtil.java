@@ -67,7 +67,7 @@ public class StringUtil {
         StringBuilder inj = new StringBuilder();
         String templet = Template2.replace("#[method]", ru.getParseProgram().replace("\\", "\\\\").replace("\"", "\\\""))
                 .replace("#[isHtml]", String.valueOf(ru.isHtml()))
-                .replace("#[type]", ru.getRequestType())
+                .replace("#[type]", method.getRequestType())
                 .replace("#[url]", ru.getUrl())
                 .replace("#[userage]", rc.getUserAgents().get(new Random().nextInt(rc.getUserAgents().size())))
                 .replace("#[cookies]", rr.getCookies())

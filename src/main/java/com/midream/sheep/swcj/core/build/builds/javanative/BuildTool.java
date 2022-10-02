@@ -1,5 +1,7 @@
 package com.midream.sheep.swcj.core.build.builds.javanative;
 
+import com.midream.sheep.swcj.annotation.Param;
+import com.midream.sheep.swcj.annotation.RequestType;
 import com.midream.sheep.swcj.annotation.WebSpider;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
@@ -7,6 +9,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.pojo.buildup.MethodHandler;
 import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
@@ -16,6 +19,7 @@ import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -78,8 +82,13 @@ public class BuildTool {
             //设置方法名
             swcjMethod.setMethodName(method.getName());
             //设置方法属性
-            List<String> methodType = new LinkedList<>();
-            Arrays.stream(method.getParameters()).forEach(parameter->methodType.add(Constant.getClassName(parameter.getType().toString())));
+            List<MethodHandler> methodType = new LinkedList<>();
+            for (Parameter parameter : method.getParameters()) {
+                String type = Constant.getClassName(parameter.getType().toString());
+                String methodName = parameter.getAnnotation(Param.class)==null?parameter.getName():parameter.getAnnotation(Param.class).value();
+                MethodHandler handler = new MethodHandler(methodName, type);
+                methodType.add(handler);
+            }
             swcjMethod.setVars(methodType);
             if ((Constant.getClassName(method.getReturnType().toString()).equals(""))) {
                 try {
@@ -88,7 +97,7 @@ public class BuildTool {
                     Logger.getLogger(BuildTool.class.getName()).severe(returnTypeIllegal.getMessage());
                 }
             }
-
+            swcjMethod.setRequestType(method.getAnnotation(RequestType.class) == null ? "GET" : method.getAnnotation(RequestType.class).value().getValue());
             swcjMethod.setReturnType(Constant.getClassName(method.getReturnType().toString()));
             if (config.getChoice() == ChooseStrategy.ANNOTATION) {
                 analysisMethodByAnnotation(swcjMethod, method, rootReptile,config, swcjClass);
@@ -149,39 +158,10 @@ public class BuildTool {
         //获取拼接对象
         StringBuilder sb = new StringBuilder();
         //获取方法参数和输入参数
-        List<String> methodVars = method.getVars();
-        String[] inPutVars = ru.getInPutName().split(",");
-
-        //如果方法参数为空直接返回
-        if (methodVars.size() == 0) {
-            return Constant.nullString;
-        }
-
-        int len = inPutVars.length;
-        if (ru.getInPutName().trim().equals("")) {
-            len = 0;
-        }
-
-        if (len > methodVars.size()) {
-            try {
-                throw new InterfaceIllegal("方法参数不统一");
-            } catch (InterfaceIllegal interfaceIllegal) {
-                Logger.getLogger(BuildTool.class.getName()).severe(interfaceIllegal.getMessage());
-            }
-        } else if (len == methodVars.size()) {
-            for (int i = 0; i < inPutVars.length; i++) {
-                add(sb, methodVars.get(i), " ", inPutVars[i], ",");
-                injection.add(inPutVars[i]);
-            }
-        } else {
-            System.err.println("SWCJ:警告：你的接口有部分参数没有用到,方法:" + ru.getName());
-            for (int i = 0; i < len; i++) {
-                add(sb, methodVars.get(i), " ", inPutVars[i], ",");
-                injection.add(inPutVars[i]);
-            }
-            for (int i = len; i < methodVars.size(); i++) {
-                add(sb, methodVars.get(i), " args", i, ",");
-            }
+        List<MethodHandler> methodVars = method.getVars();
+        for (MethodHandler var : methodVars) {
+            injection.add(var.getMethodName());
+            sb.append(var.getMethodType()).append(" ").append(var.getMethodName()).append(",");
         }
         return sb.substring(0, sb.lastIndexOf(","));
     }

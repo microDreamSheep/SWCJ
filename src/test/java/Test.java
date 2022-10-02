@@ -2,6 +2,7 @@
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.core.build.builds.effecient.EffecientCompiler;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import org.xml.sax.SAXException;
@@ -18,10 +19,13 @@ import java.util.Objects;
 public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
-       // swcjXmlFactory.setCompiler(new EffecientCompiler());
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
+        long start = System.currentTimeMillis();
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("downloader");
-        String[] it = html.gethtml("qq");
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+
+        String[] it = html.getName("9");
         for (String s : it) {
             System.out.println(s);
         }
