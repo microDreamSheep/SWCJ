@@ -25,7 +25,7 @@ public abstract class SWCJBuilderAbstract implements SWCJBuilder{
         //非空判断
         notNull();
         //开始拼接类信息
-        return CacheCorn.addObject(middle.getRootReptile().getId(),buildObject(middle));
+        return CacheCorn.SPIDER_CACHE.addCacheSpider(middle.getRootReptile().getId(),buildObject(middle));
     }
     private void notNull(){
         if(swcjcl==null){

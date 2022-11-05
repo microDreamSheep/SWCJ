@@ -39,7 +39,7 @@ public class BuildTool {
      * @return 爬虫对像
      * */
     public static Object getObjectFromTool(String className) {
-        return CacheCorn.getObject(className);
+        return CacheCorn.SPIDER_CACHE.getCacheSpider(className);
     }
     /**
      * 获取爬虫实体类

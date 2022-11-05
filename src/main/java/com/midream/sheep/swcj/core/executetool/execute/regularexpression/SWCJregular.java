@@ -1,5 +1,7 @@
 package com.midream.sheep.swcj.core.executetool.execute.regularexpression;
 
+import com.midream.sheep.api.clazz.ClazzBuilder;
+import com.midream.sheep.api.clazz.filed.fileds.StringHandler;
 import com.midream.sheep.swcj.core.executetool.SWCJExecute;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.XmlSpecialStrings;
@@ -77,20 +79,17 @@ public class SWCJregular<T> implements SWCJExecute<T> {
         if (values.size() == 1) {
             return (List<T>) values.get(RegConstants.strName);
         }
-        Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
-        List<T> listw = new LinkedList<>();
-        for (int i = 0; i < max; i++) {
-            @SuppressWarnings("unchecked") T t = (T) aClass.getDeclaredConstructor().newInstance();
-            listw.add(t);
-        }
+        ClazzBuilder clazzBuilder = new ClazzBuilder();
+        clazzBuilder.setClass(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
+        //Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
+       // List<T> listw = new LinkedList<>();
         for (Map.Entry<String, List<String>> entry : values.entrySet()) {
-            for (int i = 0; i < entry.getValue().size(); i++) {
-                Object o = listw.get(i);
-                Method repay1 = aClass.getMethod("set" + StringUtil.StringToUpperCase(entry.getKey()), String.class);
-                repay1.invoke(o, entry.getValue().get(i));
+            String name = entry.getKey();
+            for (String s : entry.getValue()) {
+                clazzBuilder.addFiled(name, new StringHandler(s));
             }
         }
-        return listw;
+        return (List<T>) clazzBuilder.buildObjects();
     }
     private void putMap(Node name,Map<String,List<String>> values,List<String> list){
         if (name != null && !name.getNodeValue().trim().equals(Constant.nullString)) {
