@@ -37,7 +37,6 @@ public class CacheCorn {
 
     public static Object addObject(String ket, Object object) {
         OBJECTS_MAP.put(ket, object);
-        ;
         return object;
     }
 }

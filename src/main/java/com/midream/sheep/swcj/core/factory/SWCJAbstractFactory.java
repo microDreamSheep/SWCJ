@@ -63,6 +63,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 }
             }else {
                 rootReptiles.get(id).setLoad(true);
+                rootReptiles.remove(rootReptiles.get(id));
                 return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id),rc));
             }
         }

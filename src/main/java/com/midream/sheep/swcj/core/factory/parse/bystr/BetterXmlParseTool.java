@@ -39,40 +39,36 @@ public class BetterXmlParseTool implements SWCJParseI {
      */
     private void parseConfigFile(String configString, ReptileConfig config) {
         //设置工作空间
-        try {
+        if(configString.contains("<constructionSpace>")){
             parseWorkPlace(configString.substring(configString.indexOf("<constructionSpace>") + "<constructionSpace>".length(), configString.indexOf("</constructionSpace>")), config);
-        } catch (Exception ignored) {
         }
         //设置超时时间
-        try {
+        if(configString.contains("<timeout>")){
             parseTimeOut(configString.substring(configString.indexOf("<timeout>") + "<timeout>".length(), configString.indexOf("</timeout>")), config);
-        } catch (Exception ignored) {
         }
-        try {
-            //设置userAgent
+        //设置userAgent
+        if(configString.contains("<userAgent>")){
             parseUserAgent(configString.substring(configString.indexOf("<userAgent>") + "<userAgent>".length(), configString.indexOf("</userAgent>")), config);
-        } catch (Exception ignored) {
         }
-        try {
-            //设置注入配置
+        //设置注入配置
+        if(configString.contains("<executes>")){
             parseExecutes(configString.substring(configString.indexOf("<executes>") + "<executes>".length(), configString.indexOf("</executes>")));
-        } catch (Exception ignored) {
         }
         //注入分析策略
-        try {
+        if(configString.contains("<chooseStrategy>")){
             parseChooseStrategy(configString.substring(configString.indexOf("<chooseStrategy>") + "<chooseStrategy>".length(), configString.indexOf("</chooseStrategy>")), config);
-        }catch (Exception ignored) {
         }
         //注入重用策略
-        try{
+        if(configString.contains("<injections>")){
             parseInjections(configString.substring(configString.indexOf("<injections>") + "<injections>".length(), configString.indexOf("</injections>")));
-        }catch (Exception ignored) {
         }
         config.setCache(configString.contains("<cache/>"));
     }
 
     private void parseInjections(String substring) {
-        Arrays.stream(parseTag(substring, "<injection>", "</injection>")).forEach(s->CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim()));
+        for (String s : parseTag(substring, "<injection>", "</injection>")) {
+            CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
+        }
     }
 
     private void parseChooseStrategy(String substring, ReptileConfig config) {
@@ -80,7 +76,9 @@ public class BetterXmlParseTool implements SWCJParseI {
     }
 
     private void parseUserAgent(String substring, ReptileConfig config) {
-        Arrays.stream(parseTag(substring, "<value>", "</value>")).forEach(s->config.addUserAgent(s.trim()));
+        for (String s : parseTag(substring, "<value>", "</value>")) {
+            config.addUserAgent(s.trim());
+        }
     }
 
     /**
@@ -111,7 +109,9 @@ public class BetterXmlParseTool implements SWCJParseI {
      * 注入配置
      */
     private void parseExecutes(String executes) {
-        Arrays.stream(parseTag(executes, "<execute>", "</execute>")).forEach(this::putExecute);
+        for (String s : parseTag(executes, "<execute>", "</execute>")) {
+            putExecute(s);
+        }
     }
     private void putExecute(String s){
         if (s.contains("<executeConfig>")) {
@@ -136,11 +136,11 @@ public class BetterXmlParseTool implements SWCJParseI {
             xmlString = xmlString.replace(entry.getKey(), entry.getValue());
         }
         List<RootReptile> rootReptiles = new LinkedList<>();
-        Arrays.stream(parseTag(xmlString, "<swc>", "</swc>")).forEach(s->{
-            RootReptile rootReptile = new RootReptile();
-            parseClass(s, rootReptile);
-            rootReptiles.add(rootReptile);
-        });
+        for (String s : parseTag(xmlString, "<swc>", "</swc>")) {
+                RootReptile rootReptile = new RootReptile();
+                parseClass(s, rootReptile);
+                rootReptiles.add(rootReptile);
+        }
         return rootReptiles;
     }
 

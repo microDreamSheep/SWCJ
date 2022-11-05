@@ -40,7 +40,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     public SWCJXmlFactory parse(File xmlFile) {
         notNull();
         try {
-                parse(swcjParseI.parseXmlFile(xmlFile, rc));
+            parse(swcjParseI.parseXmlFile(xmlFile, rc));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
         }
@@ -59,7 +59,9 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     }
 
     private void parse(List<RootReptile> rootReptiles) {
-        rootReptiles.forEach(reptile->this.rootReptiles.put(reptile.getId(), reptile));
+        for (RootReptile rootReptile : rootReptiles) {
+            this.rootReptiles.put(rootReptile.getId(), rootReptile);
+        }
     }
 
     @Override

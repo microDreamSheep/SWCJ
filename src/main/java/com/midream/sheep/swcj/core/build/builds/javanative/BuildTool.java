@@ -104,7 +104,6 @@ public class BuildTool {
             } else if (config.getChoice() == ChooseStrategy.METHOD_NAME) {
                 analysisMethodByMethodName(swcjMethod, method, rootReptile,config, swcjClass);
             }
-
         }
     }
     /**
@@ -121,10 +120,12 @@ public class BuildTool {
         if (spider == null || spider.value().equals(Constant.nullString)) {
             throw new InterfaceIllegal("InterfaceMethodIllegal(接口方法不合法，请定义注解)");
         }
-        rootReptile.getRu().stream().filter(url -> url.getName().equals(spider.value())).forEach(url -> {
-            parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
-            swcjClass.addMethod(spider.value(), swcjMethod);
-        });
+        for (ReptileUrl url : rootReptile.getRu()) {
+            if(url.getName().equals(spider.value())){
+                parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
+                swcjClass.addMethod(spider.value(), swcjMethod);
+            }
+        }
     }
     /**
      * 通过方法名解析方法
@@ -134,10 +135,13 @@ public class BuildTool {
      * @param swcjClass 爬虫实体类
      * */
     private static void analysisMethodByMethodName(SWCJMethod swcjMethod, Method method, RootReptile rootReptile,ReptileConfig reptileConfig ,SWCJClass swcjClass) {
-        rootReptile.getRu().stream().filter(url->url.getName().equals(method.getName())).forEach(url->{
-            parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
-            swcjClass.addMethod(method.getName(), swcjMethod);
-        });
+        for (ReptileUrl url : rootReptile.getRu()) {
+            if(url.getName().equals(method.getName())){
+                parsePublicArea(swcjMethod, url, rootReptile,reptileConfig);
+                swcjClass.addMethod(method.getName(), swcjMethod);
+                return;
+            }
+        }
     }
 
     private static void parsePublicArea(SWCJMethod swcjMethod,ReptileUrl url, RootReptile rootReptile,ReptileConfig reptileConfig) {

@@ -8,6 +8,6 @@ import com.midream.sheep.swcj.core.executetool.execute.SRequest;
 public interface pojo {
 
     @RequestType(SRequest.GET)
-    @WebSpider("getName")
-    String[] getName(@Param("count") String i);
+    @WebSpider("gethtml")
+    String[] gethtml(@Param("count") String i);
 }
