@@ -67,7 +67,7 @@ public class BetterXmlParseTool implements SWCJParseI {
 
     private void parseInjections(String substring) {
         for (String s : parseTag(substring, "<injection>", "</injection>")) {
-            CacheCorn.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
+            CacheCorn.INJECTION_CACHE.putInjection(s.substring(s.indexOf("<key>") + "<key>".length(), s.indexOf("</key>")).trim(), s.substring(s.indexOf("<value>") + "<value>".length(), s.indexOf("</value>")).trim());
         }
     }
 
@@ -132,7 +132,7 @@ public class BetterXmlParseTool implements SWCJParseI {
      * 分析swcj
      */
     private List<RootReptile> parseAllClass(String xmlString) {
-        for (Map.Entry<String, String> entry : CacheCorn.getINJECTION_MAP().entrySet()) {
+        for (Map.Entry<String, String> entry : CacheCorn.INJECTION_CACHE.getINJECTION_MAP().entrySet()) {
             xmlString = xmlString.replace(entry.getKey(), entry.getValue());
         }
         List<RootReptile> rootReptiles = new LinkedList<>();

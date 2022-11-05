@@ -21,7 +21,7 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
     public List<T> execute(String in, Object... args) {
         if (SWCJAbstractFactory.rc.isCache()){
             @SuppressWarnings("unchecked")
-            List<T> o = (List<T>) CacheCorn.get(in);
+            List<T> o = (List<T>) CacheCorn.EXECUTE_CACHE.get(in);
             if(o!=null){
                 return o;
             }
@@ -38,7 +38,7 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
             SWCJExecute<T> execute = (SWCJExecute<T>) Class.forName(split[9]).newInstance();
             List<T> result = execute.execute(executeValue, split[10]);
             if(SWCJAbstractFactory.rc.isCache()){
-                CacheCorn.put(in,result);
+                CacheCorn.EXECUTE_CACHE.put(in,result);
             }
             return result;
         } catch (Exception e) {
