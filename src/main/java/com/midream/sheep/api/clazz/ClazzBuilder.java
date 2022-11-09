@@ -1,6 +1,7 @@
 package com.midream.sheep.api.clazz;
 
 import com.midream.sheep.api.clazz.filed.FiledHandler;
+import com.midream.sheep.api.clazz.filed.fileds.StringHandler;
 import com.midream.sheep.api.clazz.reflector.ClazzBuilderReflectionInter;
 import com.midream.sheep.api.clazz.reflector.SWCJDefaultClazzBuilderReflection;
 
@@ -87,6 +88,16 @@ public class ClazzBuilder {
             }
         }
         return objects;
+    }
+
+    public List<?> buildByMap(Map<String,List<String>> fields){
+        for (Map.Entry<String, List<String>> aFiled : fields.entrySet()) {
+            String filedName = aFiled.getKey();
+            for (String filedValue : aFiled.getValue()) {
+                this.addFiled(filedName, new StringHandler(filedValue));
+            }
+        }
+        return buildObjects();
     }
     private int maxCount(){
         int max = 0;

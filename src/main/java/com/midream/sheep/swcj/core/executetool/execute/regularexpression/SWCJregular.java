@@ -76,13 +76,7 @@ public class SWCJregular<T> implements SWCJExecute<T> {
     private List<T> buildClasses(ExecuteValue executeValue,Map<String,List<String>> fields){
         ClazzBuilder clazzBuilder = new ClazzBuilder();
         clazzBuilder.setClass(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
-        for (Map.Entry<String, List<String>> aFiled : fields.entrySet()) {
-            String filedName = aFiled.getKey();
-            for (String filedValue : aFiled.getValue()) {
-                clazzBuilder.addFiled(filedName, new StringHandler(filedValue));
-            }
-        }
-        return (List<T>) clazzBuilder.buildObjects();
+        return (List<T>) clazzBuilder.buildByMap(fields);
     }
     private void putMap(Node name,Map<String,List<String>> values,List<String> list){
         if (name != null && !name.getNodeValue().trim().equals(Constant.nullString)) {
