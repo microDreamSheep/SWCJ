@@ -1,15 +1,22 @@
 package com.midream.sheep.swcj.util.function;
 
+import com.midream.sheep.api.http.HTTPTool;
+import com.midream.sheep.swcj.core.executetool.execute.regularexpression.SWCJregular;
+import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * @author midreamsheep
@@ -85,5 +92,43 @@ public class StringUtil {
             }
         }
         return templet.replace("#[in]",(Constant.nullString.contentEquals(inj))?Constant.nullString:inj.substring(0, inj.length() - 1));
+    }
+    /**
+     * 读取文件
+     * */
+    public static String getStringByStream(File xmlFile) {
+        try {
+            return getStringByStream(Files.newInputStream(xmlFile.toPath()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static String getStringByStream(InputStream is) {
+        try (InputStream inputStream = is) {
+            //根据File获取xml文件文本
+            StringBuilder sb = new StringBuilder();
+            byte[] bytes = new byte[1024];
+            int len;
+            while ((len = inputStream.read(bytes)) != -1) {
+                sb.append(new String(bytes, 0, len));
+            }
+            return sb.toString();
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getStringByStream(BufferedReader gbk) {
+        StringBuilder sb;
+        try (BufferedReader input = gbk) {
+            String line;
+            sb = new StringBuilder();
+            while ((line = input.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

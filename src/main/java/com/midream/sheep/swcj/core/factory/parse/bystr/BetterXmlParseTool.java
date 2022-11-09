@@ -10,19 +10,17 @@ import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Logger;
 
 public class BetterXmlParseTool implements SWCJParseI {
     @Override
     public List<RootReptile> parseXmlFile(File xmlFile, ReptileConfig rc) {
-        return parseStringXml(getStringByStream(xmlFile), rc);
+        return parseStringXml(StringUtil.getStringByStream(xmlFile), rc);
     }
 
     @Override
@@ -185,21 +183,4 @@ public class BetterXmlParseTool implements SWCJParseI {
         return swcs.toArray(new String[0]);
     }
 
-    /**
-     * 读取文件
-     * */
-    private String getStringByStream(File xmlFile) {
-        //根据File获取xml文件文本
-        StringBuilder sb = new StringBuilder();
-        try (InputStream is = Files.newInputStream(xmlFile.toPath())) {
-            byte[] bytes = new byte[1024];
-            int len;
-            while ((len = is.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-        } catch (IOException e) {
-            Logger.getLogger(BetterXmlParseTool.class.getName()).warning(e.getMessage());
-        }
-        return sb.toString();
-    }
 }

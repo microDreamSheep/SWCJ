@@ -5,7 +5,15 @@ package com.midream.sheep.swcj.core.executetool.execute;
  * @description request type description class
  */
 public enum SRequest {
-    GET("GET"),POST("POST");
+    GET("GET"),
+    POST("POST"),
+    DELETE("DELETE"),
+    HEAD("HEAD"),
+    PUT("PUT"),
+    OPTIONS("OPTIONS"),
+    TRACE("TRACE"),
+    CONNECT("CONNECT"),
+    ;
 
     private String value;
 
