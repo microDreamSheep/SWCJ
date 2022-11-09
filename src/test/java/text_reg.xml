@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SWCJ>
+    <config>
+        <timeout>10000</timeout>
+        <userAgent>
+            <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62</value>
+        </userAgent>
+        <chooseStrategy>METHOD_NAME</chooseStrategy>
+    </config>
+    <swc>
+        <id>downloader</id>
+        <cookies>
+        </cookies>
+        <parentInterface>test.pojo</parentInterface>
+        <url>
+            <name>gethtml</name>
+            <type>GET</type>
+            <path>https://pic.netbian.com/index_#{count}.html</path>
+            <parseProgram>
+                <isHtml>false</isHtml>
+                <type>reg</type>
+                <xml>
+                    <reg>
+                        <reg name="" del="">
+                            &lt;img src=".+?" alt=".+?"&gt;
+                        </reg>
+                    </reg>
+                </xml>
+            </parseProgram>
+        </url>
+    </swc>
+</SWCJ>

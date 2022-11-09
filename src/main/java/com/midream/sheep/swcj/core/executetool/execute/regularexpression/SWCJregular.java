@@ -6,15 +6,12 @@ import com.midream.sheep.swcj.core.executetool.SWCJExecute;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.XmlSpecialStrings;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
-import com.midream.sheep.swcj.util.function.StringUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -26,7 +23,6 @@ import java.util.regex.Pattern;
  * @author midreamsheep
  */
 public class SWCJregular<T> implements SWCJExecute<T> {
-    int max = 0;
 
     @Override
     public List<T> execute(ExecuteValue executeValue, String... args) throws Exception {
@@ -36,9 +32,14 @@ public class SWCJregular<T> implements SWCJExecute<T> {
         String text = getText(executeValue);
         Map<String, List<String>> values = new LinkedHashMap<>();
         //获取节点对象
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        NodeList d = builder.parse(new InputSource(new StringReader(args[0].trim()))).getElementsByTagName(RegConstants.regTag).item(0).getChildNodes();
+        NodeList d = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder()
+                .parse(
+                        new InputSource(new StringReader(args[0].trim()))
+                )
+                .getElementsByTagName(RegConstants.regTag)
+                .item(0)
+                .getChildNodes();
         for (int i = 0; i < d.getLength(); i++) {
             Node item = d.item(i);
             if (!item.getNodeName().equals(RegConstants.regTag)) {
@@ -53,43 +54,29 @@ public class SWCJregular<T> implements SWCJExecute<T> {
                 trim = trim.replace(entry.getKey(), entry.getValue());
             }
             String del = item.getAttributes().getNamedItem("del").getTextContent();
-            String[] not;
+            String[] nots = new String[0];
             if (del != null && !del.equals("")) {
                 String[] split = del.trim().split("';");
-                not = new String[split.length];
+                nots = new String[split.length];
                 for (int a = 0; a < split.length; a++) {
-                    not[a] = split[a].substring(1);
+                    nots[a] = split[a].substring(1);
                 }
-            } else {
-                not = new String[0];
             }
-            Pattern r = Pattern.compile(trim);
-            Matcher matcher = r.matcher(text);
+            Matcher matcher = Pattern.compile(trim).matcher(text);
             while (matcher.find()) {
-                String s = matcher.group();
-                for (String s1 : not) {
-                    s = s.replace(s1, "");
+                String value = matcher.group();
+                for (String notStr : nots) {
+                    value = value.replace(notStr, "");
                 }
-                list.add(s);
-            }
-            if (list.size() > max) {
-                max = list.size();
+                list.add(value);
             }
         }
-        if (values.size() == 1) {
-            return (List<T>) values.get(RegConstants.strName);
-        }
+        return values.size()==1?(List<T>) values.get(RegConstants.strName):buildClasses(executeValue,values);
+    }
+    private List<T> buildClasses(ExecuteValue executeValue,Map<String,List<String>> fields){
         ClazzBuilder clazzBuilder = new ClazzBuilder();
         clazzBuilder.setClass(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
-        //Class<?> aClass = Class.forName(executeValue.getClassNameReturn().replace("[]", Constant.nullString));
-       // List<T> listw = new LinkedList<>();
-        for (Map.Entry<String, List<String>> entry : values.entrySet()) {
-            String name = entry.getKey();
-            for (String s : entry.getValue()) {
-                clazzBuilder.addFiled(name, new StringHandler(s));
-            }
-        }
-        return (List<T>) clazzBuilder.buildObjects();
+        return (List<T>) clazzBuilder.buildByMap(fields);
     }
     private void putMap(Node name,Map<String,List<String>> values,List<String> list){
         if (name != null && !name.getNodeValue().trim().equals(Constant.nullString)) {
@@ -104,7 +91,6 @@ public class SWCJregular<T> implements SWCJExecute<T> {
      */
     private String getText(ExecuteValue executeValue) {
         HttpURLConnection con;
-
         BufferedReader buffer;
         StringBuilder resultBuffer;
         InputStream inputStream = null;

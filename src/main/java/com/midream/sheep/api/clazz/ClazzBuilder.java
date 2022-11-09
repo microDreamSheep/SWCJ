@@ -1,6 +1,7 @@
 package com.midream.sheep.api.clazz;
 
 import com.midream.sheep.api.clazz.filed.FiledHandler;
+import com.midream.sheep.api.clazz.filed.fileds.StringHandler;
 import com.midream.sheep.api.clazz.reflector.ClazzBuilderReflectionInter;
 import com.midream.sheep.api.clazz.reflector.SWCJDefaultClazzBuilderReflection;
 
@@ -51,7 +52,19 @@ public class ClazzBuilder {
     }
 
     public Object buildAObject(){
-        return null;
+        Object object = clazzBuilderReflectionInter.newInstance(aClass);
+        for (Map.Entry<String, List<FiledHandler>> entry : dataMap.entrySet()) {
+            //反射获取方法
+            String filedName = entry.getKey();
+            Method setMethod = clazzBuilderReflectionInter.findSetMethod(aClass, filedName, entry.getValue().get(0).getaClass());
+            //反射调用方法
+            try {
+                setMethod.invoke(object,entry.getValue().get(0).getValue());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return object;
     }
     public List<Object> buildObjects(){
         List<Object> objects = new LinkedList<>();
@@ -75,6 +88,16 @@ public class ClazzBuilder {
             }
         }
         return objects;
+    }
+
+    public List<?> buildByMap(Map<String,List<String>> fields){
+        for (Map.Entry<String, List<String>> aFiled : fields.entrySet()) {
+            String filedName = aFiled.getKey();
+            for (String filedValue : aFiled.getValue()) {
+                this.addFiled(filedName, new StringHandler(filedValue));
+            }
+        }
+        return buildObjects();
     }
     private int maxCount(){
         int max = 0;

@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
         SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
-        swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/test.xml"));
+        swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/text_reg.xml"));
         long start1 = System.currentTimeMillis();
         swcjXmlFactory.setCompiler(new EffecientCompiler());
         pojo html = (pojo) swcjXmlFactory.getWebSpiderById("downloader");
