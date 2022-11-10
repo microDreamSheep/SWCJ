@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns="http://www.itcast.cn/xml"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.itcast.cn/xml"
+            elementFormDefault="qualified">
+    <!--根标签定义-->
+    <xsd:element name="SWCJ" type="SWCJType"/>
+    <xsd:simpleType name="Boolean">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="true"/>
+            <xsd:enumeration value="false"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <!--二级子标签-->
+    <xsd:complexType name="SWCJType">
+        <xsd:sequence>
+            <xsd:element name="config" type="configType" minOccurs="0"/>
+            <xsd:element name="swc" type="swcType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <!--配置文件限定-->
+    <xsd:complexType name="configType">
+        <xsd:all>
+            <!--分析策略-->
+            <xsd:element name="chooseStrategy" type="chooseStrategy" minOccurs="0"/>
+            <!--超时时间-->
+            <xsd:element name="timeout" type="timeout" minOccurs="0"/>
+            <!--userAgent-->
+            <xsd:element name="userAgent" type="userAgent" minOccurs="0"/>
+            <!--是否使用缓存-->
+            <xsd:element name="cache" minOccurs="0"/>
+            <!--工作空间-->
+            <xsd:element name="constructionSpace" type="constructionSpace" minOccurs="0"/>
+            <!--执行器-->
+            <xsd:element name="executes" type="executes" minOccurs="0"/>
+            <xsd:element name="injections" type="injections" minOccurs="0"/>
+        </xsd:all>
+    </xsd:complexType>
+    <!--分析策略-->
+    <xsd:simpleType name="chooseStrategy">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="METHOD_NAME"/>
+            <xsd:enumeration value="ANNOTATION"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <!--超时时间配置-->
+    <xsd:simpleType name="timeout">
+        <xsd:restriction base="xsd:integer"/>
+    </xsd:simpleType>
+    <!--UserAgent-->
+    <xsd:complexType name="userAgent">
+        <xsd:sequence>
+            <xsd:element name="value" type="xsd:string" maxOccurs="100"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!--工作空间复合标签-->
+    <xsd:complexType name="constructionSpace">
+        <xsd:sequence>
+            <!--是否绝对路径-->
+            <xsd:element name="isAbsolute" type="Boolean" minOccurs="0"/>
+            <!--工作空间-->
+            <xsd:element name="workSpace" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!--执行器-->
+    <xsd:complexType name="executes">
+        <xsd:sequence>
+            <xsd:element name="execute" type="execute"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!--单个执行器-->
+    <xsd:complexType name="execute">
+        <xsd:all>
+            <xsd:element name="key" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:string"/>
+            <xsd:element name="executeConfig" type="xsd:string" minOccurs="0"/>
+        </xsd:all>
+    </xsd:complexType>
+    <!--injections-->
+    <xsd:complexType name="injections">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="injection" type="injection"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="injection">
+        <xsd:sequence>
+            <xsd:element name="key" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!--执行逻辑-->
+    <xsd:complexType name="swcType">
+        <xsd:sequence>
+            <!--获取id-->
+            <xsd:element name="id" type="xsd:string"/>
+            <!--携带cookie-->
+            <xsd:element name="cookies" type="xsd:string" minOccurs="0"/>
+            <!--接口-->
+            <xsd:element name="parentInterface" type="xsd:string"/>
+            <!--具体的请求方法-->
+            <xsd:element name="url" type="url" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!--url具体配置-->
+    <xsd:complexType name="url">
+        <xsd:all>
+            <!--选择名-->
+            <xsd:element name="name" type="xsd:string"/>
+            <!--请求类型-->
+            <xsd:element name="type" type="type" minOccurs="0"/>
+            <!--请求参数-->
+            <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+            <!--请求路径-->
+            <xsd:element name="path" type="xsd:string"/>
+            <!--解析方案-->
+            <xsd:element name="parseProgram" type="parseProgram"/>
+        </xsd:all>
+    </xsd:complexType>
+    <!--type限制-->
+    <xsd:simpleType name="type">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="GET"/>
+            <xsd:enumeration value="POST"/>
+            <xsd:enumeration value="DELETE"/>
+            <xsd:enumeration value="HEAD"/>
+            <xsd:enumeration value="PUT"/>
+            <xsd:enumeration value="OPTIONS"/>
+            <xsd:enumeration value="TRACE"/>
+            <xsd:enumeration value="CONNECT"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <!--parseProgram-->
+    <xsd:complexType name="parseProgram">
+        <xsd:sequence>
+            <xsd:element name="isHtml" type="Boolean"/>
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element name="xml" type="xsd:anyType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
