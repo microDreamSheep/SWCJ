@@ -60,7 +60,7 @@ public class BetterXmlParseTool implements SWCJParseI {
         if(configString.contains("<injections>")){
             parseInjections(configString.substring(configString.indexOf("<injections>") + "<injections>".length(), configString.indexOf("</injections>")));
         }
-        config.setCache(configString.contains("<cache/>"));
+        config.setCache(configString.contains("<cache/>")||configString.contains("<cache></cache>"));
     }
 
     private void parseInjections(String substring) {

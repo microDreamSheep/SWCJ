@@ -7,6 +7,7 @@ import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.XmlSpecialStrings;
 import com.midream.sheep.swcj.pojo.ExecuteValue;
 import com.midream.sheep.swcj.util.function.StringUtil;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -22,6 +23,8 @@ import java.util.regex.Pattern;
  */
 public class SWCJregular<T> implements SWCJExecute<T> {
 
+
+    private String before = "";
     @Override
     public List<T> execute(ExecuteValue executeValue, String... args) throws Exception {
         for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
@@ -30,17 +33,20 @@ public class SWCJregular<T> implements SWCJExecute<T> {
         String text = getText(executeValue);
         Map<String, List<String>> values = new LinkedHashMap<>();
         //获取节点对象
-        NodeList d = DocumentBuilderFactory.newInstance()
+        Document parse = DocumentBuilderFactory.newInstance()
                 .newDocumentBuilder()
                 .parse(
                         new InputSource(new StringReader(args[0].trim()))
-                )
-                .getElementsByTagName(RegConstants.regTag)
-                .item(0)
-                .getChildNodes();
+                );
+        NodeList reg = parse.getElementsByTagName("REG");
+        if(reg.getLength()==0){
+            before="reg:";
+            reg=parse.getElementsByTagName("reg:REG");
+        }
+        NodeList d=reg.item(0).getChildNodes();
         for (int i = 0; i < d.getLength(); i++) {
             Node item = d.item(i);
-            if (!item.getNodeName().equals(RegConstants.regTag)) {
+            if (!item.getNodeName().equals(before+RegConstants.regTag)) {
                 continue;
             }
             //放入属性map
@@ -51,7 +57,11 @@ public class SWCJregular<T> implements SWCJExecute<T> {
             for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
                 trim = trim.replace(entry.getKey(), entry.getValue());
             }
-            String del = item.getAttributes().getNamedItem("del").getTextContent();
+            Node delNode = item.getAttributes().getNamedItem("del");
+            String del = null;
+            if(delNode!=null){
+                del = delNode.getTextContent();
+            }
             String[] nots = new String[0];
             if (del != null && !del.equals("")) {
                 String[] split = del.trim().split("';");
