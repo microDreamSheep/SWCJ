@@ -30,19 +30,21 @@ public class SWCJregular<T> implements SWCJExecute<T> {
         for (Map.Entry<String, String> entry : XmlSpecialStrings.map.entrySet()) {
             executeValue.setUrl(executeValue.getUrl().replace(entry.getKey(), entry.getValue()));
         }
-        String text = getText(executeValue);
-        Map<String, List<String>> values = new LinkedHashMap<>();
         //获取节点对象
         Document parse = DocumentBuilderFactory.newInstance()
                 .newDocumentBuilder()
                 .parse(
                         new InputSource(new StringReader(args[0].trim()))
                 );
+
         NodeList reg = parse.getElementsByTagName("REG");
         if(reg.getLength()==0){
             before="reg:";
             reg=parse.getElementsByTagName("reg:REG");
         }
+
+        Map<String, List<String>> values = new LinkedHashMap<>();
+        String text = getText(executeValue);
         NodeList d=reg.item(0).getChildNodes();
         for (int i = 0; i < d.getLength(); i++) {
             Node item = d.item(i);
