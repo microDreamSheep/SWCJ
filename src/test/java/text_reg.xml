@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<SWCJ>
+<SWCJ
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:live.midreamsheep.swcj"
+        xsi:schemaLocation="urn:live.midreamsheep.swcj E:\SWCJ\core\SWCJ\src\main\resources\swcj-core\swcjSchema.xml"
+        xmlns:reg="E:\SWCJ\core\SWCJ\src\main\resources\reg\reg.xml"
+>
     <config>
         <timeout>10000</timeout>
         <userAgent>
