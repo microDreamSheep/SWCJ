@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<xsd:schema xmlns="http://www.itcast.cn/xml"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://www.itcast.cn/xml"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="live.midreamsheep.swcj"
+            xmlns="live.midreamsheep.swcj"
             elementFormDefault="qualified">
     <!--根标签定义-->
     <xsd:element name="SWCJ" type="SWCJType"/>
