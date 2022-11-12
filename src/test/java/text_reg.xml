@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<SWCJ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<SWCJ
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="live.midreamsheep.swcj"
         xsi:schemaLocation="live.midreamsheep.swcj https://blog.midreamsheep.live/static/swcjSchema.xml"
         xmlns:reg="https://blog.midreamsheep.live/static/reg.xml"
 >
-    <!--配置信息-->
     <config>
-        <!--超时时间-->
+        <constructionSpace>
+            <isAbsolute>true</isAbsolute>
+            <workSpace>E://临时文件</workSpace>
+        </constructionSpace>
+        <cache/>
         <timeout>10000</timeout>
-        <!--浏览器标识-->
         <userAgent>
             <value>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62</value>
         </userAgent>
-        <!--选择策略-->
         <chooseStrategy>METHOD_NAME</chooseStrategy>
     </config>
     <swc>
-        <!--唯一id-->
         <id>downloader</id>
-        <!--父接口-->
+        <cookies>
+        </cookies>
         <parentInterface>test.pojo</parentInterface>
-        <!--一个具体的请求-->
         <url>
-            <!--方法识别名-->
             <name>gethtml</name>
-            <!--请求链接-->
+            <type>GET</type>
             <path>https://pic.netbian.com/index_#{count}.html</path>
-            <!--请求处理策略-->
             <parseProgram>
-                <!--是否html（不一定生效-->
                 <isHtml>false</isHtml>
-                <!--执行器选择-->
                 <type>reg</type>
-                <!--具体逻辑，视执行器而定-->
                 <xml>
-                    <!--reg的配置-->
                     <reg:REG>
-                        <reg:reg name="" del="">
+                        <reg:reg>
                             &lt;img src=".+?" alt=".+?"&gt;
                         </reg:reg>
                     </reg:REG>

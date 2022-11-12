@@ -40,7 +40,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     public SWCJXmlFactory parse(File xmlFile) {
         notNull();
         try {
-            parse(swcjParseI.parseXmlFile(xmlFile, rc));
+            parse(swcjParseI.parseXmlFile(xmlFile, config));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
         }
@@ -51,7 +51,7 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
     public SWCJXmlFactory parse(String File) {
         notNull();
         try {
-            parse(swcjParseI.parseStringXml(File, rc));
+            parse(swcjParseI.parseStringXml(File, config));
         } catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
         }
@@ -62,16 +62,29 @@ public class CoreXmlFactory extends SWCJAbstractFactory {
         for (RootReptile rootReptile : rootReptiles) {
             this.rootReptiles.put(rootReptile.getId(), rootReptile);
         }
+        if(config.isCache()){
+            //缓存
+            try {
+                cache();
+            } catch (ConfigException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public Object getWebSpiderById(String id) {
         Object o = BuildTool.getObjectFromTool(id);
         try {
-            return o!=null?o:swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), rc));
+            return o!=null?o:build(id);
         } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
             throw new RuntimeException(e);
         }
+    }
+    private Object build(String id) throws EmptyMatchMethodException, ConfigException, InterfaceIllegal {
+        Object builder = swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), config));
+        rootReptiles.remove(id);
+        return builder;
     }
     private void notNull(){
         if (swcjBuilder == null) {
