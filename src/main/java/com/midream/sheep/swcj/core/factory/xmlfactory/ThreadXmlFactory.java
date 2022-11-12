@@ -46,7 +46,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
         }
         execute.execute(() -> {
             try {
-                parse(swcjParseI.parseXmlFile(xmlFile, rc));
+                parse(swcjParseI.parseXmlFile(xmlFile, config));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }
@@ -60,7 +60,7 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
         }
         execute.execute(() -> {
             try {
-                parse(swcjParseI.parseStringXml(File, rc));
+                parse(swcjParseI.parseStringXml(File, config));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }
@@ -71,7 +71,14 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
         for (RootReptile reptile : list) {
             rootReptiles.put(reptile.getId(), reptile);
         }
-        for (RootReptile reptile : list) {
+        if(config.isCache()) {
+            try {
+                cache();
+            } catch (ConfigException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for (RootReptile reptile : rootReptiles.values()) {
             if (swcjBuilder == null) {
                 swcjBuilder = new ReptilesBuilder();
             }
@@ -80,7 +87,9 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
             }
             try {
                 reptile.setLoad(true);
-                swcjBuilder.Builder(new ReptlileMiddle(reptile, rc));
+                swcjBuilder.Builder(new ReptlileMiddle(reptile, config));
+                //删除
+                rootReptiles.remove(reptile.getId());
             } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }

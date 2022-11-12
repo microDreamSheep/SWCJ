@@ -3,15 +3,23 @@ package com.midream.sheep.swcj.core.factory;
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
+import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
+import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
+import com.midream.sheep.swcj.util.function.StringUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -21,13 +29,17 @@ import java.util.logging.Logger;
  */
 public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
     //核心配置文件
-    public static volatile ReptileConfig rc = new ReptileConfig();
+    public static volatile ReptileConfig config = new ReptileConfig();
+    //是否已经已经读取过缓存
+    private static volatile boolean isCache = false;
     //爬虫文件
     protected Map<String, RootReptile> rootReptiles = new HashMap<>();
     //构造器
     protected SWCJBuilder swcjBuilder = null;
     //解析器
     protected SWCJParseI swcjParseI = null;
+    //加载器
+    protected SWCJClassLoaderInter classLoader = null;
     @Override
     public Object getWebSpiderById(String id) throws ConfigException, EmptyMatchMethodException, InterfaceIllegal {
         //效验池中是否存在,如果存在直接返回
@@ -64,7 +76,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
             }else {
                 rootReptiles.get(id).setLoad(true);
                 rootReptiles.remove(rootReptiles.get(id));
-                return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id),rc));
+                return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), config));
             }
         }
     }
@@ -98,7 +110,50 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         if(this.swcjBuilder==null){
             this.swcjBuilder = new ReptilesBuilder();
         }
+        this.classLoader = classLoader;
         swcjBuilder.setClassLoader(classLoader);
         return null;
+    }
+    //读取配置文件中的对象
+    protected void cache() throws ConfigException {
+        if(isCache){
+            return;
+        }
+        String workplace = config.getWorkplace();
+        //通过io流读取文件
+        File file = new File(config.getWorkplace()+"/ClassCatch.swcj");
+        if(!file.exists()) {
+            return;
+        }
+        String key_value = StringUtil.getStringByStream(file);
+        if(key_value.trim().equals("")){
+            return;
+        }
+        for (String s : key_value.split("\n")) {
+            String[] split = s.split("=");
+            String className = Constant.DEFAULT_PACKAGE_NAME+"."+ split[0];
+            String id = split[1];
+            if(CacheCorn.SPIDER_CACHE.getCacheSpider(id)!=null){
+                continue;
+            }
+            try {
+                byte[] bytesByStream = StringUtil.getBytesByStream(new FileInputStream(new File(workplace + "/class/" + className.replace(Constant.DEFAULT_PACKAGE_NAME+".","") + ".class")));
+                //加载类
+                if(classLoader==null){
+                    classLoader = new SWCJClassLoader();
+                    setClassLoader(classLoader);
+                }
+                //将类放入池中
+                CacheCorn.SPIDER_CACHE.addCacheSpider(id, classLoader.loadData(className, bytesByStream).getDeclaredConstructor().newInstance());
+                //删除id为id的的rootReptile
+                rootReptiles.remove(id);
+            } catch (FileNotFoundException e) {
+                throw new ConfigException("找不到缓存文件");
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                     NoSuchMethodException e) {
+                throw new RuntimeException("加载类异常");
+            }
+        }
+        isCache=true;
     }
 }

@@ -1,7 +1,6 @@
 package com.midream.sheep.swcj.cache;
 
 import com.midream.sheep.swcj.cache.configuration.ConfigXmlInjectionCache;
-import com.midream.sheep.swcj.cache.execute.ExecuteCache;
 import com.midream.sheep.swcj.cache.object.SpiderCache;
 
 import java.util.HashMap;
@@ -15,7 +14,5 @@ public class CacheCorn {
     public static final SpiderCache SPIDER_CACHE = new SpiderCache();
     //缓存xml注入的xml
     public static final ConfigXmlInjectionCache INJECTION_CACHE = new ConfigXmlInjectionCache();
-
-    public static final ExecuteCache EXECUTE_CACHE = new ExecuteCache();
 
 }

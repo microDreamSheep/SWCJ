@@ -131,4 +131,18 @@ public class StringUtil {
             throw new RuntimeException(e);
         }
     }
+    public static byte[] getBytesByStream(InputStream is) {
+        try (InputStream inputStream = is) {
+            //根据File获取xml文件文本
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] bytes = new byte[1024];
+            int len;
+            while ((len = inputStream.read(bytes)) != -1) {
+                baos.write(bytes, 0, len);
+            }
+            return baos.toByteArray();
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

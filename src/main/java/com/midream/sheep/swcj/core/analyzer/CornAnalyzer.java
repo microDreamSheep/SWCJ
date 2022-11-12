@@ -19,13 +19,6 @@ import java.util.logging.Logger;
 public class CornAnalyzer<T> implements IAnalyzer<T>{
     @Override
     public List<T> execute(String in, Object... args) {
-        if (SWCJAbstractFactory.rc.isCache()){
-            @SuppressWarnings("unchecked")
-            List<T> o = (List<T>) CacheCorn.EXECUTE_CACHE.get(in);
-            if(o!=null){
-                return o;
-            }
-        }
         ExecuteValue executeValue = new ExecuteValue();
         String[] split = in.split("\\[swcj;]");
         //数据注入
@@ -37,9 +30,6 @@ public class CornAnalyzer<T> implements IAnalyzer<T>{
             @SuppressWarnings("unchecked")
             SWCJExecute<T> execute = (SWCJExecute<T>) Class.forName(split[9]).newInstance();
             List<T> result = execute.execute(executeValue, split[10]);
-            if(SWCJAbstractFactory.rc.isCache()){
-                CacheCorn.EXECUTE_CACHE.put(in,result);
-            }
             return result;
         } catch (Exception e) {
             Logger.getLogger(CornAnalyzer.class.getName()).severe(e.getMessage());
