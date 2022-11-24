@@ -3,10 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <name>SWCJ-core</name>
+    <description>
+        link: china:https://blog.midreamsheep.live/2022/11/11/SWCJ/
+                english:https://blog.midreamsheep.live/2022/11/11/english/SWCJ/SWCJ/
+    </description>
     <groupId>live.midreamsheep.swcj</groupId>
     <artifactId>SWCJ-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <!--项目url-->
     <url>https://github.com/microDreamSheep/SWCJ</url>
@@ -81,12 +85,18 @@
             </plugin>
         </plugins>
     </build>
+
+
+
+
+
+
+
     <profiles>
         <profile>
             <id>release</id>
             <build>
                 <plugins>
-
                     <!-- Source -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -129,14 +139,14 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
-                        <extensions>true</extensions>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
                         </configuration>
                     </plugin>
                     <!-- Gpg Signature -->
@@ -147,7 +157,7 @@
                         <executions>
                             <execution>
                                 <!-- id 与 setting.xml 的 gpg 配置中的 id 对应-->
-                                <id>ossrh</id>
+                                <id>release</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
@@ -160,11 +170,11 @@
             </build>
             <distributionManagement>
                 <snapshotRepository>
-                    <id>ossrh</id>
+                    <id>release</id>
                     <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
                 </snapshotRepository>
                 <repository>
-                    <id>ossrh</id>
+                    <id>release</id>
                     <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
