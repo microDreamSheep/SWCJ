@@ -167,6 +167,6 @@ public class BuildTool {
             injection.add(var.getMethodName());
             sb.append(var.getMethodType()).append(" ").append(var.getMethodName()).append(",");
         }
-        return sb.substring(0, sb.lastIndexOf(","));
+        return sb.toString().trim().equals("")?"":sb.substring(0, sb.lastIndexOf(","));
     }
 }

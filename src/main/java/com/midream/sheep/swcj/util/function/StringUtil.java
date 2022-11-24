@@ -1,8 +1,5 @@
 package com.midream.sheep.swcj.util.function;
 
-import com.midream.sheep.api.http.HTTPTool;
-import com.midream.sheep.swcj.core.executetool.execute.regularexpression.SWCJregular;
-import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
@@ -10,13 +7,11 @@ import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
 import com.midream.sheep.swcj.pojo.swc.RootReptile;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * @author midreamsheep
