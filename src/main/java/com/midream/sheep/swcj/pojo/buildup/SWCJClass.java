@@ -6,6 +6,8 @@ import java.util.*;
  * @author midreamsheep
  */
 public class SWCJClass {
+    private boolean isLoad;
+    private String id;
     private String className;
     private String itIterface;
     private Map<String,SWCJMethod> methods;
@@ -61,5 +63,21 @@ public class SWCJClass {
 
     public void setCodes(byte[] codes) {
         this.codes = codes;
+    }
+
+    public boolean isLoad() {
+        return isLoad;
+    }
+
+    public void setLoad(boolean load) {
+        isLoad = load;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

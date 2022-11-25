@@ -77,12 +77,8 @@ public class DynamicCompiler implements SWCJCompiler {
     }
     private SWCJClass getAllMethod(SWCJClass swcjClass, ReptlileMiddle middle) {
         Map<String, SWCJMethod> function = swcjClass.getMethods();
-        for (ReptileUrl reptileUrl : middle.getRootReptile().getRu()) {
-            SWCJMethod method = function.get(reptileUrl.getName());
-            if (method == null) {
-                continue;
-            }
-            method.setExecuteStr(BuildTool.spliceMethod(method));
+        for (Map.Entry<String, SWCJMethod> entry : function.entrySet()) {
+            entry.getValue().setExecuteStr(BuildTool.spliceMethod(entry.getValue()));
         }
         return swcjClass;
     }

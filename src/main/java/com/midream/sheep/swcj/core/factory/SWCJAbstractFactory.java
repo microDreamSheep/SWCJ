@@ -10,9 +10,11 @@ import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
+import com.midream.sheep.swcj.core.factory.parse.bystr.SWCJParseI;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
@@ -30,10 +32,8 @@ import java.util.logging.Logger;
 public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
     //核心配置文件
     public static volatile ReptileConfig config = new ReptileConfig();
-    //是否已经已经读取过缓存
-    private static volatile boolean isCache = false;
     //爬虫文件
-    protected Map<String, RootReptile> rootReptiles = new HashMap<>();
+    protected Map<String, SWCJClass> swcjClasses = new HashMap<>();
     //构造器
     protected SWCJBuilder swcjBuilder = null;
     //解析器
@@ -54,7 +54,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
             if (object != null) {
                 return object;
             }
-            RootReptile rootReptile = rootReptiles.get(id);
+            SWCJClass rootReptile = swcjClasses.get(id);
             if(rootReptile==null){
                 try {
                     TimeUnit.MILLISECONDS.sleep(200);
@@ -74,9 +74,9 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                     Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
                 }
             }else {
-                rootReptiles.get(id).setLoad(true);
-                rootReptiles.remove(rootReptiles.get(id));
-                return swcjBuilder.Builder(new ReptlileMiddle(rootReptiles.get(id), config));
+                swcjClasses.get(id).setLoad(true);
+                swcjClasses.remove(swcjClasses.get(id));
+                return swcjBuilder.Builder(new ReptlileMiddle(swcjClasses.get(id), config));
             }
         }
     }
@@ -115,13 +115,9 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         return null;
     }
     //读取配置文件中的对象
-    protected void cache() throws ConfigException {
-        if(isCache){
-            return;
-        }
-        String workplace = config.getWorkplace();
+    protected void cache(String workplace) throws ConfigException {
         //通过io流读取文件
-        File file = new File(config.getWorkplace()+"/ClassCatch.swcj");
+        File file = new File(workplace+"/ClassCatch.swcj");
         if(!file.exists()) {
             return;
         }
@@ -146,7 +142,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 //将类放入池中
                 CacheCorn.SPIDER_CACHE.addCacheSpider(id, classLoader.loadData(className, bytesByStream).getDeclaredConstructor().newInstance());
                 //删除id为id的的rootReptile
-                rootReptiles.remove(id);
+                swcjClasses.remove(id);
             } catch (FileNotFoundException e) {
                 throw new ConfigException("找不到缓存文件");
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
@@ -154,6 +150,6 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 throw new RuntimeException("加载类异常");
             }
         }
-        isCache=true;
+        SWCJParseI.count.addAndGet(key_value.split("\n").length);
     }
 }

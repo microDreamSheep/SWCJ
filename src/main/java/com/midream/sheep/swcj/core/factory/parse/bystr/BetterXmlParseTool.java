@@ -1,36 +1,40 @@
 package com.midream.sheep.swcj.core.factory.parse.bystr;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
+import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
-import com.midream.sheep.swcj.core.factory.SWCJParseI;
+import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
+import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.pojo.buildup.MethodMeta;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
 import com.midream.sheep.swcj.util.function.StringUtil;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class BetterXmlParseTool implements SWCJParseI {
     @Override
-    public List<RootReptile> parseXmlFile(File xmlFile, ReptileConfig rc) {
+    public List<SWCJClass> parseXmlFile(File xmlFile, ReptileConfig rc) throws ClassNotFoundException, InterfaceIllegal {
         return parseStringXml(StringUtil.getStringByStream(xmlFile), rc);
     }
 
     @Override
-    public List<RootReptile> parseStringXml(String xmlString, ReptileConfig rc) {
+    public List<SWCJClass> parseStringXml(String xmlString, ReptileConfig rc) throws ClassNotFoundException, InterfaceIllegal {
         //正则删除注释
         xmlString = xmlString.replaceAll("<!--[\\s\\S]+?-->","");
         if(xmlString.contains("<config>")) {
             parseConfigFile(xmlString.substring(xmlString.indexOf("<config>") + 8, xmlString.indexOf("</config>")), rc);
         }
-        return xmlString.contains("<swc>")?parseAllClass(xmlString):new LinkedList<>();
+        return xmlString.contains("<swc>")?parseAllClass(xmlString,rc):new LinkedList<>();
     }
     /**
      * 分析配置文件
@@ -129,29 +133,38 @@ public class BetterXmlParseTool implements SWCJParseI {
     /**
      * 分析swcj
      */
-    private List<RootReptile> parseAllClass(String xmlString) {
+    private List<SWCJClass> parseAllClass(String xmlString, ReptileConfig config) throws ClassNotFoundException, InterfaceIllegal {
         for (Map.Entry<String, String> entry : CacheCorn.INJECTION_CACHE.getINJECTION_MAP().entrySet()) {
             xmlString = xmlString.replace(entry.getKey(), entry.getValue());
         }
-        List<RootReptile> rootReptiles = new LinkedList<>();
+        List<SWCJClass> swcjClasses = new LinkedList<>();
         for (String s : parseTag(xmlString, "<swc>", "</swc>")) {
-                RootReptile rootReptile = new RootReptile();
-                parseClass(s, rootReptile);
-                rootReptiles.add(rootReptile);
+                SWCJClass swcjClass = new SWCJClass();
+                parseClass(s, swcjClass,config);
+                swcjClasses.add(swcjClass);
         }
-        return rootReptiles;
+        return swcjClasses;
     }
 
-    private void parseClass(String s, RootReptile rootReptile) {
-        rootReptile.setLoad(false);
-        rootReptile.setId(s.substring(s.indexOf("<id>") + "<id>".length(), s.indexOf("</id>")).trim());
+    private void parseClass(String s, SWCJClass sClass,ReptileConfig config) throws ClassNotFoundException, InterfaceIllegal {
+        sClass.setLoad(false);
+        sClass.setId(s.substring(s.indexOf("<id>") + "<id>".length(), s.indexOf("</id>")).trim());
+        if(CacheCorn.SPIDER_CACHE.getCacheSpider(sClass.getId())!=null){
+            sClass.setLoad(true);
+            return;
+        }
+        sClass.setClassName("swcj" + (count.addAndGet(1)));
+        sClass.setItIterface(s.substring(s.indexOf("<parentInterface>") + "<parentInterface>".length(), s.indexOf("</parentInterface>")).trim());
+        MethodMeta methodMeta = new MethodMeta();
+
         if(s.contains("<cookies>")) {
-            rootReptile.setCookies(s.substring(s.indexOf("<cookies>") + "<cookies>".length(), s.indexOf("</cookies>")).trim());
+            methodMeta.setCookies(s.substring(s.indexOf("<cookies>") + "<cookies>".length(), s.indexOf("</cookies>")).trim());
         }
-        rootReptile.setParentInter(s.substring(s.indexOf("<parentInterface>") + "<parentInterface>".length(), s.indexOf("</parentInterface>")).trim());
-        rootReptile.setRu(parseRu(parseTag(s, "<url>", "</url>")));
+        parseMethod(parseRu(parseTag(s, "<url>", "</url>")),sClass,methodMeta,config);
     }
-
+    private void parseMethod(List<ReptileUrl> rus,SWCJClass swcjClass,MethodMeta meta,ReptileConfig config) throws ClassNotFoundException, InterfaceIllegal {
+        BuildTool.getFunction(swcjClass, meta, config, rus);
+    }
     private List<ReptileUrl> parseRu(String[] RuStrings) {
         List<ReptileUrl> reptileUrls = new LinkedList<>();
         for (String ru : RuStrings) {

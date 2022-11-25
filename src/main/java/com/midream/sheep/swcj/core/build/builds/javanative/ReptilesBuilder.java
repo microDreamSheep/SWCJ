@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 
 public class ReptilesBuilder extends SWCJBuilderAbstract {
 
-    public Object loadClass(SWCJClass sclass,ReptlileMiddle middle) {
+    public Object loadClass(ReptlileMiddle middle) {
         try {
-            DataInComplier data = swcjCompiler.compileAndLoad(sclass,middle);
+            DataInComplier data = swcjCompiler.compileAndLoad(middle.getSwcjClass(),middle);
             if(data.isIsload()){
                 return data.getaClass().getDeclaredConstructor().newInstance();
             }
-            return swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + sclass.getClassName(), data.getDatas()).getDeclaredConstructor().newInstance();
+            return swcjcl.loadData(Constant.DEFAULT_PACKAGE_NAME + "." + middle.getSwcjClass().getClassName(), data.getDatas()).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
             Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
@@ -27,17 +27,8 @@ public class ReptilesBuilder extends SWCJBuilderAbstract {
         }
     }
 
-    public SWCJClass getSWCJClass(ReptlileMiddle middle) throws ClassNotFoundException, EmptyMatchMethodException, ConfigException {
-        return BuildTool.getSWCJClass(middle);
-    }
-
     @Override
     protected Object buildObject(ReptlileMiddle middle) {
-        try {
-            return loadClass(getSWCJClass(middle),middle);
-        } catch (ClassNotFoundException | EmptyMatchMethodException | ConfigException e) {
-            Logger.getLogger(ReptilesBuilder.class.getName()).info(e.getMessage());
-            throw new RuntimeException(e);
-        }
+        return loadClass(middle);
     }
 }

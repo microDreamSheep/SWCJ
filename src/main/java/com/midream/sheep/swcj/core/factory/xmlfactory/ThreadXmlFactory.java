@@ -7,7 +7,7 @@ import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
 import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.SWCJXmlFactory;
 import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
 import org.xml.sax.SAXException;
 
@@ -26,17 +26,11 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
             5, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>()
     ,Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy());
-
-    //xml工厂提供的构造器
-    public ThreadXmlFactory(String value) {
-        parse(value);
-    }
-    //xml工厂提供的默认构造器
-    public ThreadXmlFactory() {
-    }
-    //xml工厂提供的构造器
-    public ThreadXmlFactory(File xmlFile) {
-        parse(xmlFile);
+    public ThreadXmlFactory(){}
+    public ThreadXmlFactory(boolean isLoadCache,String workplace) throws ConfigException {
+        if (isLoadCache) {
+            cache(workplace);
+        }
     }
     //解析文档
     @Override
@@ -49,6 +43,8 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 parse(swcjParseI.parseXmlFile(xmlFile, config));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
+            } catch (ClassNotFoundException | InterfaceIllegal e) {
+                throw new RuntimeException(e);
             }
         });
         return this;
@@ -63,33 +59,28 @@ public class ThreadXmlFactory extends SWCJAbstractFactory {
                 parse(swcjParseI.parseStringXml(File, config));
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
+            } catch (ClassNotFoundException | InterfaceIllegal e) {
+                throw new RuntimeException(e);
             }
         });
         return this;
     }
-    private void parse(List<RootReptile> list){
-        for (RootReptile reptile : list) {
-            rootReptiles.put(reptile.getId(), reptile);
+    private void parse(List<SWCJClass> list){
+        for (SWCJClass swcjClass : list) {
+            swcjClasses.put(swcjClass.getId(), swcjClass);
         }
-        if(config.isCache()) {
-            try {
-                cache();
-            } catch (ConfigException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        for (RootReptile reptile : rootReptiles.values()) {
+        for (SWCJClass reptile : swcjClasses.values()) {
             if (swcjBuilder == null) {
                 swcjBuilder = new ReptilesBuilder();
             }
-            if (rootReptiles.get(reptile.getId()).isLoad()) {
+            if (swcjClasses.get(reptile.getId()).isLoad()) {
                 continue;
             }
             try {
                 reptile.setLoad(true);
                 swcjBuilder.Builder(new ReptlileMiddle(reptile, config));
                 //删除
-                rootReptiles.remove(reptile.getId());
+                swcjClasses.remove(reptile.getId());
             } catch (EmptyMatchMethodException | ConfigException | InterfaceIllegal e) {
                 Logger.getLogger(CoreXmlFactory.class.getName()).severe(e.getMessage());
             }
