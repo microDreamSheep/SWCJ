@@ -1,4 +1,4 @@
-package com.midream.sheep.swcj.core.factory.parse.bystr;
+package com.midream.sheep.swcj.core.factory.xmlfactory.bystr;
 
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.data.ReptileConfig;

@@ -10,8 +10,8 @@ import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
-import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
-import com.midream.sheep.swcj.core.factory.parse.bystr.SWCJParseI;
+import com.midream.sheep.swcj.core.factory.xmlfactory.bystr.SWCJParseI;
+import com.midream.sheep.swcj.core.factory.xmlfactory.SWCJAbstractXmlFactory;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
@@ -22,22 +22,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-/**
- * @author midreamsheep
- */
-public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
+public abstract class SWCJAbstractFactory
+        implements SWCJFactory
+{
     //核心配置文件
     public static volatile ReptileConfig config = new ReptileConfig();
     //爬虫文件
     protected Map<String, SWCJClass> swcjClasses = new HashMap<>();
     //构造器
     protected SWCJBuilder swcjBuilder = null;
-    //解析器
-    protected SWCJParseI swcjParseI = null;
     //加载器
     protected SWCJClassLoaderInter classLoader = null;
     @Override
@@ -60,7 +58,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                     TimeUnit.MILLISECONDS.sleep(200);
                     i++;
                 } catch (InterruptedException e) {
-                    Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
+                    Logger.getLogger(SWCJAbstractXmlFactory.class.getName()).warning("线程暂停失败");
                 }
                 if(i==10){
                     throw new ConfigException("你的配置文件找不到id="+id);
@@ -71,7 +69,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
                 try {
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
-                    Logger.getLogger(SWCJAbstractFactory.class.getName()).warning("线程暂停失败");
+                    Logger.getLogger(SWCJAbstractXmlFactory.class.getName()).warning("线程暂停失败");
                 }
             }else {
                 swcjClasses.get(id).setLoad(true);
@@ -81,7 +79,7 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         }
     }
     @Override
-    public SWCJXmlFactory setCompiler(SWCJCompiler swcjCompiler) {
+    public SWCJFactory setCompiler(SWCJCompiler swcjCompiler) {
         if(swcjBuilder==null){
             swcjBuilder = new ReptilesBuilder();
         }
@@ -89,24 +87,19 @@ public abstract class  SWCJAbstractFactory implements SWCJXmlFactory{
         return this;
     }
     @Override
-    public SWCJXmlFactory setBuilder(SWCJBuilder swcjBuilder) {
+    public SWCJFactory setBuilder(SWCJBuilder swcjBuilder) {
         this.swcjBuilder = swcjBuilder;
-        return this;
-    }
-    @Override
-    public SWCJXmlFactory setParseTool(SWCJParseI swcjParseI) {
-        this.swcjParseI = swcjParseI;
         return this;
     }
 
     @Override
-    public SWCJXmlFactory invokeSpecialMethod(Object... args) {
+    public SWCJFactory invokeSpecialMethod(Object... args) {
         System.err.println("此工厂不存在特殊方法");
         return this;
     }
 
     @Override
-    public SWCJXmlFactory setClassLoader(SWCJClassLoaderInter classLoader) {
+    public SWCJFactory setClassLoader(SWCJClassLoaderInter classLoader) {
         if(this.swcjBuilder==null){
             this.swcjBuilder = new ReptilesBuilder();
         }
