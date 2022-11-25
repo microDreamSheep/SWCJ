@@ -6,6 +6,7 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
+import com.midream.sheep.swcj.core.factory.parse.bystr.SWCJParseI;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

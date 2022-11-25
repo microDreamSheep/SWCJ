@@ -1,23 +1,23 @@
 package com.midream.sheep.swcj.pojo.swc.passvalue;
 
 import com.midream.sheep.swcj.data.ReptileConfig;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
+import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 
 public class ReptlileMiddle {
-    private RootReptile rootReptile;
+    private SWCJClass swcjClass;
     private ReptileConfig config;
 
-    public ReptlileMiddle(RootReptile rootReptile, ReptileConfig config) {
-        this.rootReptile = rootReptile;
+    public ReptlileMiddle(SWCJClass rootReptile, ReptileConfig config) {
+        this.swcjClass = rootReptile;
         this.config = config;
     }
 
-    public RootReptile getRootReptile() {
-        return rootReptile;
+    public SWCJClass getSwcjClass() {
+        return swcjClass;
     }
 
-    public void setRootReptile(RootReptile rootReptile) {
-        this.rootReptile = rootReptile;
+    public void setSwcjClass(SWCJClass swcjClass) {
+        this.swcjClass = swcjClass;
     }
 
     public ReptileConfig getConfig() {

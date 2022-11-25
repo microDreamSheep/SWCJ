@@ -1,22 +1,17 @@
 package com.midream.sheep.swcj.util.function;
 
-import com.midream.sheep.api.http.HTTPTool;
-import com.midream.sheep.swcj.core.executetool.execute.regularexpression.SWCJregular;
-import com.midream.sheep.swcj.core.factory.parse.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
+import com.midream.sheep.swcj.pojo.buildup.MethodMeta;
 import com.midream.sheep.swcj.pojo.buildup.SWCJMethod;
 import com.midream.sheep.swcj.pojo.swc.ReptileUrl;
-import com.midream.sheep.swcj.pojo.swc.RootReptile;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * @author midreamsheep
@@ -70,14 +65,14 @@ public class StringUtil {
         }
         return sb.toString();
     }
-    public static String getExecuteCharacter(ReptileUrl ru, List<String> injection, ReptileConfig rc, RootReptile rr, SWCJMethod method){
+    public static String getExecuteCharacter(ReptileUrl ru, List<String> injection, ReptileConfig rc, MethodMeta meta, SWCJMethod method){
         StringBuilder inj = new StringBuilder();
         String templet = Template2.replace("#[method]", ru.getParseProgram().replace("\\", "\\\\").replace("\"", "\\\""))
                 .replace("#[isHtml]", String.valueOf(ru.isHtml()))
                 .replace("#[type]", method.getRequestType())
                 .replace("#[url]", ru.getUrl())
                 .replace("#[userage]", rc.getUserAgents().get(new Random().nextInt(rc.getUserAgents().size())))
-                .replace("#[cookies]", rr.getCookies())
+                .replace("#[cookies]", meta.getCookies())
                 .replace("#[values]", ru.getValues())
                 .replace("#[timeout]", rc.getTimeout() + "")
                 .replace("#[class]", ru.getExecutClassName())

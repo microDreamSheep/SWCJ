@@ -13,16 +13,16 @@ public class ClazzBuilder {
     private Class<?> aClass;
     private final Map<String, List<FiledHandler>> dataMap = new LinkedHashMap<>();
 
-    public ClazzBuilder(ClazzBuilderReflectionInter clazzBuidlerReflectionInter) {
-        this.clazzBuilderReflectionInter = clazzBuidlerReflectionInter;
+    public ClazzBuilder(ClazzBuilderReflectionInter clazzBuilderReflectionInter) {
+        this.clazzBuilderReflectionInter = clazzBuilderReflectionInter;
     }
 
     public ClazzBuilder() {
         this.clazzBuilderReflectionInter = new SWCJDefaultClazzBuilderReflection();
     }
 
-    public void setClazzBuilderReflectionInter(ClazzBuilderReflectionInter clazzBuidlerReflectionInter) {
-        this.clazzBuilderReflectionInter = clazzBuidlerReflectionInter;
+    public void setClazzBuilderReflectionInter(ClazzBuilderReflectionInter clazzBuilderReflectionInter) {
+        this.clazzBuilderReflectionInter = clazzBuilderReflectionInter;
     }
 
     public Class<?> getaClass() {
