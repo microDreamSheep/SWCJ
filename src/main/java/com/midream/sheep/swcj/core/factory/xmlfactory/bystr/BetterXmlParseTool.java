@@ -1,11 +1,10 @@
-package com.midream.sheep.swcj.core.factory.parse.bystr;
+package com.midream.sheep.swcj.core.factory.xmlfactory.bystr;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.cache.CacheCorn;
 import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
 import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
-import com.midream.sheep.swcj.core.factory.SWCJAbstractFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
@@ -18,7 +17,6 @@ import com.midream.sheep.swcj.util.function.StringUtil;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class BetterXmlParseTool implements SWCJParseI {
