@@ -14,8 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public interface SWCJParseI {
 
-    AtomicInteger count = new AtomicInteger(0);
-
     /**
      * 解析文件
      *

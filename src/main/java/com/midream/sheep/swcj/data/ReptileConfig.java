@@ -1,11 +1,15 @@
 package com.midream.sheep.swcj.data;
 
 import com.midream.sheep.swcj.Exception.ConfigException;
+import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
+import com.midream.sheep.swcj.core.APIClassInter.SWCJConfigClassConfiguration;
 import com.midream.sheep.swcj.pojo.enums.ChooseStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author midreamSheep
  * 全局配置
@@ -78,6 +82,18 @@ public class ReptileConfig {
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    public void parse(SWCJConfigClassConfiguration swcjConfigClassConfiguration){
+        this.isCache = swcjConfigClassConfiguration.isCache();
+        this.choice = ChooseStrategy.METHOD_NAME;
+        this.timeout = swcjConfigClassConfiguration.getTimeout();
+        this.userAgents.addAll(swcjConfigClassConfiguration.getUserAgents());
+        this.workplace = swcjConfigClassConfiguration.getWorkplace();
+        Map<String, String> executeConfigurationClass = swcjConfigClassConfiguration.getExecuteConfigurationClass();
+        if(executeConfigurationClass!=null){
+            Constant.PutExecutesMap(executeConfigurationClass);
+        }
     }
 
     @Override

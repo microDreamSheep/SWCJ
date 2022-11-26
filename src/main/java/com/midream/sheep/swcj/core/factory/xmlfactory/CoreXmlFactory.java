@@ -5,7 +5,6 @@ import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.builds.javanative.BuildTool;
 import com.midream.sheep.swcj.core.build.builds.javanative.ReptilesBuilder;
-import com.midream.sheep.swcj.core.factory.SWCJFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.bystr.BetterXmlParseTool;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
 import com.midream.sheep.swcj.pojo.swc.passvalue.ReptlileMiddle;
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * 工厂类，读取配置文件，获取具体实现类
  */
-public class CoreXmlFactory extends SWCJAbstractXmlFactory {
+public class CoreXmlFactory extends SWCJXmlFactory {
 
     public CoreXmlFactory(){}
 
@@ -32,7 +31,7 @@ public class CoreXmlFactory extends SWCJAbstractXmlFactory {
 
     //解析文档
     @Override
-    public SWCJAbstractXmlFactory parse(File xmlFile) {
+    public SWCJXmlFactory parse(File xmlFile) {
         notNull();
         try {
             parse(swcjParseI.parseXmlFile(xmlFile, config));
@@ -45,7 +44,7 @@ public class CoreXmlFactory extends SWCJAbstractXmlFactory {
     }
 
     @Override
-    public SWCJAbstractXmlFactory parse(String File) {
+    public SWCJXmlFactory parse(String File) {
         notNull();
         try {
             parse(swcjParseI.parseStringXml(File, config));

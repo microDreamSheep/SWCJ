@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * 工厂类，读取配置文件，获取具体实现类
  */
-public class ThreadXmlFactory extends SWCJAbstractXmlFactory {
+public class ThreadXmlFactory extends SWCJXmlFactory {
     private static final ExecutorService execute = new ThreadPoolExecutor(1,1,
             5, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>()
@@ -33,7 +33,7 @@ public class ThreadXmlFactory extends SWCJAbstractXmlFactory {
     }
     //解析文档
     @Override
-    public SWCJAbstractXmlFactory parse(File xmlFile) {
+    public SWCJXmlFactory parse(File xmlFile) {
         if (this.swcjParseI == null) {
             this.swcjParseI = new BetterXmlParseTool();
         }
@@ -49,7 +49,7 @@ public class ThreadXmlFactory extends SWCJAbstractXmlFactory {
         return this;
     }
     @Override
-    public SWCJAbstractXmlFactory parse(String File) {
+    public SWCJXmlFactory parse(String File) {
         if (this.swcjParseI == null) {
             this.swcjParseI = new BetterXmlParseTool();
         }
