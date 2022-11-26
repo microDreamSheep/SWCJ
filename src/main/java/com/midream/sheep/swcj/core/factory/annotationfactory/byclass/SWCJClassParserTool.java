@@ -12,7 +12,6 @@ public class SWCJClassParserTool {
     public static SWCJClass parse(SWCJConfigClassConfiguration swcjConfigClassConfiguration){
         SWCJClass swcjClass = new SWCJClass();
         swcjClass.setClassName("swcj" + (count.addAndGet(1)));
-        swcjClass.setId(swcjConfigClassConfiguration.getId());
         swcjClass.setItIterface(swcjClass.getItIterface());
         swcjClass.setLoad(false);
         swcjClass.setMethods(parseMethod(swcjConfigClassConfiguration));

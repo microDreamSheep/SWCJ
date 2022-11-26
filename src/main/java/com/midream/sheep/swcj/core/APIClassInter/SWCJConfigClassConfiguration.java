@@ -1,6 +1,15 @@
 package com.midream.sheep.swcj.core.APIClassInter;
 
+import java.util.Collection;
+
 public interface SWCJConfigClassConfiguration {
-    String getId();
-    String getInterface();
+    boolean isCache();
+
+    int getTimeout();
+
+    Collection<String> getUserAgents();
+
+    String getWorkplace();
+
+    ExecuteConfigurationClass getExecuteConfigurationClass();
 }
