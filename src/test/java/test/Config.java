@@ -1,6 +1,5 @@
 package test;
 
-import com.midream.sheep.swcj.core.APIClassInter.ExecuteConfigurationClass;
 import com.midream.sheep.swcj.core.APIClassInter.SWCJConfigClassConfiguration;
 import com.midream.sheep.swcj.core.executetool.execute.jsoup.SWCJJsoup;
 
@@ -28,11 +27,9 @@ public class Config implements SWCJConfigClassConfiguration {
     }
 
     @Override
-    public ExecuteConfigurationClass getExecuteConfigurationClass() {
-        return ()->{
-            Map<String,String> map = new HashMap<>();
-            map.put("jsoup", SWCJJsoup.class.getName());
-            return map;
-        };
+    public Map<String, String> getExecuteConfigurationClass() {
+        Map<String,String> map = new HashMap<>();
+        map.put("jsoup", SWCJJsoup.class.getName());
+        return map;
     }
 }

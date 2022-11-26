@@ -1,6 +1,7 @@
 package com.midream.sheep.swcj.core.APIClassInter;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface SWCJConfigClassConfiguration {
     boolean isCache();
@@ -11,5 +12,5 @@ public interface SWCJConfigClassConfiguration {
 
     String getWorkplace();
 
-    ExecuteConfigurationClass getExecuteConfigurationClass();
+    Map<String, String> getExecuteConfigurationClass();
 }

@@ -90,9 +90,9 @@ public class ReptileConfig {
         this.timeout = swcjConfigClassConfiguration.getTimeout();
         this.userAgents.addAll(swcjConfigClassConfiguration.getUserAgents());
         this.workplace = swcjConfigClassConfiguration.getWorkplace();
-        ExecuteConfigurationClass executeConfigurationClass = swcjConfigClassConfiguration.getExecuteConfigurationClass();
+        Map<String, String> executeConfigurationClass = swcjConfigClassConfiguration.getExecuteConfigurationClass();
         if(executeConfigurationClass!=null){
-            Constant.PutExecutesMap(executeConfigurationClass.getExecuteConfiguration());
+            Constant.PutExecutesMap(executeConfigurationClass);
         }
     }
 
