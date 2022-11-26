@@ -12,8 +12,6 @@ public class SWCJClass {
     private String itIterface;
     private Map<String,SWCJMethod> methods;
 
-    private byte[] codes;
-
     public String getItIterface() {
         return itIterface;
     }
@@ -55,14 +53,6 @@ public class SWCJClass {
 
     public static SWCJClass buildClass(){
         return new SWCJClass();
-    }
-
-    public byte[] getCodes() {
-        return codes;
-    }
-
-    public void setCodes(byte[] codes) {
-        this.codes = codes;
     }
 
     public boolean isLoad() {

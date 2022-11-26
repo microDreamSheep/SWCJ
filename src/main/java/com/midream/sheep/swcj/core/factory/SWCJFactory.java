@@ -6,7 +6,6 @@ import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
-import com.midream.sheep.swcj.core.factory.xmlfactory.bystr.SWCJParseI;
 
 /**
  * 这是工厂类的模板，自定义工厂需要实现这些方法
@@ -34,11 +33,6 @@ public interface SWCJFactory {
      * @param classLoader 加载器
      * */
     SWCJFactory setClassLoader(SWCJClassLoaderInter classLoader);
-    /**
-     * 设置解析器
-     * @param swcjParseI 解析器
-     * */
-    SWCJFactory setParseTool(SWCJParseI swcjParseI);
     /**
      * 调用专属特殊方法
      * @param args 传递值

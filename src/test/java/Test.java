@@ -3,9 +3,8 @@ import com.midream.sheep.swcj.Exception.ConfigException;
 import com.midream.sheep.swcj.Exception.EmptyMatchMethodException;
 import com.midream.sheep.swcj.Exception.InterfaceIllegal;
 import com.midream.sheep.swcj.core.build.builds.effecient.EffecientCompiler;
-import com.midream.sheep.swcj.core.factory.SWCJFactory;
 import com.midream.sheep.swcj.core.factory.xmlfactory.CoreXmlFactory;
-import com.midream.sheep.swcj.core.factory.xmlfactory.SWCJAbstractXmlFactory;
+import com.midream.sheep.swcj.core.factory.xmlfactory.SWCJXmlFactory;
 import org.xml.sax.SAXException;
 import test.pojo;
 
@@ -19,7 +18,7 @@ import java.util.Objects;
  */
 public class Test {
     public static void main(String[] args) throws ConfigException, IOException, ParserConfigurationException, SAXException, EmptyMatchMethodException, InterfaceIllegal {
-        SWCJAbstractXmlFactory swcjXmlFactory = new CoreXmlFactory(true,"E://临时文件");
+        SWCJXmlFactory swcjXmlFactory = new CoreXmlFactory();
         long start1 = System.currentTimeMillis();
         swcjXmlFactory.parse(new File(Objects.requireNonNull(Test.class.getClassLoader().getResource("")).getPath() + "/text_reg.xml"));
         long end1 = System.currentTimeMillis();

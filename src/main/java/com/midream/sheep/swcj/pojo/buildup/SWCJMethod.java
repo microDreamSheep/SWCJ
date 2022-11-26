@@ -7,8 +7,6 @@ import java.util.List;
  * @author midreamsheep
  */
 public class SWCJMethod {
-    //方法额外的配置文件
-    private String config;
     //请求类型
     private String requestType;
     //方法名
@@ -38,13 +36,6 @@ public class SWCJMethod {
         return requestType;
     }
 
-    public String getConfig() {
-        return config;
-    }
-
-    public void setConfig(String config) {
-        this.config = config;
-    }
 
     public void setRequestType(String requestType) {
         this.requestType = requestType;

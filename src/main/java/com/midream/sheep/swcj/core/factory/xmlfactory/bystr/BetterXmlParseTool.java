@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static com.midream.sheep.swcj.core.factory.FactoryData.count;
+
 public class BetterXmlParseTool implements SWCJParseI {
     @Override
     public List<SWCJClass> parseXmlFile(File xmlFile, ReptileConfig rc) throws ClassNotFoundException, InterfaceIllegal {

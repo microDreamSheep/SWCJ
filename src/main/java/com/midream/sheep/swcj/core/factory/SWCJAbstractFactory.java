@@ -10,8 +10,7 @@ import com.midream.sheep.swcj.core.build.inter.SWCJBuilder;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoader;
 import com.midream.sheep.swcj.core.classtool.classloader.SWCJClassLoaderInter;
 import com.midream.sheep.swcj.core.classtool.compiler.SWCJCompiler;
-import com.midream.sheep.swcj.core.factory.xmlfactory.bystr.SWCJParseI;
-import com.midream.sheep.swcj.core.factory.xmlfactory.SWCJAbstractXmlFactory;
+import com.midream.sheep.swcj.core.factory.xmlfactory.SWCJXmlFactory;
 import com.midream.sheep.swcj.data.Constant;
 import com.midream.sheep.swcj.data.ReptileConfig;
 import com.midream.sheep.swcj.pojo.buildup.SWCJClass;
@@ -26,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import static com.midream.sheep.swcj.core.factory.FactoryData.count;
 
 public abstract class SWCJAbstractFactory
         implements SWCJFactory
@@ -58,7 +59,7 @@ public abstract class SWCJAbstractFactory
                     TimeUnit.MILLISECONDS.sleep(200);
                     i++;
                 } catch (InterruptedException e) {
-                    Logger.getLogger(SWCJAbstractXmlFactory.class.getName()).warning("线程暂停失败");
+                    Logger.getLogger(SWCJXmlFactory.class.getName()).warning("线程暂停失败");
                 }
                 if(i==10){
                     throw new ConfigException("你的配置文件找不到id="+id);
@@ -69,7 +70,7 @@ public abstract class SWCJAbstractFactory
                 try {
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
-                    Logger.getLogger(SWCJAbstractXmlFactory.class.getName()).warning("线程暂停失败");
+                    Logger.getLogger(SWCJXmlFactory.class.getName()).warning("线程暂停失败");
                 }
             }else {
                 swcjClasses.get(id).setLoad(true);
@@ -143,6 +144,6 @@ public abstract class SWCJAbstractFactory
                 throw new RuntimeException("加载类异常");
             }
         }
-        SWCJParseI.count.addAndGet(key_value.split("\n").length);
+        count.addAndGet(key_value.split("\n").length);
     }
 }
