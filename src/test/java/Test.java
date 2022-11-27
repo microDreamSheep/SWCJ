@@ -42,8 +42,8 @@ public class Test {
         long start3 = System.currentTimeMillis();
         pojoAnnotation parse = swcjClassFactory.parse(pojoAnnotation.class);
         long end3 = System.currentTimeMillis();
-        System.out.println("解析"+(end3 - start3));
-        for (String s : parse.test("9")) {
+        System.out.println("缓存测试" + (end3 - start3));
+        for (String s : parse.test("5")) {
             System.out.println(s);
         }
     }

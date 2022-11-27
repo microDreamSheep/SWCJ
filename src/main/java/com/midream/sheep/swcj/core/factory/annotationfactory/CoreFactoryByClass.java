@@ -94,7 +94,6 @@ public class CoreFactoryByClass extends SWCJClassFactory{
             throw new ConfigException("ConfigException(配置异常):must include @Executor,@UrlConfig,@ParseProgram"+e.getMessage());
         }
         reptileUrl.setValues(method.getAnnotation(ValueConfig.class)==null?"":method.getAnnotation(ValueConfig.class).value());
-
         List<String> vars = swcjMethod.getExecuteVars();
         swcjMethod.setParamIn(getMethodParametric(swcjMethod,vars).replace("class",Constant.nullString));
         swcjMethod.setExecuteStr(StringUtil.getExecuteCharacter(reptileUrl,vars,reptileConfig,meta,swcjMethod));
